@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/05 22:21:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/10 23:46:55 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,16 @@ typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
-	int	exit_code;
-	t_env	envl;
-	t_token	*token;
-}
+	char	*prompt;
+	int		exit_code;
+	t_env	*envl;
+	t_token	*tokenl;
+} t_msh;
 
+typedef struct s_env
+{
+	char 	*var;
+	char	*val;
+	t_env	*next;
+} t_env;
 #endif
