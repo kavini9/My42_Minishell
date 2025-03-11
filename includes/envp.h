@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin.h                                          :+:      :+:    :+:   */
+/*   envp.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/03 18:51:51 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/11 22:56:41 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/03/11 22:50:35 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/11 22:51:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTIN_H
-# define BUILTIN_H
-
 # include "../../includes/minishell.h"
 
-#endif
+void	duplicate_env(t_msh *msh, char **envp);
+void	generate_mini_env(t_msh *msh, char **envp);
