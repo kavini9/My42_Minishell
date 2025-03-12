@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/11 22:54:45 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/12 15:04:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,8 @@
 # include <readline/history.h> //for readline add_history function
 # include <stdio.h> //temporary printf in msh_clean. delete later if you use your own
 # include <stdlib.h> //for exit
-
-# include "../lib/libft/libft.h"
-# include "envp.h"
-# include "parse.h"
-# include "execute.h"
-# include "builtin.h"
-# include "signal.h"
+# include <string.h> //for strerror(errnum)
+# include <errno.h> //for using errno in strerror
 
 typedef struct s_msh
 {
@@ -36,6 +31,15 @@ typedef struct s_msh
 	char	**envl;
 //	t_token	*tokenl;
 } t_msh;
+
+# include "../lib/libft/libft.h"
+# include "envp.h"
+//# include "parse.h"
+//# include "execute.h"
+//# include "builtin.h"
+//# include "signal.h"
+
+
 
 // typedef struct s_env
 // {

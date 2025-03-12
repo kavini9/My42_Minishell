@@ -6,13 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:51:51 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/11 22:56:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:00:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BUILTIN_H
 # define BUILTIN_H
 
-# include "../../includes/minishell.h"
+# include "minishell.h"
 
 #endif
