@@ -1,1 +1,4 @@
 */*/*.swp
+lib/libft/*.o
+lib/libft/libft.a
+src/a.out
