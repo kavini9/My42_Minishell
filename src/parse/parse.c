@@ -1,158 +1,117 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipe.c                                             :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/14 19:01:36 by aoshinth         ###   ########.fr       */
+/*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
+/*   Updated: 2025/03/14 17:56:32 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/**
- * validate_pipe_position - Ensures valid syntax for a specific pipe (`|`) operator.
- *
- * @line: Input command string.
- * @i: Current index of the pipe operator in the string.
- * @shell: Shell structure managing shell state and exit status.
- *
- * This function skips whitespace after the pipe and verifies that a valid
- * command follows. If another pipe or an invalid token is found, it prints
- * an error message.
- *
- * Return:
- * - 1 if the syntax is invalid.
- * - 0 if valid.
- */
-static int	validate_pipe_position(char *line, int i, t_shell *shell)
-{
-	int	j;
 
-	j = i + 1;
-	j = skip_whitespace(line, j);
-	if (line[j] == '|' && !check_quotes(line, j))
-	{
-		ft_putstr_fd("syntax error near unexpected token '|'", 2);
-		shell->exit_stat = 2;
-		return (1);
-	}
-	return (0);
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/**
+ * validate_input - Checks the syntax of the user input.
+ * @line: Pointer to the input string entered by the user.
+ * @shell: Pointer to the shell structure.
+ *
+ * This function performs the following checks:
+ * - Ensures all quotes are properly matched.
+ * - Validates the correct usage of pipes (`|`).
+ * - Prevents the use of invalid characters like `;` and `\`.
+ * - Verifies correct redirection syntax.
+ *
+ * If any syntax errors are found, the function prints an error message,
+ * sets the shell's exit status to an error value, and returns 1.
+ *
+ * Returns:
+ * - 0 if the input is valid.
+ * - 1 if a syntax error is detected.
+ */
+int validate_input(char **line, t_shell *shell)
+{
+    int i;
+
+    // Check for unmatched quotes in the input
+    if (check_quotes(*line, ft_strlen(*line)))
+    {
+        ft_putendl_fd("syntax error: unmatched quotes", 2);
+        shell->exit_stat = 2;
+        return (1);
+    }
+
+    // Validate pipe usage
+    if (validate_pipe (line, shell))
+        return (1);
+
+    i = 0;
+    while ((*line)[i])
+    {
+        // Ensure characters like ';' and '\' are not improperly used
+        if (!check_quotes(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
+        {
+            ft_putendl_fd("invalid syntax", 2);
+            shell->exit_stat = 2;
+            return (1);
+        }
+        i++;
+    }
+
+    // Check for correct redirection syntax
+    if (check_redirects(*line, shell))
+        return (1);
+
+    return (0);
 }
 
 /**
- * detect_consecutive_pipes - Checks for consecutive pipes without valid tokens.
+ * validate_and_parse - Validates and processes user input for execution.
+ * @line: Pointer to the user input string.
+ * @shell: Pointer to the shell structure.
  *
- * @line: Input string to check.
- * @shell: Shell structure managing shell state and exit status.
+ * This function:
+ * - Calls `validate_input` to check for syntax errors.
+ * - Prepares command structures if validation succeeds.
+ * - Splits the input into separate commands based on pipes (`|`).
+ * - Calls `parse_input` to further process the structured commands.
  *
- * Iterates through the input string, ensuring that pipes are not used
- * consecutively without valid tokens between them. Skips quoted characters
- * and whitespace.
+ * If any stage fails, the function returns an error.
  *
- * Return:
- * - 1 if syntax errors are found.
- * - 0 otherwise.
+ * Returns:
+ * - 0 if parsing is successful.
+ * - 1 if any error occurs during validation or parsing.
  */
-static int	detect_consecutive_pipes(char *line, t_shell *shell)
+int validate_and_parse(char **line, t_shell *shell)
 {
-	int	i;
-	int	pipe_found;
+    // Validate user input for syntax errors
+    if (validate_input(line, shell))
+        return (1);
 
-	i = 0;
-	pipe_found = 0;
-	while (line[i])
-	{
-		if (line[i] == '|' && !check_quotes(line, i))
-		{
-			if (validate_pipe_position(line, i, shell))
-				return (1);
-			pipe_found = 1;
-		}
-		else if (ft_isspace(line[i]))
-			pipe_found = 0;
-		i++;
-	}
-	return (0);
+    // Prepare command structures for execution
+    if (prepare_command_structs(shell, *line))
+        return (1);
+
+    // Split input into commands based on pipes
+    if (split_input_by_pipes(*line, shell))
+        return (1);
+
+    // Parse commands into structured format for execution
+    if (parse_input(shell))
+        return (1);
+
+    return (0);
 }
-
-/**
- * handle_trailing_pipe - Manages cases where the input ends with a pipe (`|`).
- *
- * @shell: Shell structure managing shell state.
- * @line: Pointer to the input string (modifiable to include more input).
- *
- * If the command ends with a pipe, prompts the user for additional input.
- * Uses `get_trailing_input()` to retrieve further input and appends it to the
- * existing command string. If no additional input is provided, it returns an error.
- *
- * Return:
- * - 1 if handling fails.
- * - 0 if the input is successfully extended.
- */
-static int	handle_trailing_pipe(t_shell *shell, char **line)
-{
-	int		i;
-	char	*extended_line;
-
-	i = ft_strlen(*line) - 1;
-	while (i >= 0 && ft_isspace((*line)[i]))
-		i--;
-	if (i >= 0 && (*line)[i] == '|' && !check_quotes(*line, i))
-	{
-		extended_line = get_trailing_input(shell, *line);
-		if (!extended_line)
-		{
-			*line = NULL;
-			return (1);
-		}
-		*line = extended_line;
-	}
-	return (0);
-}
-
-
-/**
- * validate_pipe_syntax - Ensures proper syntax for pipes (`|`) in the input string.
- *
- * @line: Pointer to the input command string (modifiable for trailing pipes).
- * @shell: Shell structure managing shell state and exit status.
- *
- * This function checks if:
- * - The input starts with a pipe (invalid)
- * - There are consecutive pipes without valid tokens between them
- * - The input ends with a pipe (handled separately)
- *
- * Return:
- * - 1 if pipe syntax is invalid.
- * - 0 if syntax is valid.
- */
-int	validate_pipe (char **line, t_shell *shell)
-{
-	int	i;
-
-	i = 0;
-	i = skip_whitespace(*line, i);
-	if ((*line)[i] == '|' && !check_quotes(*line, i))
-	{
-		ft_putendl_fd("syntax error near unexpected token '|'", 2);
-		shell->exit_stat = 2;
-		return (1);
-	}
-	if (detect_consecutive_pipes(*line, shell))
-		return (1);
-	if (process_trailing_pipe(shell, line))
-		return (1);
-	return (0);
-}
-
-
-
-
-
-
 
 
 
