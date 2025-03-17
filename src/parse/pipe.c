@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/14 19:01:36 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/17 18:37:18 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static int	validate_pipe_position(char *line, int i, t_shell *shell)
  * - 1 if syntax errors are found.
  * - 0 otherwise.
  */
-static int	detect_consecutive_pipes(char *line, t_shell *shell)
+static int	detect_consecutive_pipes(char *line, t_msh *msh)
 {
 	int	i;
 	int	pipe_found;
@@ -67,7 +67,7 @@ static int	detect_consecutive_pipes(char *line, t_shell *shell)
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
 		{
-			if (validate_pipe_position(line, i, shell))
+			if (validate_pipe_position(line, i, msh))
 				return (1);
 			pipe_found = 1;
 		}
@@ -92,7 +92,7 @@ static int	detect_consecutive_pipes(char *line, t_shell *shell)
  * - 1 if handling fails.
  * - 0 if the input is successfully extended.
  */
-static int	handle_trailing_pipe(t_shell *shell, char **line)
+static int	handle_trailing_pipe(t_msh *msh, char **line)
 {
 	int		i;
 	char	*extended_line;
@@ -102,7 +102,7 @@ static int	handle_trailing_pipe(t_shell *shell, char **line)
 		i--;
 	if (i >= 0 && (*line)[i] == '|' && !check_quotes(*line, i))
 	{
-		extended_line = get_trailing_input(shell, *line);
+		extended_line = get_trailing_input(msh, *line);
 		if (!extended_line)
 		{
 			*line = NULL;
@@ -129,7 +129,7 @@ static int	handle_trailing_pipe(t_shell *shell, char **line)
  * - 1 if pipe syntax is invalid.
  * - 0 if syntax is valid.
  */
-int	validate_pipe (char **line, t_shell *shell)
+int	validate_pipe (char **line, t_msh *msh)
 {
 	int	i;
 
@@ -138,12 +138,12 @@ int	validate_pipe (char **line, t_shell *shell)
 	if ((*line)[i] == '|' && !check_quotes(*line, i))
 	{
 		ft_putendl_fd("syntax error near unexpected token '|'", 2);
-		shell->exit_stat = 2;
+		msh->exit_code = 2;
 		return (1);
 	}
-	if (detect_consecutive_pipes(*line, shell))
+	if (detect_consecutive_pipes(*line, msh))
 		return (1);
-	if (process_trailing_pipe(shell, line))
+	if (process_trailing_pipe(msh, line))
 		return (1);
 	return (0);
 }

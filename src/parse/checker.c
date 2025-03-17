@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/14 18:37:00 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/17 19:02:42 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,11 @@ int	is_this_empty(char *line)
 		line++;
 	}
 	return (1);
+}
+
+int	skip_whitespace(char *str, int i)
+{
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	return (i);
 }

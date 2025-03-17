@@ -10,11 +10,7 @@ typedef struct s_cmd
     struct s_cmd   *next;
 } t_cmd;
 
-typedef struct s_shell
-{
-    t_cmd   *cmds;
-    int     exit_stat;
-} t_shell;
+
 
 // Function Prototypes
 int     parse_and_validate_input(char **input, t_shell *mini);
