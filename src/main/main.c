@@ -6,11 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2025/03/12 16:08:59 by wweerasi         ###   ########.fr       */
-=======
-/*   Updated: 2025/03/12 17:39:47 by aoshinth         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2025/03/17 16:10:32 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
