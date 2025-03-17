@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-<<<<<<< Updated upstream
-/*   Updated: 2025/03/12 16:08:59 by wweerasi         ###   ########.fr       */
-=======
-/*   Updated: 2025/03/12 17:39:47 by aoshinth         ###   ########.fr       */
->>>>>>> Stashed changes
+/*   Updated: 2025/03/17 17:46:15 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +47,8 @@ void	msh_loop(t_msh *msh)
 			if (!ft_strcmp(line, "exit"))
 				break; 
 		}
+		parse (msh);
+		
 	}
 	rl_clear_history();
 }
