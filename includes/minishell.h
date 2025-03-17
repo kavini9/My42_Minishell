@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/12 15:04:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:37:22 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_msh
 
 # include "../lib/libft/libft.h"
 # include "envp.h"
-//# include "parse.h"
+# include "parse.h"
 //# include "execute.h"
 //# include "builtin.h"
 //# include "signal.h"
