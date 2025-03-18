@@ -6,12 +6,12 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/17 18:24:09 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:06:52 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
-
+//#include "../../includes/minishell.h"
+# include "parse.h"
 
 #include <stdio.h>
 #include <stdlib.h>

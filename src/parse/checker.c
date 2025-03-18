@@ -6,11 +6,12 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/17 19:02:42 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:30:54 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+//#include "../../includes/minishell.h"
+# include "parse.h"
 
 /**
  * check_quotes - Checks for unclosed quotes within a given line.

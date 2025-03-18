@@ -6,56 +6,37 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:50:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/14 19:01:00 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:01:02 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include "packer.h"
 
 /**
- * process_trailing_pipe - Handles commands ending with a pipe (`|`).
+ * finalize_pipe_processing - Restores input state and finalizes handling.
  *
- * @shell: Pointer to the shell structure managing state information.
- * @line: Current input string to be extended.
+ * @shell: Shell structure managing shell state.
+ * @line: Processed input string to be returned.
  *
- * This function deals with cases where the input ends with
- * a trailing pipe (`|`), meaning additional input is needed.
- * It continuously prompts the user with a secondary prompt (`>`)
- * until a valid input is received or the operation is canceled.
+ * Restores the original standard input and ensures proper cleanup.
+ * Closes any saved file descriptors and resets shell state.
  *
- * - Saves the current standard input for restoration later.
- * - Captures user input and appends it if valid.
- * - If canceled (CTRL+C) or an error occurs, frees memory and returns NULL.
- *
- * Return: The updated input string with appended input, or NULL on failure.
+ * Return: The processed input string, or NULL on failure.
  */
-char *process_trailing_pipe(t_shell *shell, char *line)
+static char *finalize_pipe_processing(t_shell *shell, char *line)
 {
-	char *additional_input;
-
-	additional_input = NULL;
-	signal(SIGINT, sig_handler_hd);
-	shell->stdin_saved = dup(STDIN_FILENO);
-	if (shell->stdin_saved == -1)
+	if (restore_and_cleanup(shell, 0, 0) != 0)
 	{
-		perror("Failed to save STDIN");
+		free(line);
 		return (NULL);
 	}
-	while (1)
+	if (shell->stdin_saved != -1)
 	{
-		additional_input = readline("> ");
-		if (!additional_input || g_sig == SIGINT)
-		{
-			g_sig = 0;
-			shell->exit_stat = restore_and_cleanup(shell, -1, 1);
-			free(line);
-			return (NULL);
-		}
-		if (!is_input_empty(additional_input))
-			return (concat_and_cleanup(shell, line, additional_input));
-		free(additional_input);
+		close(shell->stdin_saved);
+		shell->stdin_saved = -1;
 	}
-	return (finalize_pipe_processing(shell, line));
+	return (line);
 }
 
 /**
@@ -89,27 +70,51 @@ static char *concat_and_cleanup(t_shell *shell, char *line, char *additional_inp
 }
 
 /**
- * finalize_pipe_processing - Restores input state and finalizes handling.
+ * process_trailing_pipe - Handles commands ending with a pipe (`|`).
  *
- * @shell: Shell structure managing shell state.
- * @line: Processed input string to be returned.
+ * @shell: Pointer to the shell structure managing state information.
+ * @line: Current input string to be extended.
  *
- * Restores the original standard input and ensures proper cleanup.
- * Closes any saved file descriptors and resets shell state.
+ * This function deals with cases where the input ends with
+ * a trailing pipe (`|`), meaning additional input is needed.
+ * It continuously prompts the user with a secondary prompt (`>`)
+ * until a valid input is received or the operation is canceled.
  *
- * Return: The processed input string, or NULL on failure.
+ * - Saves the current standard input for restoration later.
+ * - Captures user input and appends it if valid.
+ * - If canceled (CTRL+C) or an error occurs, frees memory and returns NULL.
+ *
+ * Return: The updated input string with appended input, or NULL on failure.
  */
-static char *finalize_pipe_processing(t_shell *shell, char *line)
+char *get_trailing_input(t_msh *msh, char *line)
 {
-	if (restore_and_cleanup(shell, 0, 0) != 0)
+	char *additional_input;
+
+	additional_input = NULL;
+	signal(SIGINT, sig_handler_hd);
+	msh->stdin_saved = dup(STDIN_FILENO);
+	if (shell->stdin_saved == -1)
 	{
-		free(line);
+		perror("Failed to save STDIN");
 		return (NULL);
 	}
-	if (shell->stdin_saved != -1)
+	while (1)
 	{
-		close(shell->stdin_saved);
-		shell->stdin_saved = -1;
+		additional_input = readline("> ");
+		if (!additional_input || g_sig == SIGINT)
+		{
+			g_sig = 0;
+			shell->exit_stat = restore_and_cleanup(shell, -1, 1);
+			free(line);
+			return (NULL);
+		}
+		if (!is_input_empty(additional_input))
+			return (concat_and_cleanup(shell, line, additional_input));
+		free(additional_input);
 	}
-	return (line);
+	return (finalize_pipe_processing(shell, line));
 }
+
+
+
+
