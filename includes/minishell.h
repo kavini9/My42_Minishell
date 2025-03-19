@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/17 17:37:22 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:38:37 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,10 @@ typedef struct s_msh
 
 # include "../lib/libft/libft.h"
 # include "envp.h"
-# include "parse.h"
+# include "../src/parse/parse.h"
 //# include "execute.h"
 //# include "builtin.h"
-//# include "signal.h"
+# include "../src/signal/signal.h"
 
 
 
