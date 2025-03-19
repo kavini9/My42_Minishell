@@ -6,12 +6,11 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/18 16:13:08 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:01:33 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../../includes/minishell.h"
-# include "parse.h"
+#include "../../includes/minishell.h"
 
 /**
  * validate_pipe_position - Ensures valid syntax for a specific pipe (`|`) operator.

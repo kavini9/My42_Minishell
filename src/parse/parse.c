@@ -6,12 +6,11 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/18 16:06:52 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:56:12 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../../includes/minishell.h"
-# include "parse.h"
+#include "../../includes/minishell.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,8 +32,7 @@ int handle_unmatched_quotes(char **line)
     // Keep asking for more input if quotes are unmatched
     while (check_quotes(*line, ft_strlen(*line)))
     {
-        ft_putendl_fd("> ", 1); // Display continuation prompt
-        extra_line = readline(""); // Read additional user input
+        extra_line = readline(">"); // Read additional user input
 
         // If user presses Ctrl+D (EOF), just exit gracefully without an error
         if (!extra_line)
