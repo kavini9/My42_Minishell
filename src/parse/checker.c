@@ -6,12 +6,11 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/18 15:30:54 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:51:46 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "../../includes/minishell.h"
-# include "parse.h"
+#include "../../includes/minishell.h"
 
 /**
  * check_quotes - Checks for unclosed quotes within a given line.
@@ -49,17 +48,44 @@ int	check_quotes(char *line, int limit)
 	return (single_quote || double_quote);
 }
 
-
-int	is_this_empty(char *line)
+int	ft_isspace(char c)
 {
-	while (*line)
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\v' )
 	{
-		if (!ft_isspace(*line))
-			return (0);
-		line++;
+		return (1);
 	}
-	return (1);
+	else
+		return (0);
 }
+
+/**
+ * is_this_empty - Checks if a given string consists only of whitespace.
+ *
+ * @input: The input string to check.
+ *
+ * This function iterates through the string and determines whether it 
+ * contains only whitespace characters (spaces, tabs, newlines, etc.).
+ * 
+ * If a non-whitespace character is found, the function returns 0. 
+ * Otherwise, if the string is empty or consists entirely of whitespace, 
+ * it returns 1.
+ *
+ * Return: 1 if the string is NULL, empty, or only whitespace, 0 otherwise.
+ */
+int is_input_empty(const char *input)
+{
+    if (!input) // Check if the input pointer is NULL.
+        return 1;
+
+    while (*input)
+    {
+        if (!ft_isspace(*input)) // Check if the character is not a whitespace.
+            return 0; // Input is not empty.
+        input++;
+    }
+    return 1; // Input is empty.
+}
+
 
 int	skip_whitespace(char *str, int i)
 {
@@ -67,3 +93,4 @@ int	skip_whitespace(char *str, int i)
 		i++;
 	return (i);
 }
+
