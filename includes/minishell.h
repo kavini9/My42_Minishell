@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/12 15:04:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/19 20:09:16 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,26 @@
 # include <string.h> //for strerror(errnum)
 # include <errno.h> //for using errno in strerror
 
+typedef enum e_do_err {
+    LOG   = 0b001,
+	CLEAN = 0b010,
+	EXIT  = 0b100
+} t_do_err;
+
+typedef enum e_err_type{
+	ERR_SYS_FUNC,
+	ERR_MALLOC,
+	
+} t_err_type;
+
 typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
 	char	*prompt;
-	int		exit_code;
 	char	**envl;
-//	t_token	*tokenl;
+	t_token	*tokenl;
+	int		exit_code;
 } t_msh;
 
 # include "../lib/libft/libft.h"
@@ -50,7 +62,7 @@ typedef struct s_msh
 
 void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);
-int	msh_clean(t_msh *msh, int err_out);
+int	msh_clean(t_msh *msh);
 int err_out(char *msg);
 
 #endif

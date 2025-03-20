@@ -6,13 +6,14 @@
 #    By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/25 18:55:54 by wweerasi          #+#    #+#              #
-#    Updated: 2024/10/27 16:23:24 by wweerasi         ###   ########.fr        #
+#    Updated: 2025/03/19 16:06:49 by wweerasi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
 GNL_DIR = gnl
+PRINTF_DIR = printf_fd
 
 SOURCES = ft_isalpha.c \
 		  ft_isdigit.c \
@@ -63,11 +64,18 @@ BONUS_SOURCES = ft_lstnew_bonus.c \
 
 GNL_SOURCES = $(GNL_DIR)/get_next_line.c
 
+PRINTF_SOURCES = $(PRINTF_DIR)/printf_fd.c \
+				 $(PRINTF_DIR)/putnbr_fd.c \
+		  		 $(PRINTF_DIR)/putnbr_u_fd.c \
+				 $(PRINTF_DIR)/putstr_fd.c \
+				 $(PRINTF_DIR)/putchar_fd.c \
+
 OBJECTS = $(SOURCES:.c=.o)
 BONUS_OBJECTS = $(BONUS_SOURCES:.c=.o)
 GNL_OBJECTS = $(notdir $(GNL_SOURCES:.c=.o))
+PRINTF_OBJECTS = $(notdir $(PRINTF_SOURCES:.c=.o))
 
-HEADER = libft.h $(GNL_DIR)/get_next_line.h
+HEADER = libft.h $(GNL_DIR)/get_next_line.h $(PRINTF_DIR)/printf_fd.h
 
 CC = cc
 
@@ -85,8 +93,11 @@ all: $(NAME)
 %.o: $(GNL_DIR)/%.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(OBJECTS) $(GNL_OBJECTS)
-	$(AR) $(NAME) $(OBJECTS) $(GNL_OBJECTS)
+%.o: $(PRINTF_DIR)/%.c $(HEADER)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(NAME): $(OBJECTS) $(GNL_OBJECTS) $(PRINTF_OBJECTS)
+	$(AR) $(NAME) $(OBJECTS) $(GNL_OBJECTS) $(PRINTF_OBJECTS)
 
 bonus: .bonus
 
@@ -95,7 +106,7 @@ bonus: .bonus
 	@touch .bonus
 
 clean:
-	$(RM) $(OBJECTS) $(BONUS_OBJECTS) $(GNL_OBJECTS)
+	$(RM) $(OBJECTS) $(BONUS_OBJECTS) $(GNL_OBJECTS) $(PRINTF_OBJECTS)
 	@$(RM) .bonus
 
 fclean: clean

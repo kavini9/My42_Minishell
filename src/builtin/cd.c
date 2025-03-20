@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/18 19:09:35 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/20 19:15:37 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,29 @@ void    cd_tilde(t_msh *msh, char *tilde_path)
         return (msh_warning("minishell: cd: HOME not set"));
     path = ft_strjoin(home, tilde_path + 1);
     if (!path)
-        exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail joining home and tilde path.
+    msh_error(msh, LOG|CLEAN|EXIT, ERR_MALLOC, NULL);//ERROR_MESSAGE
     if (chdir(path) == -1)
     {
         free(path);
+        msh_error(msh, LOG, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
         msh_error(msh, perror("minishell: cd"));//TODO: this should exit minishell.
     }
     free(path);
     return(pwd_update(msh));//TODO: write functon. 
 }
 
+//cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 void    cd_path(t_msh *msh, char *path)
 {
     char    *cwd;
     
     if (chdir(path) == -1)
-        return (msh_warning("minishell: cd:", path , perror(""), NULL));//TODO: create mechanism to write error messages.
+        return(msh_error(msh, LOG, ERR_SYS_FUNC, "chdir"));//ERROR_MESSAGE
     cwd = getcwd(NULL, 0);
     if (!cwd && errno == ENOENT)
         return(unlinked_cwd(msh, path));  //TODO:write function
     else if (!cwd)
-        exit(msh_clean(msh, err_out(strerror(errno))));//TODO: sysfunc getcwd failed.
+        msh_error(msh, LOG, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
     free(cwd);
     return (pwd_update(msh));
 }
@@ -65,7 +67,7 @@ void    builtin_cd(t_msh *msh, char **cmd)
 {
     if (cmd[2])
         msh_error("minishell: cd: too many arguments\n");//TODO: should not exit minishell but prints error message.
-    else if (!cmd[1] || ft_strcmp(cmd[1], "~") || ft_strcmp(cmd[1], "--"))//DES: used with -filename to indicate end of options.
+    else if (!cmd[1] || ft_strcmp(cmd[1], "~") || ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
         cd_env_var(msh, "HOME");
     else if (cmd[1][0] == '~')
         cd_tilde(msh, cmd[1]);
@@ -74,3 +76,5 @@ void    builtin_cd(t_msh *msh, char **cmd)
     else
         cd_path(msh, cmd[1]);
 }
+
+//TODO: find a way to update exit status
