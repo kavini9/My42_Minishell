@@ -11,7 +11,9 @@
 # include <string.h>            // for strerror(errnum)
 # include <errno.h>             // for using errno in strerror
 # include <signal.h>            // for signal handling
-// #include "../../includes/minishell.h"  // Ensure t_msh and other necessary types are included
+
+#include <stddef.h>  // For NULL
+#include "../../includes/minishell.h"  // Ensure t_msh and other necessary types are included
 extern int g_sig;
 
 /**
@@ -23,6 +25,29 @@ typedef struct s_cmd
     int           cmd_index;   // Index of the command in the pipeline
     struct s_cmd *next;        // Pointer to the next command in the pipeline
 } t_cmd;
+
+
+
+// Command structure definition
+typedef struct s_cmd {
+    char    *cmd_name;           // Name of the command (e.g., "ls", "echo")
+    char    *cmd_path;           // Path to the command (e.g., "/bin/ls")
+    int     cmd_index;           // Index for the command in a pipeline
+    char    **cmd_args;          // Array of arguments passed to the command
+    int     cmd_arg_count;       // Number of arguments
+    void    *redir_start;        // First redirection (could be file path or other structure)
+    void    *redir_end;          // Last redirection (could be file path or other structure)
+    int     input_fd;            // File descriptor for input redirection
+    int     output_fd;           // File descriptor for output redirection
+    int     cmd_exit_status;     // Exit status of the command
+} t_cmd;
+
+//command functions
+void clean_cmds(t_cmd **cmds);                              // Cleans up allocated memory for command structures
+int build_command_structs(t_msh *cmd, char *input);          // Builds command structures from the input
+int allocate_command_structs(t_msh *cmd, int cmd_count);    // Allocates and initializes command structures
+void initialize_command(t_cmd *cmd);                         // Initializes a command structure
+int count_pipes(char *line);   
 
 // Function Prototypes
 

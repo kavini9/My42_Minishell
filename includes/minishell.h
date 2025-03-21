@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/19 16:38:37 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:47:14 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 
 typedef struct s_msh
 {
+	t_cmd	**cmds; // fr command.c
+	int		cmd_count; //  for command.c
 	char	*cwd;
 	char	*old_wd;
 	char	*prompt;
