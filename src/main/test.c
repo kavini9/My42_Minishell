@@ -1,10 +1,23 @@
 #include "../../includes/minishell.h"
 
+static void	format_print_x_var(char *x_var)
+{
+	char	*eq;
+	char	*key;
+
+	eq = ft_strchr(x_var, '=');
+	key = ft_substr(x_var, 0, eq - x_var);
+	if (!key)
+		printf("error\n");
+	printf("declare -x %s=\"%s\"\n", key, eq + 1);
+	free(key);	
+}
+
 static void    display_x_var(char **envl, char *floor)
 {
     char    **lex_min;
     char    **iter;
-    int len;
+    int	len;
     
     iter = envl;
     len = 0;
@@ -14,7 +27,7 @@ static void    display_x_var(char **envl, char *floor)
     {
         lex_min = envl;
         iter = envl;
-        while(*lex_min && ft_strcmp(*lex_min, floor) > 0)
+        while(*lex_min && !(ft_strcmp(*lex_min, floor) > 0))
             lex_min++;
         while (*iter)
         {
@@ -22,7 +35,7 @@ static void    display_x_var(char **envl, char *floor)
                 lex_min = iter;
             iter++;
         }
-        printf("declare -x %s\n", *lex_min);
+        format_print_x_var(*lex_min);
         floor = *lex_min;
     }  
 }
