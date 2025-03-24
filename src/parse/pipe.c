@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/19 17:01:33 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/24 13:30:28 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,28 +112,28 @@ static int	handle_trailing_pipe(t_msh *msh, char **line)
 }
 
 /**
- * validate_pipe - Validates the syntax of pipes ('|') in the input command.
+ * validate_pipe - Validates the syntax of pipe characters ('|') in the input command.
  *
  * @line: Pointer to the command line input.
  * @msh: Pointer to the minishell structure storing shell state.
  * 
  * This function enforces Bash-like syntax rules for pipes:
- * - Detects a pipe (`|`) at the start of the command and prints an error.
- * - Detects consecutive pipes (`||` or `| |`) and reports an error.
- * - Detects a trailing pipe (`ls |`) and prompts for additional input.
- * - Ensures pipes inside quotes do not trigger errors.
- * 
- * If an error is found, an appropriate error message is printed, and 
- * the exit code is set to 2.
- * 
+ * - Detects if the command starts with a pipe (`|`), which is a syntax error.
+ * - Detects consecutive pipes (`||` or `| |`), reporting a syntax error.
+ * - Detects a trailing pipe (e.g., `ls |`), prompting for additional input.
+ * - Ensures that pipes inside quotes are not treated as errors (quotes are ignored).
+ *
+ * If an invalid pipe usage is detected, an error message is printed, 
+ * and the exit code is set to 2.
+ *
  * Return:
- * - 1 if an invalid pipe usage is detected.
+ * - 1 if an invalid pipe usage is detected (syntax error).
  * - 0 if the pipe usage is valid.
  */
 int	validate_pipe(char **line, t_msh *msh)
 {
 	int	i;
-	int j;
+	int	j;
 
 	i = skip_whitespace(*line, 0);
 
@@ -145,15 +145,17 @@ int	validate_pipe(char **line, t_msh *msh)
 			j++;
 
 		ft_putstr_fd("syntax error near unexpected token `", 2);
-		write(2, *line + i, j - i); // Print exact token
+		write(2, *line + i, j - i); // Print the exact token that caused the error
 		ft_putendl_fd("'", 2);
 		msh->exit_code = 2;
 		return (1);
 	}
 
+	// Check for other invalid pipe usages: consecutive pipes or trailing pipe
 	if (detect_consecutive_pipes(*line, msh) || handle_trailing_pipe(msh, line))
 		return (1);
 
 	return (0);
 }
+
  

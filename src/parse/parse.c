@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/21 11:42:24 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/24 15:51:06 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int validate_input(char **line, t_msh *msh)
 /**
  * validate_and_parse - Validates and processes user input for execution.
  * @line: Pointer to the user input string.
- * @shell: Pointer to the shell structure.
+ * @msh: Pointer to the msh structure.
  *
  * This function:
  * - Calls `validate_input` to check for syntax errors.
@@ -113,17 +113,16 @@ int msh_parse(char **line, t_msh *msh)
         return (1);
 
     // Prepare command structures for execution
-    if (build_command_structs(msh, *line))
+    if (build_token_structs(msh, *line))
         return (1);
 
-/*     // Split input into commands based on pipes
-    if (split_input_by_pipes(*line, shell))
+    // Split input into commands based on pipes
+    if (split_line (*line, msh))
         return (1);
 
     // Parse commands into structured format for execution
-    if (parse_input(shell))
+    if (parse_line(msh))
         return (1);
- */
     return (0);
 }
 

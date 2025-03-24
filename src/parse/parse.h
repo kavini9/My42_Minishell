@@ -2,7 +2,6 @@
 #define PARSE_H
 
 # include "../../lib/libft/libft.h"
-
 # include <stdbool.h>
 # include <readline/readline.h> // for readline
 # include <readline/history.h>  // for add_history function
@@ -11,43 +10,41 @@
 # include <string.h>            // for strerror(errnum)
 # include <errno.h>             // for using errno in strerror
 # include <signal.h>            // for signal handling
-
 #include <stddef.h>  // For NULL
 #include "../../includes/minishell.h"  // Ensure t_msh and other necessary types are included
+
 extern int g_sig;
 
 /**
- * Structure representing a parsed command.
+ * Structure representing a parsed command token.
  */
-typedef struct s_cmd
+typedef struct s_token
 {
-    char          **args;      // Array of command arguments
-    int           cmd_index;   // Index of the command in the pipeline
-    struct s_cmd *next;        // Pointer to the next command in the pipeline
-} t_cmd;
+    char    *seg;
+    char    *token_name;          // Name of the token (e.g., "ls", "echo")
+    char    *token_path;          // Path to the token (e.g., "/bin/ls")
+    int     token_index;          // Index for the token in a pipeline
+    char    **token_args;         // Array of arguments passed to the token
+    int     token_arg_count;      // Number of arguments
+    void    *redir_start;         // First redirection (could be file path or other structure)
+    void    *redir_end;           // Last redirection (could be file path or other structure)
+    int     input_fd;             // File descriptor for input redirection
+    int     output_fd;            // File descriptor for output redirection
+    int     token_exit_status;    // Exit status of the token
+    struct s_token *next;         // Pointer to the next token in the pipeline
+} t_token;
 
+// Token functions
+void clean_tokens(t_token **tokens);                      // Cleans up allocated memory for token structures
+int build_token_structs(t_msh *msh, char *input);         // Builds token structures from the input
+int allocate_token_structs(t_msh *msh, int token_count);  // Allocates and initializes token structures
+void initialize_token(t_token *token);                    // Initializes a token structure
+int count_pipes(char *line);                              // Counts the number of pipe symbols in the input
 
-
-// Command structure definition
-typedef struct s_cmd {
-    char    *cmd_name;           // Name of the command (e.g., "ls", "echo")
-    char    *cmd_path;           // Path to the command (e.g., "/bin/ls")
-    int     cmd_index;           // Index for the command in a pipeline
-    char    **cmd_args;          // Array of arguments passed to the command
-    int     cmd_arg_count;       // Number of arguments
-    void    *redir_start;        // First redirection (could be file path or other structure)
-    void    *redir_end;          // Last redirection (could be file path or other structure)
-    int     input_fd;            // File descriptor for input redirection
-    int     output_fd;           // File descriptor for output redirection
-    int     cmd_exit_status;     // Exit status of the command
-} t_cmd;
-
-//command functions
-void clean_cmds(t_cmd **cmds);                              // Cleans up allocated memory for command structures
-int build_command_structs(t_msh *cmd, char *input);          // Builds command structures from the input
-int allocate_command_structs(t_msh *cmd, int cmd_count);    // Allocates and initializes command structures
-void initialize_command(t_cmd *cmd);                         // Initializes a command structure
-int count_pipes(char *line);   
+// New functions added for line splitting
+char *trim_whitespace(char *seg); // Trims leading and trailing whitespace from a string
+int segment_handler(t_token *token, char *line, int start, int end); // Handles extracting and trimming segments
+int split_line(char *line, t_msh *msh); // Splits the line into tokens, respecting quoted pipes
 
 // Function Prototypes
 
@@ -64,14 +61,14 @@ int handle_unmatched_quotes(char **line);
 int  msh_parse(char **line, t_msh *msh);
 int  validate_input_syntax(char **input, t_msh *msh);
 int  parse_input(t_msh *msh);
-int  parse_cmd_string(t_msh *msh, t_cmd *cmd);
-int  cmd_string_while(t_msh *msh, t_cmd *cmd, int i, int *cmd_found);
+int  parse_cmd_string(t_msh *msh, t_token *token);
+int  cmd_string_while(t_msh *msh, t_token *token, int i, int *cmd_found);
 int validate_input(char **line, t_msh *msh);
 
 // Command list management
 void add_cmd(t_msh *msh, char **args);
-t_cmd *create_cmd(char **args);
-void free_cmd_list(t_cmd *cmd_list);
+t_token *create_cmd(char **args);
+void free_cmd_list(t_token *cmd_list);
 
 // Handling trailing input and signals
 char *get_trailing_input(t_msh *msh, char *line);
@@ -83,8 +80,5 @@ int check_redirects(char *line, t_msh *msh);
 static int check_in_redir(char *line, t_msh *msh, int *i);
 static int check_out_redir(char *line, t_msh *msh, int *i);
 static int validate_redirect(char *line, t_msh *msh, int *i, char *type);
-
-// External global variable (ensure it is defined elsewhere)
-//extern int g_sig;
 
 #endif
