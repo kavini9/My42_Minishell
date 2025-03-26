@@ -6,40 +6,11 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:53:48 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/12 15:44:03 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/26 18:56:50 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
-
-// t_env	*new_env_var(char *var, char *val, int var_len)
-// {
-// 	t_env	*node;
-
-// 	node = malloc(sizeof(t_env));
-// 	if (node != NULL)
-// 	{
-// 		ft_memcpy(node -> var, (const void *) var, var_len);
-// 		node -> val = val;
-//         node -> next = NULL;
-// 	}
-// 	return (node);
-// }
-
-// void duplicate_env(t_msh *msh, char **envp)
-// {
-//     char    eq;
-//     char    *val;
-    
-// 	if (!envp || !*envp)
-// 		return(gen_basic_envl(msh, envp));
-// 	while (*envp)
-// 	{
-//         eq = ft_strchr(*envp, '=');
-//         if (!msh -> envl)
-//             new_env_var(*envp, eq + 1, (eq - *envp));
-// 	}
-// }
 
 void	generate_mini_env(t_msh *msh)
 {

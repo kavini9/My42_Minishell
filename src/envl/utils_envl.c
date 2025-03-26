@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/26 18:41:30 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/26 22:09:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,20 @@ void    add_env_var(t_msh *msh, char **envl, char *entry)
 {
     int env_len;
     char **env_new;
+	char *tmp;
 
     env_len = 0;
     while (envl[env_len])
         env_len++;
     env_new = ft_calloc(env_len + 2, sizeof(char *));
     if (!env_new)
-        exit(printf("\033[1;31add_env_var env_new big array error\n\033[0m")); //TODO: 
+        exit(printf("\033[1;31madd_env_var env_new big array error\n\033[0m")); //TODO: 
     ft_memcpy(env_new, envl, env_len * sizeof(char *));
-    env_new[env_len]  = ft_strdup(entry);
-    if (!env_new[env_len])
-        exit(printf("\033[1;31add_env_var env_new entry error\n\033[0m")); //TODO:
+	tmp = env_new[env_len - 1];
+    env_new[env_len - 1]  = ft_strdup(entry);
+    if (!env_new[env_len - 1])
+        exit(printf("\033[1;31madd_env_var env_new entry error\n\033[0m")); //TODO:
+    env_new[env_len] = tmp;
     env_new[++env_len] = NULL;
     free(envl);
     msh -> envl = env_new;

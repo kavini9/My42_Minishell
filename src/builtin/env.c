@@ -6,13 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 21:08:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/20 21:30:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/26 21:52:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
 
-void    builtin_env(t_msh *msh)
+void    builtin_env(t_msh *msh, char **cmd)
 {
-    
+    if ()
 }
