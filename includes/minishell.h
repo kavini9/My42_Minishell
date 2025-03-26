@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:03 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/25 22:27:38 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_msh
 
 void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);
-int	msh_clean(t_msh *msh);
+//void	msh_clean(t_msh *msh);
 int err_out(char *msg);
 
 #endif
