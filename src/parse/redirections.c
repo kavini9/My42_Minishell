@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:25:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/21 11:11:03 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/26 12:24:07 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,13 @@ static int validate_redirect(char *line, t_msh *msh, int *i, char *type)
 	// Check for invalid tokens after the redirection operator
 	if (!line[*i] || line[*i] == '|' || line[*i] == '<' || line[*i] == '>') //  do we need to add | in here???
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		if (!line[*i])
+			ft_putstr_fd("newline", 2);
+		else
+			write(2, &line[*i], 1);
+		ft_putstr_fd("'\n", 2);
+
 		msh->exit_code = 2;
 		return (1);
 	}

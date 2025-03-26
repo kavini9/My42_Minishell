@@ -6,19 +6,11 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/24 15:51:06 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/26 10:38:37 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 /**
  * Handles unmatched quotes by allowing multiline input.

@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:00:53 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/24 13:51:11 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/25 17:47:40 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
  */
 void initialize_token(t_token *token)
 {
-    token->token_name = NULL;           // Initialize the token name as NULL
-    token->token_path = NULL;           // Initialize the token path as NULL
+    token->command = NULL;           // Initialize the token name as NULL
+    token->command_path = NULL;           // Initialize the token path as NULL
     token->token_index = 0;             // Initialize the token index to 0
     token->token_args = NULL;           // Initialize the token arguments as NULL
     token->token_arg_count = 0;         // Initialize the argument count to 0
