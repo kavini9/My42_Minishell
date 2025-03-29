@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/26 22:09:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/29 00:55:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,5 +87,13 @@ void    set_env(t_msh *msh, char **envl, char *entry)
         return(overwrite_env_var(env_iter, entry));
 }
   
-    
+void    update_env(t_msh *msh, char *key, char *value)
+{
+    char *entry;
+
+    entry = ft_strjoin(key, value);
+    if(!entry)
+        exit(printf("malloc fail")); //TODO;
+    set_env(msh, msh -> envl, entry);
+}    
     

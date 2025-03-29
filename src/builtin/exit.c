@@ -6,7 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:24 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/23 22:57:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/29 05:50:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include "../../includes/minishell.h"
+
+void    builtin_exit(t_msh *msh, char **cmd)
+{
+    
+}
