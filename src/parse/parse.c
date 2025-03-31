@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/26 10:38:37 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/31 11:40:47 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ int msh_parse(char **line, t_msh *msh)
         return (1);
 
     // Parse commands into structured format for execution
-    if (parse_line(msh))
+    if (parse_line (msh))
         return (1);
     return (0);
 }

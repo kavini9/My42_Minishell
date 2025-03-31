@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:07:44 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/26 12:35:05 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/28 12:11:34 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void clean_tokens(t_token **tokens)
     while (tokens[i])
     {
         // Free token arguments
-        ft_free_array(tokens[i]->token_args);
+        ft_free_array(tokens[i]->args);
 
         // Free command string and path
         if (tokens[i]->command)
@@ -53,4 +53,35 @@ void clean_tokens(t_token **tokens)
 
     // Free the token array itself
     free(tokens);
+}
+
+/**
+ * unlink_all_heredocs - Deletes all temporary heredoc files from tokens.
+ *
+ * @msh: Pointer to the shell structure containing the parsed token list.
+ *
+ * Iterates through each token's redirection list and removes any temporary
+ * files created for heredoc (<<) redirections. Frees associated memory
+ * and resets the heredoc filename pointer to NULL.
+ */
+void unlink_all_heredocs(t_msh *msh)
+{
+	t_redir *redir;
+	int i = 0;
+
+	while (msh->tokens[i])
+	{
+		redir = msh->tokens[i]->redir_start;
+		while (redir)
+		{
+			if (redir->type == HEREDOC && redir->heredoc_name)
+			{
+				unlink(redir->heredoc_name);
+				free(redir->heredoc_name);
+				redir->heredoc_name = NULL;
+			}
+			redir = redir->next;
+		}
+		i++;
+	}
 }
