@@ -1,28 +1,189 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/31 12:24:31 by aoshinth          #+#    #+#             */
+/*   Updated: 2025/03/31 12:24:44 by aoshinth         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSE_H
 #define PARSE_H
 
-#include <stdbool.h>
+/**
+ * @file parse.h
+ * @brief Header for parsing and input validation in Minishell.
+ *
+ * Contains struct definitions and function declarations related to
+ * command parsing, validation, expansion, redirections, heredocs,
+ * and quote/variable processing.
+ */
 
-typedef struct s_cmd
+# include "../../lib/libft/libft.h"
+# include <stdbool.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <errno.h>
+# include <signal.h>
+# include <stddef.h>
+# include "../../includes/minishell.h"
+
+extern int g_sig;
+
+/* ────────────────────────────────────────────────────────────── */
+/*                       ENUMERATIONS                             */
+/* ────────────────────────────────────────────────────────────── */
+
+typedef enum e_redir_type
 {
-    char            **args;
-    int             cmd_index;
-    struct s_cmd   *next;
-} t_cmd;
+	REDIRECT_IN,
+	REDIRECT_OUT,
+	APPEND,
+	HEREDOC
+}	t_redir_type;
 
-typedef struct s_shell
+/* ────────────────────────────────────────────────────────────── */
+/*                     STRUCTURES                                 */
+/* ────────────────────────────────────────────────────────────── */
+
+typedef struct s_vdata
 {
-    t_cmd   *cmds;
-    int     exit_stat;
-} t_shell;
+	char	*value;
+	char	**expan;
+	char	*temp;
+	char	*name;
+}	t_vdata;
 
-// Function Prototypes
-int     parse_and_validate_input(char **input, t_shell *mini);
-int     validate_input_syntax(char **input, t_shell *mini);
-int     parse_input(t_shell *mini);
-int     parse_cmd_string(t_shell *mini, t_cmd *cmd);
-int     cmd_string_while(t_shell *mini, t_cmd *cmd, int i, int *cmd_found);
-void    add_cmd(t_shell *mini, char **args);
-t_cmd   *create_cmd(char **args);
+typedef struct s_expand
+{
+	int		sgl;
+	int		dbl;
+	int		i;
+	char	*name;
+	char	*value;
+	int		start;
+}	t_expand;
 
-#endif
+typedef struct s_redir
+{
+	char			*file;
+	char			*delimiter;
+	t_redir_type	type;
+	bool			expand;
+	char			*heredoc_name;
+	int				heredoc_index;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_token
+{
+	char			*seg;
+	char			*command;
+	char			*command_path;
+	int				token_index;
+	char			**args;
+	int				arg_count;
+	void			*redir_start;
+	void			*redir_end;
+	int				input_fd;
+	int				output_fd;
+	int				token_exit_status;
+	struct s_token	*next;
+}	t_token;
+
+/* ────────────────────────────────────────────────────────────── */
+/*                TOKEN ALLOCATION & INITIALIZATION              */
+/* ────────────────────────────────────────────────────────────── */
+
+void	clean_tokens(t_token **tokens);
+int		build_token_structs(t_msh *msh, char *input);
+int		allocate_token_structs(t_msh *msh, int token_count);
+void	initialize_token(t_token *token);
+int		count_pipes(char *line);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                   LINE SPLITTING & SEGMENTS                   */
+/* ────────────────────────────────────────────────────────────── */
+
+char	*trim_whitespace(char *seg);
+int		segment_handler(t_token *token, char *line, int start, int end);
+int		split_line(char *line, t_msh *msh);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                      REDIRECTION CHECKING                     */
+/* ────────────────────────────────────────────────────────────── */
+
+int		check_redirects(char *line, t_msh *msh);
+int		validate_redirect(char *line, t_msh *msh, int *i, char *type);
+int		we_have_heredoc(t_expand *arg, char *str, int n);
+void	unlink_all_heredocs(t_msh *msh);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                     SYNTAX & PIPE VALIDATION                  */
+/* ────────────────────────────────────────────────────────────── */
+
+int		check_quotes(char *line, int length);
+int		skip_whitespace(char *str, int i);
+int		ft_isspace(char c);
+int		validate_pipe(char **line, t_msh *msh);
+int		is_input_empty(const char *input);
+int		handle_unmatched_quotes(char **line);
+int		validate_input(char **line, t_msh *msh);
+int		validate_input_syntax(char **input, t_msh *msh);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                       PARSING PIPELINE                        */
+/* ────────────────────────────────────────────────────────────── */
+
+int		msh_parse(char **line, t_msh *msh);
+int		parse_input(t_msh *msh);
+int		parse_cmd_string(t_msh *msh, t_token *token);
+int		cmd_string_while(t_msh *msh, t_token *token, int i, int *cmd_found);
+int		parse_line(t_msh *msh);
+int		no_args(t_token *cmd, int i);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                  EXPANSION & QUOTE HANDLING                   */
+/* ────────────────────────────────────────────────────────────── */
+
+int		handle_expand(t_msh *msh, t_token **token);
+int		init_expansion(t_expand *arg, char **expan);
+int		the_arg(t_expand *arg, int i);
+void	what_quote(char *str, t_expand *arg);
+int		handle_question(t_msh *msh, char *str, char **expan, t_expand *arg);
+int		new_result(t_expand *arg, char *temp);
+int		oh_a_dollar(t_msh *msh, char *str, char **expan, t_expand *arg);
+int		we_have_dollar(t_msh *msh, t_expand *arg, char *str);
+int		tildes_home(t_msh *msh, char *str, char **expan, t_expand *arg);
+int		handle_value(t_msh *msh, t_vdata *data);
+char	*get_value(t_env *env, char *name);
+char	*ft_strjoin_char(char *str, char c);
+void	just_a_quest(char *str, char *name, int *indx, t_expand *arg);
+void	we_need_name(t_expand *arg, char *str, char *name, int *indx);
+int		s_unquoted(t_msh *msh, t_token **cmd, t_expand *arg, char **expan);
+int		no_quotes(t_msh *msh, t_token *cmd, int i, t_expand *arg);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                 COMMAND LIST MANAGEMENT                       */
+/* ────────────────────────────────────────────────────────────── */
+
+void	add_cmd(t_msh *msh, char **args);
+t_token	*create_cmd(char **args);
+void	free_cmd_list(t_token *cmd_list);
+
+/* ────────────────────────────────────────────────────────────── */
+/*                   SIGNAL HANDLING                             */
+/* ────────────────────────────────────────────────────────────── */
+
+char	*get_trailing_input(t_msh *msh, char *line);
+void	sigint_handler(int sig);
+void	sig_handler_heredoc(int sig);
+void	sig_handler_hd(int sig);
+
+#endif // PARSE_H

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/25 22:27:38 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:55:44 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,23 @@ typedef enum e_err_type{
 
 typedef struct s_msh
 {
+	int		cmd_count; //  for command.c
 	char	*cwd;
 	char	*old_wd;
 	char	*prompt;
 	char	**envl;
-//	t_token	*tokenl;
+	t_token	**tokens;
+	char	**envl;
+	t_token	*tokenl;
 	int		exit_code;
 } t_msh;
 
 # include "../lib/libft/libft.h"
 # include "envp.h"
-//# include "parse.h"
+# include "../src/parse/parse.h"
 //# include "execute.h"
 //# include "builtin.h"
-//# include "signal.h"
+# include "../src/signal/signal.h"
 
 
 
