@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/25 22:16:23 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/03/31 13:24:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		if (*line)
 		{
+			//validation(line);
 			add_history(line);
 			printf("line entered: %s\n", line);
 //			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
@@ -59,14 +60,14 @@ void	msh_loop(t_msh *msh)
 // 	return(1); //temporary exitcodes. will be changed later
 // }
 
-void print_envl(t_msh	*msh) //SUCCESS: unit test for envl duplication.
-{
-	while (*msh -> envl)
-	{
-		printf("%s\n", *msh -> envl);
-		msh -> envl++;
-	}
-}
+// void print_envl(t_msh	*msh) //SUCCESS: unit test for envl duplication.
+// {
+// 	while (*msh -> envl)
+// 	{
+// 		printf("%s\n", *msh -> envl);
+// 		msh -> envl++;
+// 	}
+// }
 
 int	main(int ac, char **av, char **envp)
 {
@@ -77,7 +78,7 @@ int	main(int ac, char **av, char **envp)
 		exit(err_out("# minishell: Error: Invalid number of arguments."
 		"\n# Usage: ./minishell"));
 	msh_init(&msh, envp);
-	print_envl(&msh);
+//	print_envl(&msh);
 	msh_loop(&msh);
 //	msh_clean(&msh, 1);
 //	exit(msh.exit_code);
