@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/01 18:36:44 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:37:40 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ void msh_init(t_msh *msh, char **envp)
 
 void    msh_execute(t_msh *msh)
 {
-    if (msh -> cmd_count == 1 && execif_builtin(msh, msh -> cmd -> *cmd))
+	here_doc(msh);//what kind of errors can occur with this? pipe open, read and write to pipe
+    if (msh -> cmd_count == 1 && execif_builtin(msh, msh -> cmd -> cmd))
         return ;
     else
         execin_child(msh);

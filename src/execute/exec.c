@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute.h                                          :+:      :+:    :+:   */
+/*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/02 15:25:40 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/04/02 20:36:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXECUTE_H
-# define EXECUTE_H
+# include "../../includes/minishell.h"
 
-# include "minishell.h"
 
-#endif
-
+void    execin_child(t_msh *msh)
+{
+    
+}
