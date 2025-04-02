@@ -6,77 +6,46 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:43:11 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/31 18:35:01 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/02 19:29:34 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 /**
- * no_args - Initializes the args array when no arguments are found.
- *
- * @cmd: Pointer to the command structure representing a single command segment.
- * @i: Current parsing index (returned unchanged).
- *
- * Allocates memory for the args array with the command as the only argument:
- *   - args[0] = strdup(command)
- *   - args[1] = NULL
- * Sets the argument count to 1.
- *
- * Return: The same index `i` on success, or -1 on allocation failure.
- */
-int no_args(t_cmd *cmd, int i)
-{
-	cmd->args = ft_calloc(2, sizeof(char *));
-	if (!cmd->args)
-		return (-1);
-	cmd->args[0] = ft_strdup(cmd->command);
-	if (!cmd->args[0])
-	{
-		free(cmd->args);
-		cmd->args = NULL;
-		return (-1);
-	}
-	cmd->args[1] = NULL;
-	cmd->arg_count = 1;
-	return (i);
-}
-
-/**
- * cmd_string_while - Parses and processes elements in a command string.
+ * cmd_string_while - Parses tokens inside a command segment string.
  *
  * @msh: Pointer to the shell structure.
- * @token: Pointer to the command structure being parsed.
- * @i: Current index in the command string.
- * @cmd_found: Pointer to an integer that tracks if a command name has been found.
+ * @cmd: Pointer to the current command structure being parsed.
+ * @i: Index for scanning the segment string.
+ * @cmd_found: Pointer to a flag indicating if a command name has been found.
  *
- * Iterates over a command segment string to handle redirections, the command
- * name, and its arguments. Skips whitespace and updates `cmd_found` when a
- * valid command name is identified.
+ * Handles redirections, command name, and arguments. Skips whitespace,
+ * and updates state as parsing progresses.
  *
  * Return: Updated index `i` on success, or -1 on failure.
  */
-int cmd_string_while(t_msh *msh, t_cmd *token, int i, int *cmd_found)
+int	cmd_string_while(t_msh *msh, t_cmd *cmd, int i, int *cmd_found)
 {
-	while (token->seg[i])
+	while (cmd->seg[i])
 	{
-		if (is_redirection(token, i))
+		if (is_redirection(cmd, i))
 		{
-			i = handle_redirections(msh, token, i);
+			i = handle_redirections(msh, cmd, i);
 			if (i == -1)
 				return (-1);
-			i = skip_whitespace(token->seg, i);
+			i = skip_whitespace(cmd->seg, i);
 		}
 		else if (*cmd_found == 0)
 		{
-			i = handle_cmd_name(token, i);
+			i = handle_cmd_name(cmd, i);
 			if (i == -1)
 				return (-1);
 			*cmd_found = 1;
 		}
 		else
 		{
-			i = handle_cmd_args(msh, token, i);
+			i = handle_cmd_args(msh, cmd, i);
 			if (i == -1)
 				return (-1);
 		}
@@ -85,21 +54,21 @@ int cmd_string_while(t_msh *msh, t_cmd *token, int i, int *cmd_found)
 }
 
 /**
- * parse_cmd_string - Parses a single command string and handles expansion.
+ * parse_cmd_string - Parses a command segment and expands variables.
  *
  * @msh: Pointer to the shell structure.
- * @cmd: Pointer to the command structure for the command being parsed.
+ * @cmd: Pointer to the current command structure being parsed.
  *
- * This function handles variable expansion and delegates parsing logic to
- * `cmd_string_while`. If a command was found but no arguments were parsed,
- * `no_args` is called to set up the default args array.
+ * Performs expansion and parses the segment for redirections,
+ * command name, and arguments. If only the command is found with
+ * no args, `no_args` initializes the args array.
  *
  * Return: 0 on success, or 1 on failure.
  */
-int parse_cmd_string(t_msh *msh, t_cmd *cmd)
+int	parse_cmd_string(t_msh *msh, t_cmd *cmd)
 {
-	int i;
-	int cmd_found;
+	int	i;
+	int	cmd_found;
 
 	i = 0;
 	cmd_found = 0;
@@ -108,39 +77,42 @@ int parse_cmd_string(t_msh *msh, t_cmd *cmd)
 	i = cmd_string_while(msh, cmd, i, &cmd_found);
 	if (i == -1)
 		return (1);
-	if (cmd_found && (!cmd->args || !cmd->args[0]))
+/* 	if (cmd_found && (!cmd->args || !cmd->args[0]))
 	{
 		if (no_args(cmd, i) == -1)
 			return (1);
-	}
+	} */
 	return (0);
 }
 
 /**
- * parse_line - Parses each command segment and stores parsed results.
+ * parse_line - Parses all command segments in the linked list.
  *
- * @msh: Pointer to the shell structure containing command tokens and execution data.
+ * @msh: Pointer to the shell structure containing the command list.
  *
- * Iterates through each command segment stored in `msh->tokens`, assigns a unique
- * index, and processes it with `parse_cmd_string`. Cleans up on failure.
+ * Iterates through each t_cmd node, assigns an index, and processes it
+ * using `parse_cmd_string`. Handles cleanup on failure.
  *
- * Return: 0 on success, or 1 on failure of any segment parsing.
+ * Return: 0 on success, 1 on failure.
  */
-int parse_line(t_msh *msh)
+int	parse_line(t_msh *msh)
 {
-	int index;
+	t_cmd	*current;
+	int		index;
 
+	current = msh->cmds;
 	index = 0;
-	while (msh->tokens[index])
+	while (current)
 	{
-		msh->tokens[index]->cmd_index = index;
-		if (parse_cmd_string(msh, msh->tokens[index]))
+		current->cmd_index = index;
+		if (parse_cmd_string(msh, current))
 		{
 			msh->exit_code = 1;
 			unlink_all_heredocs(msh);
-			clean_tokens(msh->tokens);
+			clean_tokens(&msh->cmds);
 			return (1);
 		}
+		current = current->next;
 		index++;
 	}
 	return (0);

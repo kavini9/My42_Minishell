@@ -6,37 +6,10 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:25:54 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/31 18:15:01 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:27:49 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/**
- * no_args - Sets args array with only the command when no arguments are found.
- *
- * @cmd: Pointer to the command structure representing a command segment.
- * @i: The current parsing index (returned unchanged).
- *
- * This function is used when a command (like "ls") has no additional arguments.
- * It allocates a minimal args array as follows:
- *   - args[0] = strdup(command)
- *   - args[1] = NULL
- *
- * Return: The same index `i` on success, or -1 on allocation failure.
- */
-int no_args(t_cmd *cmd, int i)
-{
-	cmd->args = ft_calloc(2, sizeof(char *));
-	if (!cmd->args)
-		return (-1);
 
-	cmd->args[0] = ft_strdup(cmd->command);
-	if (!cmd->args[0])
-		return (-1);
-
-	cmd->args[1] = NULL;
-	cmd->arg_count = 1;
-
-	return (i);
-}
