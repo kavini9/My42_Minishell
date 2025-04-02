@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/31 11:40:47 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/31 17:52:23 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
  * Handles unmatched quotes by allowing multiline input.
  * If the user presses Ctrl+D (EOF), it exits gracefully without an error.
  */
-int handle_unmatched_quotes(char **line)
+int handle_unmatched_quotes(char *line)
 {
     char *extra_line;
     char *temp;
 
     // Keep asking for more input if quotes are unmatched
-    while (check_quotes(*line, ft_strlen(*line)))
+    while (check_quotes(line, ft_strlen(line)))
     {
         extra_line = readline(">"); // Read additional user input
 
@@ -31,13 +31,13 @@ int handle_unmatched_quotes(char **line)
             return (0);
 
         // Append a newline character to the existing input
-        temp = *line;
-        *line = ft_strjoin(*line, "\n");
+        temp = line;
+        line = ft_strjoin(line, "\n");
         free(temp);
 
         // Append the new input to the existing input line
-        temp = *line;
-        *line = ft_strjoin(*line, extra_line);
+        temp = line;
+        line = ft_strjoin(line, extra_line);
         free(temp);
         free(extra_line);
     }
@@ -51,7 +51,7 @@ int handle_unmatched_quotes(char **line)
  * - Ensures correct redirection syntax
  * Returns 1 if an error is found, otherwise returns 0.
  */
-int validate_input(char **line, t_msh *msh)
+int validate_input(char *line, t_msh *msh)
 {
     int i;
 
@@ -64,10 +64,10 @@ int validate_input(char **line, t_msh *msh)
 
     // Loop through the input string to check for invalid characters
     i = 0;
-    while ((*line)[i])
+    while (line[i])
     {
         // Ensure characters like ';' and '\' are not used improperly
-        if (!check_quotes(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
+        if (!check_quotes(*line, i) && (line[i] == ';' || line[i] == '\\'))
         {
             ft_putendl_fd("invalid syntax", 2); // Print error message
             msh->exit_code = 2; // Set exit code
@@ -98,18 +98,18 @@ int validate_input(char **line, t_msh *msh)
  * - 0 if parsing is successful.
  * - 1 if any error occurs during validation or parsing.
  */
-int msh_parse(char **line, t_msh *msh)
+int msh_parse(char *line, t_msh *msh)
 {
     // Validate user input for syntax errors
     if (validate_input(line, msh))
         return (1);
 
     // Prepare command structures for execution
-    if (build_token_structs(msh, *line))
+    if (build_token_structs(msh, line))
         return (1);
 
     // Split input into commands based on pipes
-    if (split_line (*line, msh))
+    if (split_line (line, msh))
         return (1);
 
     // Parse commands into structured format for execution

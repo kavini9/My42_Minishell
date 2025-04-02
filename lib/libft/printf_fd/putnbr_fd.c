@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   putnbr_fd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 16:41:02 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:02 by wweerasi         ###   ########.fr       */
+/*   Created: 2024/05/14 13:49:53 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/19 16:09:20 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf_fd.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	putnbr_fd(int nbr, t_base b, int *totlen, int fd)
 {
-	while (*s1 == *s2)
+	long int	n;
+
+	n = nbr;
+	if (n < 0)
 	{
-		if (!*s1)
-			return (0);
-		s1++;
-		s2++;
+		putchar_fd('-', totlen, fd);
+		n = -n;
 	}
-	return (*(unsigned char *) s1 - *(unsigned char *) s2);
+	if (n >= b.base)
+		putnbr_fd(n / b.base, b, totlen, fd);
+	if (*totlen != -1)
+		putchar_fd(b.str[n % b.base], totlen, fd);
+	else
+		return ;
 }

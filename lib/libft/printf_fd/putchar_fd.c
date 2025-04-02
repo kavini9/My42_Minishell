@@ -1,25 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   putchar_fd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 16:41:02 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:02 by wweerasi         ###   ########.fr       */
+/*   Created: 2024/05/14 13:18:41 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/19 17:38:36 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf_fd.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	putchar_fd(char c, int *totlen, int fd)
 {
-	while (*s1 == *s2)
-	{
-		if (!*s1)
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (*(unsigned char *) s1 - *(unsigned char *) s2);
+	if (write(fd, &c, 1) == -1)
+		*totlen = -1;
+	else
+		(*totlen)++;
 }

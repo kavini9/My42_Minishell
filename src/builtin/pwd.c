@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 16:41:02 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:02 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/03/20 19:22:43 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/20 21:30:59 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+# include "../../includes/minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void    builtin_pwd(t_msh *msh)
 {
-	while (*s1 == *s2)
-	{
-		if (!*s1)
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (*(unsigned char *) s1 - *(unsigned char *) s2);
+    printf("%s\n", msh -> cwd);
 }
+
+//TODO: find a way to update exit status

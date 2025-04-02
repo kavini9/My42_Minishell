@@ -6,11 +6,9 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:16:56 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/26 14:39:31 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:38:40 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../../includes/minishell.h"
 
 #include "../../includes/minishell.h"
 
@@ -19,9 +17,9 @@
  *
  * @seg: The input string to trim.
  *
- * This function modifies the input string in-place. It finds the first and last
- * non-whitespace characters, shifts the relevant portion to the start of the buffer,
- * null-terminates the result, and returns the trimmed string.
+ * Modifies the input string in-place by identifying the first and last
+ * non-whitespace characters. Shifts the trimmed portion to the beginning
+ * of the string and null-terminates it.
  *
  * Return: Pointer to the trimmed string, or NULL if input is NULL.
  */
@@ -43,17 +41,19 @@ char *trim_whitespace(char *seg)
 }
 
 /**
- * segment_handler - Processes and stores a command segment in a token.
+ * segment_handler - Extracts and stores a trimmed command segment.
  *
- * @token: Pointer to the token structure to store the segment.
- * @line: The original input line.
- * @start: Starting index of the segment.
- * @end: Ending index (non-inclusive) of the segment.
+ * @cmd: Pointer to the command structure to store the trimmed segment.
+ * @line: Full input line containing all segments.
+ * @start: Start index of the current segment.
+ * @end: End index (non-inclusive) of the current segment.
  *
- * Extracts a substring from `line`, trims whitespace, and stores it in the
- * token's `command` field. Returns 1 on memory allocation failure, 0 on success.
+ * Creates a substring of the current segment, trims whitespace, and stores
+ * it in the command's `seg` field.
+ *
+ * Return: 0 on success, 1 on allocation failure or missing segment.
  */
-static int segment_handler(t_token *token, char *line, int start, int end)
+static int segment_handler(t_cmd *cmd, char *line, int start, int end)
 {
 	char *trimmed;
 
@@ -61,10 +61,10 @@ static int segment_handler(t_token *token, char *line, int start, int end)
 	if (!trimmed)
 		return (ft_putendl_fd("Allocation failed", 2), 1);
 	trimmed = trim_whitespace(trimmed);
-	token->command = trimmed;
-	if (!token->command)
+	cmd->seg = trimmed;
+	if (!cmd->seg)
 	{
-		ft_putendl_fd("Missing command", 2);
+		ft_putendl_fd("Missing command segment", 2);
 		free(trimmed);
 		return (1);
 	}
@@ -72,16 +72,16 @@ static int segment_handler(t_token *token, char *line, int start, int end)
 }
 
 /**
- * split_line - Splits the input line into segments using unquoted pipe ('|') characters.
+ * split_line - Splits the input line into command segments using unquoted pipes ('|').
  *
- * @line: The input command line.
- * @msh: Pointer to the minishell structure where tokens are stored.
+ * @line: The full input command line from the user.
+ * @msh: Pointer to the shell structure containing the array of command structures.
  *
- * This function iterates through the input string, identifying segments separated
- * by unquoted pipes (`|`). It calls `segment_handler` to trim and assign each
- * segment to a token in the shell structure.
+ * Iterates through the input line and splits it into segments at unquoted
+ * pipe characters. Each segment is passed to `segment_handler` for trimming
+ * and storing in the corresponding command structure.
  *
- * Return: 0 on success, or 1 on memory allocation or processing failure.
+ * Return: 0 on successful parsing of all segments, 1 on error.
  */
 int split_line(char *line, t_msh *msh)
 {
@@ -101,5 +101,4 @@ int split_line(char *line, t_msh *msh)
 	}
 	return segment_handler(msh->tokens[index], line, start, i);
 }
-
 

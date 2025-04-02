@@ -1,25 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 16:41:02 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:02 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/03/23 22:57:24 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/29 05:50:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+# include "../../includes/minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void    builtin_exit(t_msh *msh, char **cmd)
 {
-	while (*s1 == *s2)
-	{
-		if (!*s1)
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (*(unsigned char *) s1 - *(unsigned char *) s2);
+    
 }

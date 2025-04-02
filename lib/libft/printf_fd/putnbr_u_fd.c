@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*   putnbr_u_fd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/26 16:41:02 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/21 21:05:02 by wweerasi         ###   ########.fr       */
+/*   Created: 2024/05/18 16:14:58 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/19 17:39:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "printf_fd.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	putnbr_u_fd(unsigned long n, t_base b, int *totlen, int fd)
 {
-	while (*s1 == *s2)
-	{
-		if (!*s1)
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (*(unsigned char *) s1 - *(unsigned char *) s2);
+	if (n >= (unsigned long) b.base)
+		putnbr_u_fd(n / b.base, b, totlen, fd);
+	if (*totlen != -1)
+		putchar_fd(b.str[n % b.base], totlen, fd);
+	else
+		return ;
 }

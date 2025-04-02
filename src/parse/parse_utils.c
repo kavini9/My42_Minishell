@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:25:54 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/28 14:26:55 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:15:01 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /**
  * no_args - Sets args array with only the command when no arguments are found.
  *
- * @token: Pointer to the token structure representing a command segment.
+ * @cmd: Pointer to the command structure representing a command segment.
  * @i: The current parsing index (returned unchanged).
  *
  * This function is used when a command (like "ls") has no additional arguments.
@@ -25,16 +25,18 @@
  *
  * Return: The same index `i` on success, or -1 on allocation failure.
  */
-int no_args(t_token *token, int i)
+int no_args(t_cmd *cmd, int i)
 {
-	token->args = ft_calloc(2, sizeof(char *));
-	if (!token->args)
+	cmd->args = ft_calloc(2, sizeof(char *));
+	if (!cmd->args)
 		return (-1);
-	token->args[0] = ft_strdup(token->command);
-	if (!token->args[0])
+
+	cmd->args[0] = ft_strdup(cmd->command);
+	if (!cmd->args[0])
 		return (-1);
-	token->args[1] = NULL;
-	token->arg_count = 1;
+
+	cmd->args[1] = NULL;
+	cmd->arg_count = 1;
+
 	return (i);
 }
-

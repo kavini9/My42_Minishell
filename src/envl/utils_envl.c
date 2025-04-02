@@ -1,0 +1,99 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_envl.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/03/29 00:55:19 by wweerasi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+# include "../../includes/minishell.h"
+
+char    *get_env(char **envl, char *var)
+{
+    size_t  var_len;
+    
+    if(!envl || !*var)
+        return (NULL);
+    var_len = ft_strlen(var);
+    while (*envl)
+    {
+        if (ft_strncmp(*envl, var, var_len) && *(*envl + var_len) == '=')
+            return (*envl + var_len + 1);//TODO; there's a case when we have to print the whole line not just the value.
+        envl++;
+    }
+    return (NULL);
+}
+
+void    add_env_var(t_msh *msh, char **envl, char *entry)
+{
+    int env_len;
+    char **env_new;
+	char *tmp;
+
+    env_len = 0;
+    while (envl[env_len])
+        env_len++;
+    env_new = ft_calloc(env_len + 2, sizeof(char *));
+    if (!env_new)
+        exit(printf("\033[1;31madd_env_var env_new big array error\n\033[0m")); //TODO: 
+    ft_memcpy(env_new, envl, env_len * sizeof(char *));
+	tmp = env_new[env_len - 1];
+    env_new[env_len - 1]  = ft_strdup(entry);
+    if (!env_new[env_len - 1])
+        exit(printf("\033[1;31madd_env_var env_new entry error\n\033[0m")); //TODO:
+    env_new[env_len] = tmp;
+    env_new[++env_len] = NULL;
+    free(envl);
+    msh -> envl = env_new;
+	printf("\033[1;32madd_env_var successful %s\n\033[0m", entry);
+}
+
+void    overwrite_env_var(char **env_var, char *entry)
+{
+    free(*env_var);
+    *env_var = ft_strdup(entry);// this will only replace the existing 
+    if (!*env_var)
+        exit(printf("\033[1;31moverwrite env_var error %s\n\033[0m", entry));//TODO: clean "key". the cmd will be cleaned later in relevant cleaning fuunction.
+    printf("\033[1;32moverwrite successful %s\n\033[0m", entry);
+}
+
+void    set_env(t_msh *msh, char **envl, char *entry)
+{  
+    char    **env_iter;
+    char    *eq;
+    char    *key;
+    int     k_len;
+
+    eq = ft_strchr(entry, '=');
+	if (eq)
+		key = ft_substr(entry, 0, eq - entry);
+    if (!eq)
+		key = ft_strdup(entry);
+	if (!key)
+		printf("\033[1;31mset env key error\n\033[0m");//TODO: error
+    k_len = ft_strlen(key);
+    env_iter = envl;
+    while (*env_iter && !(!ft_strncmp(*env_iter, key, k_len) 
+            && (*(*env_iter + k_len) == '\0' || *(*env_iter + k_len) == '=')))
+		env_iter++;
+    free(key);
+    if (!*env_iter)
+        return(add_env_var(msh, envl, entry));// what if something happen in this function and it exits from there. is t okay to use it in a return?
+    if (*(entry + k_len) == '=')
+        return(overwrite_env_var(env_iter, entry));
+}
+  
+void    update_env(t_msh *msh, char *key, char *value)
+{
+    char *entry;
+
+    entry = ft_strjoin(key, value);
+    if(!entry)
+        exit(printf("malloc fail")); //TODO;
+    set_env(msh, msh -> envl, entry);
+}    
+    
