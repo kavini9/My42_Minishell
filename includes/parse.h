@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:24:31 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 18:24:12 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/04 19:08:57 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
  * and quote/variable processing.
  */
 
-//# include "../../lib/libft/libft.h"
 # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -34,7 +33,7 @@
 # include <stddef.h>
 # include "minishell.h"
 
-extern int g_sig;
+extern volatile sig_atomic_t g_signal;
 
 /* ────────────────────────────────────────────────────────────── */
 /*                       ENUMERATIONS                             */
@@ -42,8 +41,8 @@ extern int g_sig;
 
 typedef enum e_redir_type
 {
-	REDIRECT_IN,
-	REDIRECT_OUT,
+	REDIR_IN,
+	REDIR_OUT,
 	APPEND,
 	HEREDOC
 }	t_redir_type;
@@ -58,7 +57,7 @@ typedef struct s_vdata
 	char	**expan;
 	char	*temp;
 	char	*name;
-}	t_vdata;
+} t_vdata;
 
 typedef struct s_expand
 {
@@ -68,7 +67,7 @@ typedef struct s_expand
 	char	*name;
 	char	*value;
 	int		start;
-}	t_expand;
+} t_expand;
 
 typedef struct s_redir
 {
@@ -79,31 +78,25 @@ typedef struct s_redir
 	char			*heredoc_name;
 	int				heredoc_index;
 	struct s_redir	*next;
-}	t_redir;
-
-// 👇 Forward declaration for t_cmd
-typedef struct s_cmd t_cmd;
+} t_redir;
 
 typedef struct s_cmd
 {
-	char			*seg;
-	char			*command; //+ arg -----> char **cmd
-	char 			**cmd;
-	//char			*command_path; //set to null. execution part
-	int				cmd_index;
-	//char			**args;
-	//int				arg_count;
-	void			*redir_start;
-	void			*redir_end;
-	int				input_fd;
-	int				output_fd;
-	int				cmd_exit_status;
-	t_cmd			*next;
-}	t_cmd;
+	char		*seg;
+	char		*command;
+	char		**cmd;
+	int			cmd_index;
+	void		*redir_start;
+	void		*redir_end;
+	int			input_fd;
+	int			output_fd;
+	int			cmd_exit_status;
+	struct s_cmd *next;
+} t_cmd;
 
 typedef struct s_msh
 {
-	int		cmd_count; //  for command.c
+	int		cmd_count;
 	char	*cwd;
 	char	*old_wd;
 	char	*prompt;
@@ -138,7 +131,6 @@ int		check_redirects(char *line, t_msh *msh);
 int		validate_redirect(char *line, t_msh *msh, int *i, char *type);
 int		we_have_heredoc(t_expand *arg, char *str, int n);
 void	unlink_all_heredocs(t_msh *msh);
-int 	validate_redirect(char *line, t_msh *msh, int *i, char *type);
 
 /* ────────────────────────────────────────────────────────────── */
 /*                     SYNTAX & PIPE VALIDATION                  */
@@ -178,7 +170,6 @@ int		oh_a_dollar(t_msh *msh, char *str, char **expan, t_expand *arg);
 int		we_have_dollar(t_msh *msh, t_expand *arg, char *str);
 int		tildes_home(t_msh *msh, char *str, char **expan, t_expand *arg);
 int		handle_value(t_msh *msh, t_vdata *data);
-//char	*get_value(t_env *env, char *name);
 char	*ft_strjoin_char(char *str, char c);
 void	just_a_quest(char *str, char *name, int *indx, t_expand *arg);
 void	we_need_name(t_expand *arg, char *str, char *name, int *indx);
@@ -201,7 +192,5 @@ char	*get_trailing_input(t_msh *msh, char *line);
 void	sigint_handler(int sig);
 void	sig_handler_heredoc(int sig);
 void	sig_handler_hd(int sig);
-
-int	check_quotes(char *line, int limit);
 
 #endif // PARSE_H

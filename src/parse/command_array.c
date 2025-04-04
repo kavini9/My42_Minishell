@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:00:53 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 13:03:40 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:44:25 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ void	initialize_command_struct(t_cmd *cmd)
 {
 	cmd->seg = NULL;
 	cmd->command = NULL;
-	cmd->command_path = NULL;
+	//cmd->command_path = NULL;
 	cmd->cmd_index = 0;
-	cmd->args = NULL;
-	cmd->arg_count = 0;
+	//cmd->args = NULL;
+	//cmd->arg_count = 0;
 	cmd->redir_start = NULL;
 	cmd->redir_end = NULL;
 	cmd->input_fd = -1;
