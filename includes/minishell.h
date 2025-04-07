@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/04 15:58:47 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/07 03:11:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # define  ERROR_MSG "minishell: Error" // represents a enum containing all the err codes for now.
+# define  HEREDOC_MAX 16
 
 # include <readline/readline.h> //for readline
 # include <readline/history.h> //for readline add_history function
@@ -33,18 +34,17 @@ typedef enum e_do_err {
 typedef enum e_err_type{
 	ERR_SYS_FUNC,
 	ERR_MALLOC,
-	
 } t_err_type;
 
 typedef struct s_msh
 {
-	int		cmd_count; //  for command.c
 	char	*cwd;
 	char	*old_wd;
 	char	*prompt;
 	char	**envl;
-	char	**envl;
 	t_cmd	*cmd;
+	int		cmd_count; //  for command.c
+	int		hdocfd_l[HEREDOC_MAX];
 	int		exit_code;
 } t_msh;
 

@@ -5,3 +5,7 @@ src/a.out
 src/*/a.out
 infile
 outfile
+cmd1
+cmd2
+cmd1.c
+cmd2.c

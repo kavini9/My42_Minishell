@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/04 23:23:37 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/07 03:16:49 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,15 @@ typedef enum e_redirect_type
 typedef struct redir
 {
     t_redir_type    type;
-    char    *io_str;
+    char    *fname_o_del;
     t_redir *next;
 }   t_redir;
 
 typedef struct s_cmd
 {
-    int			cmd_id;
 	char		**cmd;
-	int			infd;
-	int			outfd;
+    int			cmd_id;
+	int			*hdocfd;
 	int			cmd_exit_code;
     t_redir     *redir;
 	t_cmd       *next;
