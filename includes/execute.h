@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/07 03:16:49 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/08 17:02:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_cmd
 {
 	char		**cmd;
     int			cmd_id;
-	int			*hdocfd;
+	int			hdoc_st_pos;
 	int			cmd_exit_code;
     t_redir     *redir;
 	t_cmd       *next;

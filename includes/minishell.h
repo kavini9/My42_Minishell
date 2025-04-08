@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/07 03:11:42 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/08 15:18:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <errno.h> //for using errno in strerror
 //# include <unistd.h>//for fork
 # include <sys/types.h>//for pid_t
+# include <fcntl.h>//for file open flags
 
 typedef enum e_do_err {
     LOG   = 0b001,

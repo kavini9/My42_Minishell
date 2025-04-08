@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/07 04:41:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:37:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@
 // 	}
 // }
 
-void run_child_proc(t_msh *msh, t_redir *redir, int rd_fd, int wr_fd)
+void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
 {
-    redirect_io(msh, redir, rd_fd, wr_fd);
+    redirect_io(msh, cmd, rd_fd, wr_fd);
     execute_cmd(msh);
 }
 
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
 {
     if (*prev_rd_fd != -1)
-            close(*prev_rd_fd);
+        close(*prev_rd_fd);
     if (i < cmd_count - 1)
     {
         *prev_rd_fd = pipe_fd[0];//This is why we need prev_rd_fd to be a pointer. this assigned value shouls be updated in calling function
@@ -59,7 +59,7 @@ void    exec_pipex(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
         if (pid < 0)
             break;//chidren are waited after exiting the loop. make sure you compare cmd cout with i and do proper error handling.
         if (pid == 0)
-            run_child_proc(msh, cmd -> redir, prev_rd_fd, pipe_fd[1]);
+            run_child_proc(msh, cmd, prev_rd_fd, pipe_fd[1]);
         else
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
         cmd = cmd -> next;

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/07 03:43:16 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/08 17:04:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
     *hdoc_fd = hd_pfd[0];
 }
 
+//TODO: expansion for heredoc
+
 void    here_doc(t_msh *msh, t_cmd *cmd, int *hdocfd_l, int i)
 {
     t_redir *redir;
@@ -43,14 +45,13 @@ void    here_doc(t_msh *msh, t_cmd *cmd, int *hdocfd_l, int i)
     while(cmd)
     {
         redir = cmd -> redir;
-        cmd -> hdocfd = hdocfd_l;
+        cmd -> hdoc_st_pos = i;
         while(redir)
         {
             if (redir -> type == REDIR_HDOC)
             {
                 get_heredoc_inp(msh, redir , hdocfd_l);
-                if (++i < 16)
-                    hdocfd_l++;
+                i++;
             }
             redir = redir -> next;
         }
