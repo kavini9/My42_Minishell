@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/08 18:37:31 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/09 21:45:26 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@
 
 void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
 {
-    redirect_io(msh, cmd, rd_fd, wr_fd);
+    redirect_pipe(msh, rd_fd, wr_fd);
+    redirect_io(msh, cmd, -1, 0);
     execute_cmd(msh);
 }
 

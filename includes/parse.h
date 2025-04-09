@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:24:31 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 15:31:05 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:30:38 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,21 +130,6 @@ typedef struct s_cmd
 	struct s_cmd *next;
 } t_cmd;
 
-typedef struct s_msh
-{
-	int		cmd_count;
-	char	*cwd;
-	t_env	*env;
-	char	*old_wd;
-	char	*prompt;
-	char	**envl;
-	t_cmd	*cmds;
-	char		**pending;
-	int		**pipes;
-	int		exit_code;
-	int		stdin_saved;
-	int		stdout_saved;
-} t_msh;
 
 /* ────────────────────────────────────────────────────────────── */
 /*                COMMAND ALLOCATION & INITIALIZATION            */

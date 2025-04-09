@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:33:32 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/20 21:30:51 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/09 23:42:44 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int  is_option(char *arg)
 {
-    if (*arg == '-')
+    if (*arg == '-' && *(arg + 1))
         arg++;
     while(*arg)
     {
@@ -39,12 +39,13 @@ void    builtin_echo(t_msh *msh, char **cmd)
     }
     while (*cmd)
     {
-        printf("%s", *cmd);
+        printf("%s", *cmd);//TODO: change printf to fd_putstr_fd
         if (*(cmd + 1))
-            printf(" ");
+            printf(" ");//TODO: change printf to fd_putstr_fd
+        cmd++;
     }
-    if (opt_n)
-        printf("\n");
+    if (!opt_n)
+        printf("\n");//TODO: change printf to fd_putstr_fd
 }
 
 //TODO: find a way to update exit status
