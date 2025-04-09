@@ -6,14 +6,14 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 21:24:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/01/24 15:38:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/04 15:00:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
 void	dup_io(t_pipex *pipex, int rd_fd, int wr_fd)
-{
+{ 
 	if (dup2(rd_fd, STDIN_FILENO) == -1)
 		pipex_sys_error("dup2: ", ft_itoa(rd_fd), pipex);
 	if (dup2(wr_fd, STDOUT_FILENO) == -1)

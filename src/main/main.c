@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/31 15:36:36 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:37:40 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ void msh_init(t_msh *msh, char **envp)
 	duplicate_env(msh, envp);
 }
 
+void    msh_execute(t_msh *msh)
+{
+	here_doc(msh);//what kind of errors can occur with this? pipe open, read and write to pipe
+    if (msh -> cmd_count == 1 && execif_builtin(msh, msh -> cmd -> cmd))
+        return ;
+    else
+        execin_child(msh);
+}
+
 void	msh_loop(t_msh *msh)
 {
 	char	*line;
@@ -41,14 +50,13 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		if (*line)
 		{
-			//validation(line); //to add entire input to history in unclosed commands and trailing pipe case 
+			msh_validate(line);//to add entire input to history in unclosed commands and trailing pipe case 
 			add_history(line);
-			printf("line entered: %s\n", line);
-//			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-			if (!ft_strcmp(line, "exit"))
-				break; 
+			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
+			msh_execute(msh);
+			//if (!ft_strcmp(line, "exit"))
+			//	break;
 		}
-		parse (msh);
 	}
 	rl_clear_history();
 }
