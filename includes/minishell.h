@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
 /*   Updated: 2025/04/08 15:18:35 by wweerasi         ###   ########.fr       */
@@ -37,7 +37,7 @@ typedef enum e_err_type{
 	ERR_MALLOC,
 } t_err_type;
 
-typedef struct s_msh
+/* typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
@@ -49,12 +49,12 @@ typedef struct s_msh
 	int		exit_code;
 } t_msh;
 
-# include "../lib/libft/libft.h"
+# include "../lib/libft/libft.h
 # include "envp.h"
-# include "../src/parse/parse.h"
+# include "parse.h"
 # include "execute.h"
 # include "builtin.h"
-# include "../src/signal/signal.h"
+# include "signal.h"
 
 void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);
