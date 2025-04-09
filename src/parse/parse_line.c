@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:43:11 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 19:29:34 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:26:31 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	parse_line(t_msh *msh)
 		{
 			msh->exit_code = 1;
 			unlink_all_heredocs(msh);
-			clean_tokens(&msh->cmds);
+			clean_cmds(msh->cmds);
 			return (1);
 		}
 		current = current->next;

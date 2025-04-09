@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 16:38:08 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/04 14:38:08 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/07 19:01:44 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,34 +33,6 @@ static int we_have_value(char *value, char *temp, char **expan)
 	}
 	free(*expan);
 	*expan = temp;
-	return (0);
-}
-
-/**
- * handle_value - Resolves and appends a variable's value to the result string.
- *
- * @msh: Pointer to the shell structure (for environment and exit code).
- * @data: Pointer to the t_vdata structure with variable info.
- *
- * Expands normal variables or special cases like `$?`.
- * Returns 0 on success, 1 on failure.
- */
-int handle_value(t_msh *msh, t_vdata *data)
-{
-	if (data->name[0] == '?')
-	{
-		data->value = ft_itoa(msh->exit_code);
-		if (!data->value)
-			return (1);
-		if (we_have_value(data->value, data->temp, data->expan) == -1)
-			return (1);
-		return (0);
-	}
-	data->value = get_value(msh->env, data->name);
-	if (data->value == (char *)-1)
-		return (1);
-	if (we_have_value(data->value, data->temp, data->expan) == -1)
-		return (1);
 	return (0);
 }
 
@@ -100,6 +72,36 @@ char *get_value(t_env *env, char *name)
 	}
 	return (value);
 }
+
+/**
+ * handle_value - Resolves and appends a variable's value to the result string.
+ *
+ * @msh: Pointer to the shell structure (for environment and exit code).
+ * @data: Pointer to the t_vdata structure with variable info.
+ *
+ * Expands normal variables or special cases like `$?`.
+ * Returns 0 on success, 1 on failure.
+ */
+int handle_value(t_msh *msh, t_vdata *data)
+{
+	if (data->name[0] == '?')
+	{
+		data->value = ft_itoa(msh->exit_code);
+		if (!data->value)
+			return (1);
+		if (we_have_value(data->value, data->temp, data->expan) == -1)
+			return (1);
+		return (0);
+	}
+	data->value = get_value(msh->env, data->name);
+	if (data->value == (char *)-1)
+		return (1);
+	if (we_have_value(data->value, data->temp, data->expan) == -1)
+		return (1);
+	return (0);
+}
+
+
 
 /**
  * ft_strjoin_char - Appends a single character to a string.
