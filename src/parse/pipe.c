@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/24 13:30:28 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:27:53 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,23 +90,23 @@ static int	detect_consecutive_pipes(char *line, t_msh *msh)
  * - 1 if handling fails.
  * - 0 if input is successfully extended.
  */
-static int	handle_trailing_pipe(t_msh *msh, char **line)
+static int	handle_trailing_pipe(t_msh *msh, char *line)
 {
 	int		i;
 	char	*extended_line;
 
-	i = ft_strlen(*line) - 1;
-	while (i >= 0 && ft_isspace((*line)[i])) // Ignore trailing spaces
+	i = ft_strlen(line) - 1;
+	while (i >= 0 && ft_isspace(line[i])) // Ignore trailing spaces
 		i--;
-	if (i >= 0 && (*line)[i] == '|' && !check_quotes(*line, i))
+	if (i >= 0 && line[i] == '|' && !check_quotes(line, i))
 	{
-		extended_line = get_trailing_input(msh, *line);
+		extended_line = get_trailing_input(msh, line);
 		if (!extended_line)
 		{
-			*line = NULL;
+			line = NULL;
 			return (1);
 		}
-		*line = extended_line;
+		line = extended_line;
 	}
 	return (0);
 }
@@ -130,29 +130,29 @@ static int	handle_trailing_pipe(t_msh *msh, char **line)
  * - 1 if an invalid pipe usage is detected (syntax error).
  * - 0 if the pipe usage is valid.
  */
-int	validate_pipe(char **line, t_msh *msh)
+int	validate_pipe(char *line, t_msh *msh)
 {
 	int	i;
 	int	j;
 
-	i = skip_whitespace(*line, 0);
+	i = skip_whitespace(line, 0);
 
 	// Check if the first non-space character is '|'
-	if ((*line)[i] == '|' && !check_quotes(*line, i))
+	if (line[i] == '|' && !check_quotes(line, i))
 	{
 		j = i;
-		while ((*line)[j] == '|') // Capture multiple consecutive pipes
+		while (line[j] == '|') // Capture multiple consecutive pipes
 			j++;
 
 		ft_putstr_fd("syntax error near unexpected token `", 2);
-		write(2, *line + i, j - i); // Print the exact token that caused the error
+		write(2, line + i, j - i); // Print the exact token that caused the error
 		ft_putendl_fd("'", 2);
 		msh->exit_code = 2;
 		return (1);
 	}
 
 	// Check for other invalid pipe usages: consecutive pipes or trailing pipe
-	if (detect_consecutive_pipes(*line, msh) || handle_trailing_pipe(msh, line))
+	if (detect_consecutive_pipes(line, msh) || handle_trailing_pipe(msh, line))
 		return (1);
 
 	return (0);

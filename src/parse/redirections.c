@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:25:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/26 12:24:07 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:27:56 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
  * - 1 if the syntax is invalid.
  * - 0 if valid.
  */
-static int validate_redirect(char *line, t_msh *msh, int *i, char *type)
+int validate_redirect(char *line, t_msh *msh, int *i, char *type)
 {
 	(*i)++;
 	(*i) = skip_whitespace(line, *i);

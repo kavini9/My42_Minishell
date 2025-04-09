@@ -6,11 +6,9 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:16:56 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/26 14:39:31 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/02 15:49:08 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../../includes/minishell.h"
 
 #include "../../includes/minishell.h"
 
@@ -19,19 +17,19 @@
  *
  * @seg: The input string to trim.
  *
- * This function modifies the input string in-place. It finds the first and last
- * non-whitespace characters, shifts the relevant portion to the start of the buffer,
- * null-terminates the result, and returns the trimmed string.
+ * Identifies the first and last non-whitespace characters in the string,
+ * then shifts the trimmed portion to the beginning and null-terminates it.
  *
  * Return: Pointer to the trimmed string, or NULL if input is NULL.
  */
-char *trim_whitespace(char *seg)
+char	*trim_whitespace(char *seg)
 {
-	int start = 0;
-	int end;
+	int	start;
+	int	end;
 
 	if (!seg)
 		return (NULL);
+	start = 0;
 	end = ft_strlen(seg) - 1;
 	while (seg[start] && ft_isspace(seg[start]))
 		start++;
@@ -43,28 +41,29 @@ char *trim_whitespace(char *seg)
 }
 
 /**
- * segment_handler - Processes and stores a command segment in a token.
+ * segment_handler - Extracts and stores a trimmed command segment.
  *
- * @token: Pointer to the token structure to store the segment.
- * @line: The original input line.
- * @start: Starting index of the segment.
- * @end: Ending index (non-inclusive) of the segment.
+ * @cmd: Pointer to the t_cmd structure where the segment will be stored.
+ * @line: Full input command line.
+ * @start: Start index of the segment in the input line.
+ * @end: End index (non-inclusive) of the segment in the input line.
  *
- * Extracts a substring from `line`, trims whitespace, and stores it in the
- * token's `command` field. Returns 1 on memory allocation failure, 0 on success.
+ * Copies the substring, trims whitespace, and assigns it to cmd->seg.
+ *
+ * Return: 0 on success, 1 on memory allocation failure or missing segment.
  */
-static int segment_handler(t_token *token, char *line, int start, int end)
+static int	segment_handler(t_cmd *cmd, char *line, int start, int end)
 {
-	char *trimmed;
+	char	*trimmed;
 
 	trimmed = ft_strndup(line + start, end - start);
 	if (!trimmed)
 		return (ft_putendl_fd("Allocation failed", 2), 1);
 	trimmed = trim_whitespace(trimmed);
-	token->command = trimmed;
-	if (!token->command)
+	cmd->seg = trimmed;
+	if (!cmd->seg)
 	{
-		ft_putendl_fd("Missing command", 2);
+		ft_putendl_fd("Missing command segment", 2);
 		free(trimmed);
 		return (1);
 	}
@@ -72,34 +71,41 @@ static int segment_handler(t_token *token, char *line, int start, int end)
 }
 
 /**
- * split_line - Splits the input line into segments using unquoted pipe ('|') characters.
+ * split_line - Splits the input into command segments at unquoted pipes ('|').
  *
- * @line: The input command line.
- * @msh: Pointer to the minishell structure where tokens are stored.
+ * @line: The full input command line from the user.
+ * @msh: Pointer to the shell structure containing the command linked list.
  *
- * This function iterates through the input string, identifying segments separated
- * by unquoted pipes (`|`). It calls `segment_handler` to trim and assign each
- * segment to a token in the shell structure.
+ * Walks through the input, identifying unquoted pipes and passing each
+ * command segment to segment_handler. The trimmed result is stored in
+ * each t_cmd node's `seg` field.
  *
- * Return: 0 on success, or 1 on memory allocation or processing failure.
+ * Return: 0 if successful, 1 on failure.
  */
-int split_line(char *line, t_msh *msh)
+int	split_line_by_pipe(char *line, t_msh *msh)
 {
-	int i = 0;
-	int start = 0;
-	int index = 0;
+	int		i;
+	int		start;
+	int		index;
+	t_cmd	*current;
+
+	i = 0;
+	start = 0;
+	index = 0;
+	current = msh->cmds;
 
 	while (line[i])
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
 		{
-			if (segment_handler(msh->tokens[index++], line, start, i))
+			if (!current || segment_handler(current, line, start, i))
 				return (1);
+			current = current->next;
 			start = i + 1;
 		}
 		i++;
 	}
-	return segment_handler(msh->tokens[index], line, start, i);
+	if (!current || segment_handler(current, line, start, i))
+		return (1);
+	return (0);
 }
-
-
