@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   execin_child.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/09 21:45:26 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/10 18:21:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
 {
     redirect_pipe(msh, rd_fd, wr_fd);
     redirect_io(msh, cmd, -1, 0);
-    execute_cmd(msh);
+    execute_cmd(msh, cmd);
 }
 
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
@@ -46,11 +46,12 @@ void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
     }   
 }
 
-void    exec_pipex(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
+void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
 {
     int pipe_fd[2];
     pid_t pid;
     
+    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);
     while (i < msh -> cmd_count)
     {
         memset(pipe_fd, -1, sizeof(int));//to avoid trying to redirect the pfd[1] in last command.
@@ -61,7 +62,7 @@ void    exec_pipex(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
             break;//chidren are waited after exiting the loop. make sure you compare cmd cout with i and do proper error handling.
         if (pid == 0)
             run_child_proc(msh, cmd, prev_rd_fd, pipe_fd[1]);
-        else
+        else if (msh -> cmd_count < 1)// it wpon't go in here if the command count is 1.
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
         cmd = cmd -> next;
         i++;//maybe this is not needed for me except to decide when not to create pipe 
@@ -72,14 +73,14 @@ void    exec_pipex(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
     //clean_cmd;
 }
 
-void    execin_child(t_msh *msh)
-{
-    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0); 
-    if (msh -> cmd_count == 1)
-        exec_single(msh);
-    else
-        exec_pipex(msh, msh -> cmd, -1,  0);
-}
+// void    execin_child(t_msh *msh)
+// {
+//     here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0); 
+//     // if (msh -> cmd_count == 1)
+//     //     exec_single(msh);
+//     // else
+//     exec_pipex(msh, msh -> cmd, -1,  0);
+// }
 //ls | sort | grep src remember to understand what happens here. does this break the
 //pipeline. 
 

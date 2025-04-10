@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/09 22:47:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/10 17:28:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ void	redirect_pipe(t_msh *msh, int rd_fd, int wr_fd)
 	ret = 0;
 	if (rd_fd != -1)
 		ret = dup_io(msh, rd_fd, STDIN_FILENO);
-	if (ret == -1)
+	if (ret < 0)
 		close(wr_fd);
-	if (ret >= 0 && wr_fd != -1)
+	else if (wr_fd != -1)
 		ret = dup_io(msh, wr_fd, STDOUT_FILENO);
-	if (ret)
-	
+	if (ret < 0)
+		printf("send_help");//TODO: ERROR handling
 }
 
 void	close_all_hdocfd(int *hdocfd_l)
@@ -95,8 +95,4 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 }
 
 //to change the increasing pointer exceed the array limit, insted of setting a int pointr
-//for hdoc_fd n cmd we can assign just a number. if this number exceed 
-REDIR_HDOC,
-	REDIR_INP,
-	REDIR_OUTP,
-	REDIR_APPEN,
+//for hdoc_fd n cmd we can assign just a number. if this number exceed.
