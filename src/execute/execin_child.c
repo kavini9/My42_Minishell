@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/10 18:21:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/11 19:49:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
     int pipe_fd[2];
     pid_t pid;
     
-    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);
+    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in synta error determining part.
     while (i < msh -> cmd_count)
     {
         memset(pipe_fd, -1, sizeof(int));//to avoid trying to redirect the pfd[1] in last command.

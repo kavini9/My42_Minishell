@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/10 17:50:15 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/11 16:32:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void msh_init(t_msh *msh, char **envp)
 	msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
 		msh_error(msh, LOG|CLEAN|EXIT, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
-	msh -> old_wd = ft_strdup(msh -> cwd);
+	msh -> old_wd = ft_strdup(msh -> cwd);//if we go one level up the old pwd is different
 	if (!msh -> old_wd)
 		msh_error(msh, LOG|CLEAN|EXIT, ERR_MALLOC, NULL);//ERROR_MESSAGE
 	duplicate_env(msh, envp);
@@ -50,7 +50,7 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		if (*line)
 		{
-			msh_validate(line);//to add entire input to history in unclosed commands and trailing pipe case 
+			//msh_validate(line);//to add entire input to history in unclosed commands and trailing pipe case 
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
 			msh_execute(msh);

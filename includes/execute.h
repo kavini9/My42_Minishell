@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/10 20:28:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/11 21:54:49 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef enum e_redirect_type
 
 typedef struct redir
 {
-    t_redir_type    type;
+    t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous edirection
     char    *fname_o_del;
     t_redir *next;
 }   t_redir;
