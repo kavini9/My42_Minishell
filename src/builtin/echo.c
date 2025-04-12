@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:33:32 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/09 23:42:44 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:19:27 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,14 @@ void    builtin_echo(t_msh *msh, char **cmd)
     }
     while (*cmd)
     {
-        printf("%s", *cmd);//TODO: change printf to fd_putstr_fd
+        printf_fd(STDOUT_FILENO, "%s", *cmd);//TODO: change printf to fd_putstr_fd pr printf_fd
         if (*(cmd + 1))
-            printf(" ");//TODO: change printf to fd_putstr_fd
+            printf_fd(STDOUT_FILENO, " ");//TODO: change printf to fd_putstr_fd or printf_fd
         cmd++;
     }
     if (!opt_n)
-        printf("\n");//TODO: change printf to fd_putstr_fd
+        printf_fd(STDOUT_FILENO, "\n");//TODO: change printf to fd_putstr_fd or printf_fd
+    msh -> exit_code = EXIT_SUCCESS;
 }
 
 //TODO: find a way to update exit status

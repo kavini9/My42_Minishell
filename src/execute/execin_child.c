@@ -6,27 +6,27 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/11 19:49:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:14:26 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
 
-// void	wait_child(t_msh *msh, int i, pid_t pid)
-// {
-// 	int	status;
+void	wait_child(t_msh *msh, int i, pid_t pid)
+{
+	int	status;
 
-// 	while (i--)
-// 	{
-// 		if (wait(&status) == pid)
-// 		{
-// 			if (WIFEXITED(status))
-// 				pipex -> status = WEXITSTATUS(status);
-// 			else if (WIFSIGNALED(status) && WTERMSIG(status))
-// 				pipex -> status = 128 + WTERMSIG(status);
-// 		}
-// 	}
-// }
+	while (i--)
+	{
+		if (wait(&status) == pid)
+		{
+			if (WIFEXITED(status))
+				msh -> exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status) && WTERMSIG(status))
+				msh -> exit_code = 128 + WTERMSIG(status);
+		}
+	}
+}
 
 void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
 {
@@ -69,7 +69,7 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
     }
     wait_child(i, pid, msh);//see where i am cleaning cmd shit
     if (i < msh -> cmd_count)
-        printf("fork fail\n");
+        printf("fork fail\n");// error messgae
     //clean_cmd;
 }
 

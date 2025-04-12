@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:31:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/19 20:14:56 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/13 00:23:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@ void error_log(int err_type, char *param)
         
 }
 
-void msh_error(t_msh *msh, t_do_err opt, t_err_type err_type, char *param)
+void msh_error(t_msh *msh, t_do_err opt_exitc, t_err_type err_type, char *param)
 {
+    int exit_code = opt_exitc & 0xFF;
+    int opt = (opt_exitc >> 8) & 0xFF;
+      
     if (opt & LOG)
         error_log(err_type, param);
     if (opt & CLEAN)
@@ -34,3 +37,6 @@ void msh_error(t_msh *msh, t_do_err opt, t_err_type err_type, char *param)
     if (opt & EXIT)
         exit(msh -> exit_code);
 }
+
+
+void msh_builtin_error(t_msh *msh, )

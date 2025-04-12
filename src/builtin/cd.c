@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/29 00:55:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/12 23:37:47 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,10 @@ void    cd_env_var(t_msh *msh, char *dir)
     if (!path)
         return (msh_warning("minishell: cd:", dir , "not set", NULL));//take care of the return value in each error.
     if (chdir(path) == -1)
-        msh_error(msh, printf("minishell: cd"));//msh_error(msh, perror("minishell: cd"));//TODO: this should exit minishell.
+        msh_error(msh, printf("minishell: cd"));//msh_error(msh, perror("minishell: cd"));//TODO: this should not exit minishell.
     if (ft_strcmp(dir, "OLDPWD"))
         printf("%s\n", path);
-    return(pwd_update(msh));//TODO: write update pwd.
+    return(msh_wd_update(msh));//TODO: write update pwd.
 }
 
 void    cd_tilde(t_msh *msh, char *tilde_path)
@@ -75,7 +75,7 @@ void    cd_tilde(t_msh *msh, char *tilde_path)
         return (msh_warning("minishell: cd: HOME not set"));
     path = ft_strjoin(home, tilde_path + 1);
     if (!path)
-    msh_error(msh, LOG|CLEAN|EXIT, ERR_MALLOC, NULL);//ERROR_MESSAGE
+    msh_error(msh, LOG|CLEAN|EXIT, , NULL);//ERROR_MESSAGE
     if (chdir(path) == -1)
     {
         free(path);
@@ -83,7 +83,7 @@ void    cd_tilde(t_msh *msh, char *tilde_path)
         msh_error(msh, printf("minishell: cd"));//msh_error(msh, perror("minishell: cd"));//TODO: this should exit minishell.
     }
     free(path);
-    return(pwd_update(msh));//TODO: write functon. 
+    return(msh_wd_update(msh));//TODO: write functon. 
 }
 
 //cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
@@ -99,13 +99,13 @@ void    cd_path(t_msh *msh, char *path)
     else if (!cwd)
         msh_error(msh, LOG, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
     free(cwd);
-    return (pwd_update(msh));
+    return (msh_wd_update(msh));
 }
 
 void    builtin_cd(t_msh *msh, char **cmd)
 {
     if (cmd[2])
-        msh_error("minishell: cd: too many arguments\n");//TODO: should not exit minishell but prints error message.
+        return(msh_warning("minishell: cd: too many arguments\n"));//TODO: should not exit minishell but prints error message.
     else if (!cmd[1] || ft_strcmp(cmd[1], "~") || ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
         cd_env_var(msh, "HOME");
     else if (cmd[1][0] == '~')

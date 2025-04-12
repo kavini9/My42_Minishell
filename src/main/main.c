@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/11 16:32:42 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/13 00:12:48 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ void msh_init(t_msh *msh, char **envp)
 	ft_memset(msh, 0, sizeof(t_msh)); //DES: sets everything to NULL
 	msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
-		msh_error(msh, LOG|CLEAN|EXIT, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
+		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
 	msh -> old_wd = ft_strdup(msh -> cwd);//if we go one level up the old pwd is different
 	if (!msh -> old_wd)
-		msh_error(msh, LOG|CLEAN|EXIT, ERR_MALLOC, NULL);//ERROR_MESSAGE
+		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1 , ERR_MALLOC, NULL);//ERROR_MESSAGE
 	duplicate_env(msh, envp);
 }
 
