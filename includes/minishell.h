@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/13 00:08:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/14 20:23:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,19 @@
 # include <sys/types.h>//for pid_t
 # include <fcntl.h>//for file open flags
 
+# include "define.h"
+
 typedef enum e_do_err {
-    LOG   = 0b001,
-	CLEAN = 0b010,
-	EXIT  = 0b100
+    ERRNO  = 0b0001,
+    LOG    = 0b0010,
+    CLEAN  = 0b0100,
+    EXIT   = 0b1000
 } t_do_err;
 
-typedef enum e_err_type{
-	ERR_SYS_FUNC,
-	ERR_MALLOC,
-} t_err_type;
+// typedef enum e_err_type{
+// 	ERR_SYS_FUNC,
+// 	ERR_MALLOC
+// } t_err_type;
 
 typedef struct s_msh
 {
