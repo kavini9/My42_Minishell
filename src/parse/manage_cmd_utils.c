@@ -6,27 +6,11 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:49:29 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 17:28:16 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:19:14 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-/**
- * skip_whitespace - Skips over whitespace in a string.
- *
- * @str: The input string.
- * @i: The starting index.
- *
- * Advances the index to skip over any leading whitespace characters.
- * Returns the updated index.
- */
-int	skip_whitespace(char *str, int i)
-{
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	return (i);
-}
 
 /**
  * append_to_array - Appends an argument to the command's argument array.

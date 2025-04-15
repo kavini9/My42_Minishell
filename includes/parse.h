@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:24:31 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 15:31:05 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 18:03:15 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
  * and quote/variable processing.
  */
 
-# include <stdbool.h>
+# include "minishell.h"
+/* # include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdio.h>
@@ -30,16 +31,14 @@
 # include <unistd.h>
 # include <string.h>
 # include <errno.h>
-# include <signal.h>
 #include <fcntl.h>
 
-# include <stddef.h>
-# include "minishell.h"
+# include <stddef.h> */
+
 
 # define TMP_S "/tmp/heredoc"
 # define TMP_EXT ".tmp"
 
-extern volatile sig_atomic_t g_signal;
 
 typedef struct s_env
 {
@@ -121,7 +120,6 @@ typedef struct s_cmd
 	char		*command;
 	char		**cmd;
 	int			cmd_index;
-
 	t_redir		*redir_start;
 	t_redir		*redir_end;
 	int			input_fd;
