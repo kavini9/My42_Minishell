@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/14 23:53:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/15 22:21:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ void    cd_tilde(t_msh *msh, char *tilde_path)
     
     home = get_env(msh -> envl, "HOME");
     if (!home)
-        return (msh_warning("minishell: cd: HOME not set"));
+        return(msh_error(msh, (LOG|CLEAN) << 8 | 1, ERR_DIR_NOTSET, "HOME")); //"minishell: cd: %s not set.\n"
+    if (chdir(path) == -1) //bash: cd: dir1: Permission denied
     path = ft_strjoin(home, tilde_path + 1);
     if (!path)
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//ERROR_MESSAGE
@@ -104,7 +105,7 @@ void    cd_path(t_msh *msh, char *path)
 void    builtin_cd(t_msh *msh, char **cmd)
 {
     if (cmd[2])
-        return(msh_error(msh, LOG << 8 | 1, "minishell: cd: too many arguments\n", NULL));//TODO: should not exit minishell but prints error message.
+        return(msh_error(msh, LOG << 8 | 1, ERR_XTRA_ARG, "cd"));//TODO: should not exit minishell but prints error message.
     else if (!cmd[1] || ft_strcmp(cmd[1], "~") || ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
         cd_env_var(msh, "HOME");
     else if (cmd[1][0] == '~')

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/12 18:14:26 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/15 23:03:32 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
     int pipe_fd[2];
     pid_t pid;
     
-    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in synta error determining part.
+    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.
     while (i < msh -> cmd_count)
     {
         memset(pipe_fd, -1, sizeof(int));//to avoid trying to redirect the pfd[1] in last command.
         if (i < msh -> cmd_count - 1 && pipe(pipe_fd) < 0)
-            exit(printf("write_fail\n"));//TODO: ERROR
+            msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "pipe");
         pid = fork();
         if (pid < 0)
             break;//chidren are waited after exiting the loop. make sure you compare cmd cout with i and do proper error handling.

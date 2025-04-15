@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/29 04:05:24 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:47:56 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void    builtin_unset(t_msh *msh, char **cmd)
             unset_env(msh, msh -> envl, *cmd);
         cmd++;
     }
+    msh -> exit_code = EXIT_SUCCESS;
 }
 
 
