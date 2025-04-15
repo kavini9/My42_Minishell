@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:50:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/19 18:07:59 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:48:46 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char *get_trailing_input(t_msh *msh, char *line)
     additional_input = NULL; // Initialize a pointer to store additional user input.
 
     // Set a signal handler for SIGINT (Ctrl+C).
-    signal(SIGINT, sig_handler_hd);
+   // signal(SIGINT, sig_handler_hd);
 
     // Enter an infinite loop to keep reading additional input.
     while (1)
