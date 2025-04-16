@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/12 22:30:58 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/16 04:19:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*get_path_array(t_msh *msh, char **envl)
 	if (*env_path)
         arr_path = ft_split(env_path, ':');
 	else
-		return ;
+		arr_path = ft_split(".", ' ');// will create {"./", NULL} so I can search current folder if the env path is unset.
 	if (!arr_path)
 		printf("path arr split failed. free nothing in this function");//TODO: error handling. no mallocs done.
 }
@@ -91,8 +91,8 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     	if (!cmd_path)
         	exit(printf("no need to free anything yet"));//TODO: Error handling
     	execve(cmd_path, cmd_arr, msh -> envl);
-		free_arr(arr_path);
-		free(cmd_path);
+		free_arr(arr_path);//see if this needs to be nulled
+		free(cmd_path);//see if this needs to be nulled
 	}
 	//clean and exit with exit code set in msh received.
     printf("execve failed. free cmd path and path arr");// clean all memeory and set exitcode for child proocess.

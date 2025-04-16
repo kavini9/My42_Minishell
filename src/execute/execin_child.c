@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 23:03:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/16 05:53:39 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,31 +46,43 @@ void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
     }   
 }
 
+void    safe_fork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int i)
+{
+    msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, "fork");
+    if (prev_rd_fd != -1)
+        close(prev_rd_fd);
+    if (i < msh -> cmd_count - 1)
+    {
+        close(pipe_fd[0]);
+        close(pipe_fd[1]);
+    }  
+}
+    
 void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
 {
     int pipe_fd[2];
     pid_t pid;
     
-    here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.
+    //here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.
     while (i < msh -> cmd_count)
     {
         memset(pipe_fd, -1, sizeof(int));//to avoid trying to redirect the pfd[1] in last command.
         if (i < msh -> cmd_count - 1 && pipe(pipe_fd) < 0)
-            msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "pipe");
+            msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, "pipe");//see if this shouls exit or clean or return
         pid = fork();
         if (pid < 0)
-            break;//chidren are waited after exiting the loop. make sure you compare cmd cout with i and do proper error handling.
+            break;
         if (pid == 0)
             run_child_proc(msh, cmd, prev_rd_fd, pipe_fd[1]);
-        else if (msh -> cmd_count < 1)// it wpon't go in here if the command count is 1.
+        else if (msh -> cmd_count <= 1)// it won't go in here if the command count is 1.
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
         cmd = cmd -> next;
         i++;//maybe this is not needed for me except to decide when not to create pipe 
     }
-    wait_child(i, pid, msh);//see where i am cleaning cmd shit
     if (i < msh -> cmd_count)
-        printf("fork fail\n");// error messgae
-    //clean_cmd;
+        safe_fork_fail(msh, prev_rd_fd, pipe_fd , i);
+    wait_child(i, pid, msh);//see where i am cleaning cmd shit
+    //clean_cmd & close pipe ends and prev_rd_fd;
 }
 
 // void    execin_child(t_msh *msh)

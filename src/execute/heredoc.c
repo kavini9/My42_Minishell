@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/08 17:04:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/16 05:48:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
     char *line;
 
     if (pipe(hd_pfd) == -1)
-        exit(print("pipe did not open\n"));//TODO: ERROR. See what is need to be freed.
+        return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, "pipe"));//TODO: ERROR. See what is need to be freed.
     while (1)
     {
         line = readline("> ");

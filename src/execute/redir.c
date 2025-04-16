@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/10 17:28:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/16 05:35:47 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,14 +75,14 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 	while (redir) // check if redir -> fname exist. ex: <$NONEXIST_FILE. should give ambiguous redirection 
 	{
 		if (redir -> type != REDIR_HDOC)
-			fd = open_file(msh, redir -> type, redir -> fname_o_del);
+			fd = open_file(msh, redir -> type, redir -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
 		else
 		{
 			fd = *(msh ->  hdocfd_l + cmd -> hdoc_st_pos + i);
-			*(msh -> hdocfd_l + cmd -> hdoc_st_pos + i) = -1;
+			*(msh -> hdocfd_l + cmd -> hdoc_st_pos + i) = -1;// this is just to make other heredocs to be closed in this child
 			i++;
 		}
-		//if (fd == -1)
+		if (fd == -1)
 			//send_help();TODO: ERROR handling
 		if (redir -> type == REDIR_INP || redir -> type == REDIR_HDOC)
 				fd = dup_io(msh, fd, STDIN_FILENO);
