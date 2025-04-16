@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:09:47 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/15 13:46:38 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 23:08:10 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,8 @@ int	handle_cmd_args(t_msh *msh, t_cmd *cmd, int i)
 	int			arg_index;
 	t_expand	arg;
 
-	if (init_args_array(cmd, i) == -1)
+	int arg_count = count_args(cmd, i); // count args from current segment
+	if (init_args_array(cmd, arg_count) == -1)
 		return (-1);
 	arg_index = 1;
 	i = skip_whitespace(cmd->seg, i);

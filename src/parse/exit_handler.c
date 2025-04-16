@@ -6,33 +6,36 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 14:57:33 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 15:09:38 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 09:23:48 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+#include "../../includes/minishell.h"
+
 /**
- * exit_for_failure - Cleans up resources and exits the shell on failure.
+ * @brief Cleans up resources and exits the shell on failure.
  *
- * @msh: Pointer to the shell structure containing resources to free.
- * @i: Index of the current command being executed.
- * @exit_status: Exit status code to terminate the shell with.
+ * @param msh Pointer to the shell structure containing resources to free.
+ * @param i Index of the current command being executed.
+ * @param exit_status Exit status code to terminate the shell with.
  *
- * This function performs a comprehensive cleanup, including closing file
- * descriptors, unlinking heredocs, freeing memory, and releasing resources
- * before terminating the shell with the specified exit status.
+ * Performs a comprehensive cleanup: closes file descriptors, unlinks heredocs,
+ * frees environment and command memory, closes pipes, and exits the shell.
  */
 void	exit_for_failure(t_msh *msh, int i, int exit_status)
 {
 	close_all_pipes(msh);
 	unlink_all_heredocs(msh);
-	if (msh->cmds[i].output_fd > 2)
-		close(msh->cmds[i].output_fd);
-	if (msh->cmds[i].input_fd > 2)
-		close(msh->cmds[i].input_fd);
-	clean_env(msh->env , msh->pending);
+	if (msh->cmds[i]->output_fd > 2)
+		close(msh->cmds[i]->output_fd);
+	if (msh->cmds[i]->input_fd > 2)
+		close(msh->cmds[i]->input_fd);
+	clean_env(msh->env, msh->pending);
 	clean_cmds(msh->cmds);
+	if (msh->cmd_count > 1)
+		ft_free_int_arr_with_size(msh->pipes, msh->cmd_count - 1);
 	free(msh->cmds);
 	free(msh->cwd);
 	free(msh->old_wd);
@@ -43,21 +46,25 @@ void	exit_for_failure(t_msh *msh, int i, int exit_status)
 }
 
 /**
- * exit_for_success - Cleans up resources
- * and exits the shell with the given status upon success.
+ * @brief Cleans up resources and exits the shell gracefully.
  *
- * @msh: Pointer to the shell structure containing resources to free.
- * @i: Index of the current command being executed.
- * @exit_status: Exit status code to terminate the shell with.
+ * @param msh Pointer to the shell structure.
+ * @param i Index of the current command being executed.
+ * @param exit_status Exit status code to terminate the shell with.
+ *
+ * Frees memory, closes valid file descriptors, pipes, and other
+ * shell-level allocations before exiting cleanly.
  */
 void	exit_for_success(t_msh *msh, int i, int exit_status)
 {
-	if (msh->cmds[i].output_fd != STDOUT_FILENO && msh->cmds[i].output_fd != -1)
-		close(msh->cmds[i].output_fd);
-	if (msh->cmds[i].input_fd != STDIN_FILENO && msh->cmds[i].input_fd != -1)
-		close(msh->cmds[i].input_fd);
+	if (msh->cmds[i]->output_fd != STDOUT_FILENO && msh->cmds[i]->output_fd != -1)
+		close(msh->cmds[i]->output_fd);
+	if (msh->cmds[i]->input_fd != STDIN_FILENO && msh->cmds[i]->input_fd != -1)
+		close(msh->cmds[i]->input_fd);
 	clean_env(msh->env, msh->pending);
 	clean_cmds(msh->cmds);
+	if (msh->cmd_count > 1)
+		ft_free_int_arr_with_size(msh->pipes, msh->cmd_count - 1);
 	free(msh->cmds);
 	free(msh->cwd);
 	free(msh->old_wd);
@@ -68,9 +75,12 @@ void	exit_for_success(t_msh *msh, int i, int exit_status)
 }
 
 /**
- * clean_cmd_unlink - Cleans up command resources and unlinks heredocs.
+ * @brief Frees command memory and unlinks heredoc files.
  *
- * @msh: Pointer to the shell structure containing commands and heredocs.
+ * @param msh Pointer to the shell structure containing commands and heredocs.
+ *
+ * This function is useful for intermediate command cleanup
+ * (e.g., after parse failure).
  */
 void	clean_cmd_unlink(t_msh *msh)
 {
@@ -79,10 +89,10 @@ void	clean_cmd_unlink(t_msh *msh)
 }
 
 /**
- * hd_free - Frees resources allocated during heredoc expansion.
+ * @brief Frees heredoc-related dynamic memory.
  *
- * @arg: Pointer to the expansion structure containing the value to free.
- * @expan: Pointer to the expanded string to free.
+ * @param arg Pointer to the heredoc expansion context (t_expand).
+ * @param expan The expanded heredoc string to free.
  */
 void	hd_free(t_expand *arg, char *expan)
 {
@@ -91,19 +101,21 @@ void	hd_free(t_expand *arg, char *expan)
 }
 
 /**
- * close_all_pipes - Closes all pipes used in the shell.
+ * @brief Closes all pipe file descriptors used for inter-process communication.
  *
- * @msh: Pointer to the shell structure containing the pipes to close.
+ * @param msh Pointer to the shell structure containing pipes.
  */
 void	close_all_pipes(t_msh *msh)
 {
-	int	j;
+	int	j = 0;
 
-	j = 0;
 	while (j < msh->cmd_count - 1)
 	{
-		close(msh->pipes[j][0]);
-		close(msh->pipes[j][1]);
+		if (msh->pipes && msh->pipes[j])
+		{
+			close(msh->pipes[j][0]);
+			close(msh->pipes[j][1]);
+		}
 		j++;
 	}
 }

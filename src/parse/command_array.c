@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:00:53 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 17:23:50 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 11:42:42 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@
  */
 int	count_pipes(char *line)
 {
-	int	i;
-	int	pipe_count;
+	int	i = 0;
+	int	pipe_count = 0;
 
-	i = 0;
-	pipe_count = 0;
 	while (line[i])
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
@@ -46,76 +44,69 @@ void	initialize_command_struct(t_cmd *cmd)
 {
 	cmd->seg = NULL;
 	cmd->command = NULL;
-	//cmd->command_path = NULL;
+	cmd->cmd = NULL;
 	cmd->cmd_index = 0;
-	//cmd->args = NULL;
-	//cmd->arg_count = 0;
 	cmd->redir_start = NULL;
 	cmd->redir_end = NULL;
 	cmd->input_fd = -1;
 	cmd->output_fd = -1;
 	cmd->cmd_exit_status = 0;
-	cmd->next = NULL;
+	// cmd->next = NULL; // removed: not used in array-based version
 }
 
 /**
- * cmd_struct_while - Creates and initializes a linked list of t_cmd nodes.
+ * cmd_struct_while - Allocates and initializes each command node in the array.
  *
- * @msh: Pointer to the shell structure holding the command list.
+ * @msh: Pointer to the shell structure.
  * @cmd_count: Number of command nodes to allocate.
  *
- * Returns: 0 on success, 1 if memory allocation fails.
+ * Returns: 0 on success, 1 on allocation failure.
  */
 static int	cmd_struct_while(t_msh *msh, int cmd_count)
 {
-	t_cmd	*prev;
-	t_cmd	*current;
-	int		i;
+	int	i;
 
 	i = 0;
-	prev = NULL;
 	while (i < cmd_count)
 	{
-		current = malloc(sizeof(t_cmd));
-		if (!current)
+		msh->cmds[i] = malloc(sizeof(t_cmd));
+		if (!msh->cmds[i])
 		{
 			ft_putendl_fd("Failed to allocate memory for command struct", 2);
-			free_cmd_list(msh->cmds);
+			clean_cmds(msh->cmds);
 			return (1);
 		}
-		initialize_command_struct(current);
-		current->cmd_index = i;
-		if (!prev)
-			msh->cmds = current;
-		else
-			prev->next = current;
-		prev = current;
+		initialize_command_struct(msh->cmds[i]);
 		i++;
 	}
+	msh->cmds[cmd_count] = NULL; // null-terminate the array
 	return (0);
 }
 
 /**
- * build_command_structs - Prepares the linked list of command structures.
+ * build_command_structs - Builds an array of initialized command structures.
  *
- * @msh: Pointer to the shell structure containing command info.
- * @line: The input line to parse.
+ * @msh: Pointer to the main shell structure.
+ * @line: The input line from user.
  *
- * Determines number of commands from unquoted pipe characters
- * and initializes a linked list of command structures.
+ * Allocates the array of t_cmd * and fills with allocated & initialized t_cmd.
  *
- * Returns: 0 on success, 1 on failure.
+ * Returns: 0 on success, 1 on error.
  */
 int	build_command_structs(t_msh *msh, char *line)
 {
-	int	cmd_count;
+	int	cmd_count = count_pipes(line) + 1;
 
-	cmd_count = count_pipes(line) + 1;
 	msh->cmd_count = cmd_count;
-	msh->cmds = NULL;
+
+	msh->cmds = ft_calloc(cmd_count + 1, sizeof(t_cmd *)); // +1 for NULL terminator
+	if (!msh->cmds)
+	{
+		ft_putendl_fd("Failed to allocate memory for command pointer array", 2);
+		return (1);
+	}
 	if (cmd_struct_while(msh, cmd_count))
 		return (1);
 	return (0);
 }
-
 

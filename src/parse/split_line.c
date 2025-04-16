@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:16:56 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 15:49:08 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 12:42:07 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
  * trim_whitespace - Removes leading and trailing whitespace from a string.
  *
  * @seg: The input string to trim.
- *
- * Identifies the first and last non-whitespace characters in the string,
- * then shifts the trimmed portion to the beginning and null-terminates it.
  *
  * Return: Pointer to the trimmed string, or NULL if input is NULL.
  */
@@ -48,8 +45,6 @@ char	*trim_whitespace(char *seg)
  * @start: Start index of the segment in the input line.
  * @end: End index (non-inclusive) of the segment in the input line.
  *
- * Copies the substring, trims whitespace, and assigns it to cmd->seg.
- *
  * Return: 0 on success, 1 on memory allocation failure or missing segment.
  */
 static int	segment_handler(t_cmd *cmd, char *line, int start, int end)
@@ -71,14 +66,10 @@ static int	segment_handler(t_cmd *cmd, char *line, int start, int end)
 }
 
 /**
- * split_line - Splits the input into command segments at unquoted pipes ('|').
+ * split_line_by_pipe - Splits the input line into command segments at unquoted pipes.
  *
- * @line: The full input command line from the user.
- * @msh: Pointer to the shell structure containing the command linked list.
- *
- * Walks through the input, identifying unquoted pipes and passing each
- * command segment to segment_handler. The trimmed result is stored in
- * each t_cmd node's `seg` field.
+ * @line: Input command line from the user.
+ * @msh: Pointer to the shell structure.
  *
  * Return: 0 if successful, 1 on failure.
  */
@@ -87,25 +78,23 @@ int	split_line_by_pipe(char *line, t_msh *msh)
 	int		i;
 	int		start;
 	int		index;
-	t_cmd	*current;
 
 	i = 0;
 	start = 0;
 	index = 0;
-	current = msh->cmds;
 
 	while (line[i])
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
 		{
-			if (!current || segment_handler(current, line, start, i))
+			if (!msh->cmds[index] || segment_handler(msh->cmds[index], line, start, i))
 				return (1);
-			current = current->next;
+			index++;
 			start = i + 1;
 		}
 		i++;
 	}
-	if (!current || segment_handler(current, line, start, i))
+	if (!msh->cmds[index] || segment_handler(msh->cmds[index], line, start, i))
 		return (1);
 	return (0);
 }

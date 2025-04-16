@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 15:56:49 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/15 13:46:42 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 10:49:52 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,22 +124,34 @@ int	count_args(t_cmd *cmd, int i)
  * @cmd: Pointer to the command structure.
  * @i: Index to start parsing for argument count.
  *
- * Uses count_args to determine allocation size.
- * Assigns the command name as the first argument.
- * Returns 0 on success, -1 on failure.
+ * This function:
+ *   - Uses count_args() to count how many arguments the segment contains.
+ *   - Allocates memory for (arg_count + 1) arguments (including the command itself).
+ *   - Sets cmd->cmd[0] to the command name (copied via ft_strdup).
+ *   - Ensures the array is NULL-terminated.
+ *
+ * Returns:
+ *   0  on success,
+ *  -1 if allocation or duplication fails.
  */
 int	init_args_array(t_cmd *cmd, int i)
 {
-	int	arg_count = count_args(cmd, i) + 1;
+	int	arg_count;
 
-	cmd->cmd = ft_calloc(arg_count + 1, sizeof(char *));
+	arg_count = count_args(cmd, i);
+
+	// +2: one for cmd[0] (command name), one for final NULL
+	cmd->cmd = ft_calloc(arg_count + 2, sizeof(char *));
 	if (!cmd->cmd)
 		return (-1);
+
 	cmd->cmd[0] = ft_strdup(cmd->command);
 	if (!cmd->cmd[0])
 	{
 		ft_free_array(cmd->cmd);
 		return (-1);
 	}
+	cmd->cmd_index = 0; // optional, if you use this to track filling
 	return (0);
 }
+

@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:25:54 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 18:45:44 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:45:34 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ bool	is_empty_command(t_cmd *cmd, int i)
 		i++;
 	if (i >= len || cmd->seg[i] == '|')
 		return (true);
+/* 			if (i != len - 1)
+	{
+		if (!cmd->seg[i] || cmd->seg[i] == '|')
+			return (true);
+	} */
 	return (false);
 }
 
