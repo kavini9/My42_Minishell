@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 14:29:20 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 17:29:18 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 09:08:36 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,14 +84,6 @@ static int create_name(t_cmd *cmd, t_hd *hd)
  * Returns 0 on success or 1 on failure.
  */
 
-static void cleanup_hd(t_hd *hd)
-{
-    free(hd->cmd_str);
-    free(hd->heredoc_str);
-    free(hd->base);
-    free(hd->mid);
-    free(hd->full);
-}
 
 int generate_hd_file(t_cmd *cmd)
 {
@@ -101,10 +93,19 @@ int generate_hd_file(t_cmd *cmd)
     if (index_to_char(cmd, &hd))
         return (1);
     if (create_name(cmd, &hd))
-    {
-        cleanup_hd(&hd);
-        return (1);
-    }
+	{
+		if (hd.cmd_str)
+			free(hd.cmd_str);
+		if (hd.heredoc_str)
+			free(hd.heredoc_str);
+		if (hd.base)
+			free(hd.base);
+		if (hd.mid)
+			free(hd.mid);
+		if (hd.full)
+			free(hd.full);
+		return (1);
+	}
     free(hd.full);
     unlink(cmd->redir_end->heredoc_name);
     return (0);
