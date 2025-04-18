@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:43:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 23:04:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/17 21:37:16 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,7 @@
 # define ERR_XTRA_ARG "minishell: %s: too many arguments\n"
 # define ERR_XPORTID "minishell: export: `%s': not a valid identifier\n"
 # define ERR_SYSFUNC "minishell: %s: %s\n"
+# define ERR_SYSFUNC_DUP "minishell: %d: %s\n"
+# define ERR_EXECVE "minishell: %s: "
 
 #endif

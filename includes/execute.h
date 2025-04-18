@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/11 21:54:49 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/18 22:01:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,19 @@ typedef struct redir
     t_redir *next;
 }   t_redir;
 
+typedef struct s_errnote
+{
+	char *cmd_path;
+	char *strerr;
+} t_errnote;
+
 typedef struct s_cmd
 {
 	char		**cmd;
     int			cmd_id;
 	int			hdoc_st_pos;
 	int			cmd_exit_code;
+	t_errnote	err_note;
     t_redir     *redir;
 	t_cmd       *next;
 } t_cmd;

@@ -6,19 +6,18 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/14 20:23:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/18 21:43:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define  ERROR_MSG "minishell: Error" // represents a enum containing all the err codes for now.
 # define  HEREDOC_MAX 16
 
 # define X_KO 126
 # define F_KO 127
-# define CMD_NOT_FOUND "Command not found"
+# define CMD_NOT_FOUND ": command not found"
 
 # include <readline/readline.h> //for readline
 # include <readline/history.h> //for readline add_history function
