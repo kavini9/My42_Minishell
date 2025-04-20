@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/17 18:42:48 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/20 05:52:16 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 			i++;
 		}
 		if (fd == -1)
-			msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, redir -> fname_o_del);
-		if (redir -> type == REDIR_INP || redir -> type == REDIR_HDOC)
+			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, redir -> fname_o_del));
+		else if (redir -> type == REDIR_INP || redir -> type == REDIR_HDOC)
 				dup_ret = dup_io(msh, fd, STDIN_FILENO);
 		else
 				dup_ret = dup_io(msh, fd, STDOUT_FILENO);
 		if (dup_ret < 0)
-			msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC_DUP, fd);	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
+			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC_DUP, fd));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
 	}
 	close_all_hdocfd(msh -> hdocfd_l);
 }

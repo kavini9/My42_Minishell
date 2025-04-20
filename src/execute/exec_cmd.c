@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/18 23:26:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/19 23:57:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,17 @@
 
 int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path)
 {
+	struct stat statbuf;
+	
 	if (access(cmd_path, F_OK) == 0)
 	{
-		if (access(cmd_path, X_OK) == 0)
-			return (0);
-		else
-		{
-			cmd -> cmd_exit_code = X_KO;
+		if (stat(cmd_path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))//double check this stat and the macro
+			cmd -> err_note.strerr = IS_DIRECTORY;
+		else if (access(cmd_path, X_OK) != 0)
 			cmd -> err_note.strerr = strerror(errno);
-		}
+		else
+			return (0);
+		cmd -> cmd_exit_code = X_KO;
 	}
 	else if (cmd -> cmd_exit_code != X_KO)
 		cmd -> cmd_exit_code = F_KO;
@@ -91,12 +93,13 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     	if (!cmd_path)
         	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
     	execve(cmd_path, cmd_arr, msh -> envl);
-		if (cmd -> err_note.strerr)
-			cmd -> err_note.cmd_path = cmd_path;
-		msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_EXECVE,  (char *)&(cmd -> err_note));
+		cmd -> err_note.cmd_path = cmd_path;
+		if (!cmd -> err_note.strerr)
+			cmd -> err_note.strerr = strerror(errno);
+		msh_error(msh, (EXTRARG|LOG) << 8 | 1, ERR_SYSFUNC, (char *)&(cmd -> err_note));
 		free(cmd_path);//see if this needs to be nulled
 	}
+	msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);
 	//clean and exit with exit code set in msh received.
-	msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_EXECVE, (char *)&(cmd -> err_note));
     //printf("execve failed. free cmd path and path arr\n");// clean all memeory and set exitcode for child proocess.
 }

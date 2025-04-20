@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/18 21:43:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/19 23:09:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 
 # define X_KO 126
 # define F_KO 127
-# define CMD_NOT_FOUND ": command not found"
+#define IS_DIRECTORY "Is a directory" 
+# define CMD_NOT_FOUND "command not found"
 
 # include <readline/readline.h> //for readline
 # include <readline/history.h> //for readline add_history function
@@ -26,16 +27,18 @@
 # include <string.h> //for strerror(errnum)
 # include <errno.h> //for using errno in strerror
 # include <unistd.h>//for fork
+# include <sys/stat.h> //for stat in access check
 # include <sys/types.h>//for pid_t
 # include <fcntl.h>//for file open flags
 
 # include "define.h"
 
 typedef enum e_do_err {
-    ERRNO  = 0b0001,
-    LOG    = 0b0010,
-    CLEAN  = 0b0100,
-    EXIT   = 0b1000
+    ERRNO 	= 0b00001,
+	EXTRARG = 0b00010,
+    LOG   	= 0b00100,
+    CLEAN 	= 0b01000,
+    EXIT  	= 0b10000
 } t_do_err;
 
 // typedef enum e_err_type{
