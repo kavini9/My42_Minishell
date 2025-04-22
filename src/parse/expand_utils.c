@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 15:07:27 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/28 16:37:10 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:47:06 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int we_have_dollar(t_msh *msh, t_expand *arg, char *str)
 {
    char	*temp;
    char	*new_res;
-   int		s_exp = arg->i;
+   //int		s_exp = arg->i;
 
    temp = ft_strdup("");
    if (!temp)

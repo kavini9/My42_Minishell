@@ -6,40 +6,44 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:25:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 15:27:56 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:00:13 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 /**
- * validate_redirect - Ensures that a redirection operator is followed by a valid token.
- * @line: The input command string.
- * @msh: The shell structure for managing shell state and exit status.
- * @i: Pointer to the current index in the line.
- * @type: The redirection type (">", ">>", "<", "<<") used in error messages.
+ * @brief Validates syntax after a redirection operator in the input line.
  *
- * This function skips whitespace after the redirection operator and verifies that
- * the next token is valid (not '|', '<', '>', or end of the string). If invalid, 
- * it prints an error message and updates the shell's exit code.
+ * This function checks whether the token following a redirection operator
+ * (such as '<', '>', '>>', '<<') is valid. According to shell syntax rules,
+ * a redirection cannot be immediately followed by a pipe ('|'), another
+ * redirection symbol, or the end of input. If such an invalid token is found,
+ * it prints a bash-like error message to stderr and updates the shell's
+ * exit code accordingly.
  *
- * Returns:
- * - 1 if the syntax is invalid.
- * - 0 if valid.
+ * @param line The full input line from the user.
+ * @param msh  Pointer to the main shell structure (used to set exit_code).
+ * @param i    Pointer to the current index in the input string (will be advanced).
+ * @param type A string representing the redirection type (used for better error messages).
+ *
+ * @return int Returns 1 if a syntax error is detected, 0 if the syntax is valid.
  */
 int validate_redirect(char *line, t_msh *msh, int *i, char *type)
 {
 	(*i)++;
 	(*i) = skip_whitespace(line, *i);
 
-	// Check for invalid tokens after the redirection operator
-	if (!line[*i] || line[*i] == '|' || line[*i] == '<' || line[*i] == '>') //  do we need to add | in here???
+	// Check for invalid characters immediately after redirection
+	if (!line[*i] || line[*i] == '|' || line[*i] == '<' || line[*i] == '>')
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		if (!line[*i])
 			ft_putstr_fd("newline", 2);
+		else if (type)
+			ft_putstr_fd(type, 2);  // Use provided redirection type if available
 		else
-			write(2, &line[*i], 1);
+			write(2, &line[*i], 1); // Otherwise, print the invalid character
 		ft_putstr_fd("'\n", 2);
 
 		msh->exit_code = 2;
@@ -47,6 +51,7 @@ int validate_redirect(char *line, t_msh *msh, int *i, char *type)
 	}
 	return (0);
 }
+
 
 /**
  * check_in_redirects - Validates output redirection syntax ('>' and '>>').

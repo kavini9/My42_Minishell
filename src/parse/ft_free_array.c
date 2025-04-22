@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:38:14 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 18:39:29 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 00:22:41 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	ft_free_array(char **array)
 	a = 0;
 	if (!array)
 		return ;
-	while (array[a] != NULL)
+	while (array[a])
 	{
 		free(array[a]);
 		a++;

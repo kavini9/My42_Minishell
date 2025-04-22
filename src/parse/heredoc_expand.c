@@ -6,21 +6,22 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 14:53:06 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 14:55:34 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 09:30:08 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+
 /**
- * init_heredoc_expander - Initializes the heredoc expansion process.
+ * @brief Initializes the heredoc expansion state and result buffer.
  *
- * @arg: Pointer to the expansion state structure to be initialized.
- * @expan: Pointer to the expansion result string, which will be allocated.
+ * @param arg Pointer to the expansion state structure to initialize.
+ * @param expan Pointer to the result string (to be allocated as empty string).
+ * @return 0 on success, 1 on failure.
  *
- * Initializes the expansion state
- * and allocates an empty string for the expansion result.
- * Returns 0 on success or 1 on failure.
+ * This sets up the internal state (`t_expand`) and allocates memory
+ * for building the result of a heredoc expansion.
  */
 static int	init_heredoc_expander(t_expand *arg, char **expan)
 {
@@ -33,16 +34,15 @@ static int	init_heredoc_expander(t_expand *arg, char **expan)
 }
 
 /**
- * finalize_hd_expand - Finalizes heredoc variable expansion.
+ * @brief Finalizes the heredoc expansion result by joining it and replacing input.
  *
- * @arg: Pointer to the expansion state structure.
- * @expan: Pointer to the accumulated expansion result.
- * @line: Pointer to the original heredoc line, which will be replaced.
+ * @param arg Pointer to the expansion state (includes accumulated value).
+ * @param expan The intermediate expanded result string.
+ * @param line Pointer to the original line string (will be replaced).
+ * @return 0 on success, -1 on failure.
  *
- * Joins the expanded result with the accumulated value,
- * replaces the original line,
- * and frees memory used during the process.
- * Returns 0 on success or -1 on failure.
+ * Frees intermediate buffers, joins the final result into `line`,
+ * and ensures memory safety.
  */
 static int	finalize_hd_expand(t_expand *arg, char *expan, char **line)
 {
@@ -59,62 +59,61 @@ static int	finalize_hd_expand(t_expand *arg, char *expan, char **line)
 }
 
 /**
- * heredoc_expander - Expands variables in a heredoc line.
+ * @brief Expands environment variables (`$VAR`) within a heredoc line.
  *
- * @msh: Pointer to the shell structure containing environment variables.
- * @line: Pointer to the heredoc line to be expanded.
+ * @param msh Pointer to shell structure containing environment.
+ * @param line Line to expand (in-place update).
+ * @return 0 on success, 1 or -1 on failure.
  *
- * Iterates through the line, expanding variables prefixed by `$`. Handles errors
- * during expansion and ensures proper memory management.
- * Updates `line` with the expanded result.
- * Returns 0 on success, 1 or -1 on failure.
+ * This iterates through the given heredoc `line`, performs expansion
+ * on variables like `$USER`, and replaces `line` with the expanded result.
  */
-int	heredoc_expander(t_msh *msh, char **line)
+int	heredoc_expander(t_msh *msh, char *line)
 {
 	t_expand	arg;
 	char		*expan;
 
 	if (init_heredoc_expander(&arg, &expan))
 		return (1);
-	while ((*line)[arg.i])
+	while ((line)[arg.i])
 	{
-		if ((*line)[arg.i] == '$' && (*line)[arg.i + 1]
-			&& ft_isalnum((*line)[arg.i + 1]))
+		if ((line)[arg.i] == '$' && (line)[arg.i + 1]
+			&& ft_isalnum((line)[arg.i + 1]))
 		{
-			if (we_have_dollar(msh, &arg, *line) == -1)
+			if (we_have_dollar(msh, &arg, line) == -1)
 			{
 				hd_free(&arg, expan);
 				return (-1);
 			}
 		}
-		else if (add_char(*line, &arg))
+		else if (add_char(line, &arg))
 		{
 			hd_free(&arg, expan);
 			return (-1);
 		}
 	}
-	if (finalize_hd_expand(&arg, expan, line))
+	if (finalize_hd_expand(&arg, expan, &line))
 		return (1);
 	return (0);
 }
 
 /**
- * check_expand - Handles variable expansion in heredoc if enabled.
+ * @brief Performs heredoc variable expansion if enabled for the command.
  *
- * @msh: Pointer to the shell structure containing environment variables.
- * @cmd: Pointer to the command structure.
- * @line: Pointer to the heredoc line to be processed.
- * @fd: File descriptor of the heredoc temporary file.
+ * @param msh Pointer to shell structure.
+ * @param cmd Pointer to current command being processed.
+ * @param line Pointer to heredoc input line (possibly modified).
+ * @param fd File descriptor of the heredoc temporary file.
+ * @return 0 on success, 1 on failure.
  *
- * Expands variables in the heredoc line if the redirection requires expansion.
- * Cleans up resources and closes the file descriptor on failure.
- * Returns 0 on success or 1 on failure.
+ * If expansion is needed for the last redirection in `cmd`, expands variables
+ * in `line`. On failure, cleans up the line and file descriptor.
  */
 int	check_expand(t_msh *msh, t_cmd *cmd, char **line, int fd)
 {
 	if (cmd->redir_end && cmd->redir_end->expand)
 	{
-		if (heredoc_expander(msh, line))
+		if (heredoc_expander(msh, *line))
 		{
 			free(*line);
 			close(fd);
@@ -123,6 +122,3 @@ int	check_expand(t_msh *msh, t_cmd *cmd, char **line, int fd)
 	}
 	return (0);
 }
-
-
-

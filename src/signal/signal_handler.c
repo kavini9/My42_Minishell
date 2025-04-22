@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:44:37 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/04 16:32:01 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:37:47 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
  * complying with the requirement to keep handlers isolated from the shell state.
  */
 
-volatile sig_atomic_t g_sig = 0;  // Global signal indicator, safe for use in handlers.
+volatile __sig_atomic_t g_sig = 0;  // Global signal indicator, safe for use in handlers.
 
 /**
  * @brief Initializes signal handling for the main shell prompt.

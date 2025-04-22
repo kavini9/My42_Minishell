@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 14:41:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 14:56:13 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:49:09 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int	open_and_write_to_heredoc(t_msh *msh, t_cmd *cmd)
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (g_signal == SIGINT)
+		if (g_sig == SIGINT)
 		{
 			free(line);
 			return (restore_and_cleanup(msh, fd, 1));

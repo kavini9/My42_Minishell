@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:09:47 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 17:29:02 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 18:13:34 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,9 @@ static int	handle_arg(t_cmd *cmd, int i, t_expand *arg, int *arg_index)
 		return (-1);
 	if (!arg->value || append_to_array(cmd, arg->value, arg_index) == -1)
 	{
+printf("Adding argument[%d]: %s\n", *arg_index, arg->value);// just foir testing remove this
+
+		
 		free(arg->value);
 		ft_free_array(cmd->cmd);
 		return (-1);
@@ -155,7 +158,8 @@ int	handle_cmd_args(t_msh *msh, t_cmd *cmd, int i)
 	int			arg_index;
 	t_expand	arg;
 
-	if (init_args_array(cmd, i) == -1)
+	int arg_count = count_args(cmd, i); // count args from current segment
+	if (init_args_array(cmd, arg_count) == -1)
 		return (-1);
 	arg_index = 1;
 	i = skip_whitespace(cmd->seg, i);
