@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/20 03:25:40 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 02:21:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void msh_init(t_msh *msh, char **envp)
 	if (!msh -> old_wd)
 		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1 , ERR_MALLOC, NULL);//"minishell: fatal error: memory allocation failed in %s.\n"
 	duplicate_env(msh, envp);
+	set_shlvl(msh, msh -> envl);
 }
 
 void    msh_execute(t_msh *msh)

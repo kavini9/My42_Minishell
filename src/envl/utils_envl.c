@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 18:20:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 02:33:13 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void    update_env(t_msh *msh, char *key, char *value)
 
     entry = ft_strjoin(key, value);
     if(!entry)
-        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "updateenv");//"minishell: fatal error: memory allocation failed in %s\n"
+        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "update_env");//who cleans key coming from shlvl
     set_env(msh, msh -> envl, entry);
 }    
     

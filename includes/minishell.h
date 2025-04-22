@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/19 23:09:21 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 01:26:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <readline/history.h> //for readline add_history function
 # include <stdio.h> //temporary printf in msh_clean. delete later if you use your own
 # include <stdlib.h> //for exit
+# include <stdint.h> //for uint8_t in exit
 # include <string.h> //for strerror(errnum)
 # include <errno.h> //for using errno in strerror
 # include <unistd.h>//for fork
