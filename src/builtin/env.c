@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 21:08:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/29 05:28:35 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/14 23:47:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,5 @@ void    builtin_env(t_msh *msh, char **cmd)
             print("%s\n", *envl);
         envl++;
     }
+    msh -> exit_code = EXIT_SUCCESS;
 }

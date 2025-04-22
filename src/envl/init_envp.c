@@ -6,11 +6,27 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:53:48 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/26 18:56:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 02:31:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
+
+void	set_shlvl(t_msh *msh, char **envl)
+{
+	char *cur_lvl;
+	char *nxt_lvl;
+	int	lvl_val;
+
+	cur_lvl = get_env(envl, "SHLVL");
+	lvl_val = ft_atoi(cur_lvl);
+	lvl_val++;
+	nxt_lvl = ft_itoa(lvl_val);
+	if (!nxt_lvl)
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "set_shlvl");
+	update_env(msh, "SHLVL=", nxt_lvl);
+	free(nxt_lvl);
+}
 
 void	generate_mini_env(t_msh *msh)
 {
@@ -18,17 +34,17 @@ void	generate_mini_env(t_msh *msh)
 	
 	msh -> envl = ft_calloc(5 ,sizeof(char *));
 	if (!msh -> envl)
-		exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when creating pwd for basic env.
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "minimal envp");
 	tmp_p = msh -> envl;
 	*tmp_p = ft_strjoin("PWD=", msh -> cwd);
 	if (!*tmp_p)
-		exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when creating pwd for basic env.
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "PWD");
 	*(++tmp_p) = ft_strdup("SHLVL=1");
 	if (!*tmp_p)
-		exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when creating pwd for basic env.
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "SHLVL");
 	*(++tmp_p) = ft_strdup("_=]");
 	if (!*tmp_p)
-		exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when creating pwd for basic env.
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "_");
 	*(++tmp_p) = NULL;
 	*(++tmp_p) = NULL;
 }
@@ -45,13 +61,13 @@ void	duplicate_env(t_msh *msh, char **envp)
 		env_len++;
 	msh -> envl = ft_calloc(env_len + 1 ,sizeof(char *));
 	if (!msh -> envl)
-		exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when creating env list.
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "envp");
 	tmp_p = msh -> envl;
 	while (*envp)
 	{
 		*tmp_p = ft_strdup(*envp);
 		if (!*tmp_p)
-			exit(msh_clean(msh , err_out(ERROR_MSG)));//TODO: malloc fail when duplicating environment variables
+			msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "env var");//how to clean this? no worries temp p is NULL.
 		tmp_p++;
 		envp++;
 	}

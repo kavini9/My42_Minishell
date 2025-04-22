@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/02 20:37:40 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 02:21:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,21 @@ void msh_init(t_msh *msh, char **envp)
 	ft_memset(msh, 0, sizeof(t_msh)); //DES: sets everything to NULL
 	msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
-		msh_error(msh, LOG|CLEAN|EXIT, ERR_SYS_FUNC, "getcwd");//ERROR_MESSAGE
-	msh -> old_wd = ft_strdup(msh -> cwd);
+		msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_GETCWD, "init");//"minishell: cd: error retrieving current directory: getcwd: %s\n"
+	msh -> old_wd = ft_strdup(msh -> cwd);//if we go one level up the old pwd is different
 	if (!msh -> old_wd)
-		msh_error(msh, LOG|CLEAN|EXIT, ERR_MALLOC, NULL);//ERROR_MESSAGE
+		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1 , ERR_MALLOC, NULL);//"minishell: fatal error: memory allocation failed in %s.\n"
 	duplicate_env(msh, envp);
+	set_shlvl(msh, msh -> envl);
 }
 
 void    msh_execute(t_msh *msh)
 {
 	here_doc(msh);//what kind of errors can occur with this? pipe open, read and write to pipe
-    if (msh -> cmd_count == 1 && execif_builtin(msh, msh -> cmd -> cmd))
-        return ;
+    if (msh -> cmd_count == 1 && is_builtin(msh -> cmd -> cmd))
+        execin_shell(msh, msh -> cmd -> cmd);
     else
-        execin_child(msh);
+        execin_child(msh, msh -> cmd, -1, 0);
 }
 
 void	msh_loop(t_msh *msh)
@@ -50,7 +51,7 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		if (*line)
 		{
-			msh_validate(line);//to add entire input to history in unclosed commands and trailing pipe case 
+			//msh_validate(line);//to add entire input to history in unclosed commands and trailing pipe case 
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
 			msh_execute(msh);

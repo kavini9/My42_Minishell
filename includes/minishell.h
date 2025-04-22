@@ -3,27 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 18:13:30 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 01:26:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define  ERROR_MSG "minishell: Error" // represents a enum containing all the err codes for now.
 # define  HEREDOC_MAX 16
 
-#include <signal.h>
+
+# define X_KO 126
+# define F_KO 127
+#define IS_DIRECTORY "Is a directory" 
+# define CMD_NOT_FOUND "command not found"
+
 # include <readline/readline.h> //for readline
 # include <readline/history.h> //for readline add_history function
 # include <stdio.h> //temporary printf in msh_clean. delete later if you use your own
 # include <stdlib.h> //for exit
+# include <stdint.h> //for uint8_t in exit
 # include <string.h> //for strerror(errnum)
 # include <errno.h> //for using errno in strerror
 # include <unistd.h>//for fork
+# include <sys/stat.h> //for stat in access check
 # include <sys/types.h>//for pid_t
 # include <fcntl.h>//for file open flags
 # include <stdbool.h>
@@ -31,19 +37,23 @@
 
 extern volatile __sig_atomic_t g_sig;
 
+# include "define.h"
+
 typedef enum e_do_err {
-    LOG   = 0b001,
-	CLEAN = 0b010,
-	EXIT  = 0b100
+    ERRNO 	= 0b00001,
+	  EXTRARG = 0b00010,
+    LOG   	= 0b00100,
+    CLEAN 	= 0b01000,
+    EXIT  	= 0b10000
 } t_do_err;
 
-typedef enum e_err_type{
-	ERR_SYS_FUNC,
-	ERR_MALLOC,
-} t_err_type;
+// typedef enum e_err_type{
+// 	ERR_SYS_FUNC,
+// 	ERR_MALLOC
+// } t_err_type;
 
 
-/* typedef struct s_msh
+typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
@@ -55,9 +65,9 @@ typedef enum e_err_type{
 	int		exit_code;
 } t_msh; */
 
-
 # include "../lib/libft/libft.h"
-# include "signal_utils.h"
+# include "envp.h"
+
 # include "parse.h"
 # include "envp.h"
 # include "execute.h"
