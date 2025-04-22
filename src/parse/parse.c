@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 16:46:28 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:43:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	handle_unmatched_quotes(char **line)
 	{
 		extra_line = readline(">");
 		if (!extra_line)
-			return (0);
+			return (0);//what should happen after this?
 		temp = *line;
 		*line = ft_strjoin(*line, "\n");
 		free(temp);

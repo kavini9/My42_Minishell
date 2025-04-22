@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 15:27:53 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:57:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
  * - 1 if an invalid pipe usage is detected (syntax error).
  * - 0 if the pipe usage is valid.
  */
-int	validate_pipe(char *line, t_msh *msh)
+int	ft_validate_pipe(char *line, t_msh *msh)
 {
 	int	i;
 	int	j;
