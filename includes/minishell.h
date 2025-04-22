@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/22 01:26:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/22 22:35:28 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct s_msh
 	int		cmd_count; //  for command.c
 	int		hdocfd_l[HEREDOC_MAX];
 	int		exit_code;
-} t_msh; */
+} t_msh;
 
 # include "../lib/libft/libft.h"
 # include "envp.h"
