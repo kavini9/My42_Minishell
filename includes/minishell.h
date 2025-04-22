@@ -15,6 +15,7 @@
 
 # define  HEREDOC_MAX 16
 
+
 # define X_KO 126
 # define F_KO 127
 #define IS_DIRECTORY "Is a directory" 
@@ -31,12 +32,16 @@
 # include <sys/stat.h> //for stat in access check
 # include <sys/types.h>//for pid_t
 # include <fcntl.h>//for file open flags
+# include <stdbool.h>
+# include <stddef.h>
+
+extern volatile __sig_atomic_t g_sig;
 
 # include "define.h"
 
 typedef enum e_do_err {
     ERRNO 	= 0b00001,
-	EXTRARG = 0b00010,
+	  EXTRARG = 0b00010,
     LOG   	= 0b00100,
     CLEAN 	= 0b01000,
     EXIT  	= 0b10000
@@ -46,6 +51,7 @@ typedef enum e_do_err {
 // 	ERR_SYS_FUNC,
 // 	ERR_MALLOC
 // } t_err_type;
+
 
 typedef struct s_msh
 {
@@ -57,18 +63,20 @@ typedef struct s_msh
 	int		cmd_count; //  for command.c
 	int		hdocfd_l[HEREDOC_MAX];
 	int		exit_code;
-} t_msh;
+} t_msh; */
 
 # include "../lib/libft/libft.h"
 # include "envp.h"
+
 # include "parse.h"
+# include "envp.h"
 # include "execute.h"
 # include "builtin.h"
-# include "signal.h"
 
-void msh_init(t_msh *msh, char **envp);
+
+/* void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);
 //void	msh_clean(t_msh *msh);
-int err_out(char *msg);
+int err_out(char *msg); */
 
 #endif

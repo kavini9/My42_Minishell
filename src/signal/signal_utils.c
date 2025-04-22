@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:43:19 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/04 16:31:47 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/15 20:33:54 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,4 +81,11 @@ void	sig_handler_heredoc(int signum)
 		rl_on_new_line();
 		rl_redisplay();
 	}
+}
+
+void sig_handler_hd(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	exit(130); // or other appropriate heredoc interrupt code
 }

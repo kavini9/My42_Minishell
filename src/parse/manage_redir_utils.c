@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 18:54:18 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 17:28:26 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:50:39 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ bool is_redirection(t_cmd *cmd, int i)
 	if ((cmd->seg[i] == '>' || cmd->seg[i] == '<')
 		&& !check_quotes(cmd->seg, i))
 		return true;
-	return false;
+	else
+		return false;
 }
 
 /**
@@ -39,13 +40,15 @@ bool is_redirection(t_cmd *cmd, int i)
  */
 int handle_redirect_in(t_cmd *cmd, int i)
 {
-	char *filename = NULL;
+	char *filename;
+
+	filename = NULL;
 	i++;
 	i = parse_filename(cmd, i, &filename);
 	if (i == -1 || !filename)
 		return -1;
-	((t_redir *)cmd->redir_end)->file = filename;
-	((t_redir *)cmd->redir_end)->type = REDIR_IN;
+	cmd->redir_end->file = filename;
+	cmd->redir_end->type = REDIR_IN;
 	return i;
 }
 
@@ -60,7 +63,9 @@ int handle_redirect_in(t_cmd *cmd, int i)
  */
 int handle_redirect_out(t_cmd *cmd, int i)
 {
-	char *filename = NULL;
+	char *filename;
+	
+	filename = NULL;
 	i++;
 	i = parse_filename(cmd, i, &filename);
 	if (i == -1 || !filename)
@@ -82,15 +87,17 @@ int handle_redirect_out(t_cmd *cmd, int i)
  */
 int handle_heredoc(t_msh *msh, t_cmd *cmd, int i)
 {
-	char *delim = NULL;
+	char *delim;
+
+	delim = NULL;
 	i += 2;
 	if (cmd->seg[i] == '\'' || cmd->seg[i] == '"')
 		((t_redir *)cmd->redir_end)->expand = false;
 	i = parse_filename(cmd, i, &delim);
 	if (i == -1 || !delim)
 		return -1;
-	((t_redir *)cmd->redir_end)->delimiter = delim;
-	((t_redir *)cmd->redir_end)->type = HEREDOC;
+	cmd->redir_end->delimiter = delim;
+	cmd->redir_end->type = HEREDOC;
 	if (generate_hd_file(cmd))
 		return -1;
 	if (open_and_write_to_heredoc(msh, cmd))
@@ -114,7 +121,7 @@ int handle_append(t_cmd *cmd, int i)
 	i = parse_filename(cmd, i, &filename);
 	if (i == -1 || !filename)
 		return -1;
-	((t_redir *)cmd->redir_end)->file = filename;
-	((t_redir *)cmd->redir_end)->type = APPEND;
+	cmd->redir_end->file = filename;
+	cmd->redir_end->type = APPEND;
 	return i;
 }

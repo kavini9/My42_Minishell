@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:43:11 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/09 15:26:31 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/16 08:42:03 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,22 +97,20 @@ int	parse_cmd_string(t_msh *msh, t_cmd *cmd)
  */
 int	parse_line(t_msh *msh)
 {
-	t_cmd	*current;
 	int		index;
 
-	current = msh->cmds;
 	index = 0;
-	while (current)
+	while (msh->cmds[index])
 	{
-		current->cmd_index = index;
-		if (parse_cmd_string(msh, current))
+		msh->cmds[index] ->cmd_index = index;
+
+		if (parse_cmd_string(msh, msh->cmds[index]))
 		{
 			msh->exit_code = 1;
 			unlink_all_heredocs(msh);
 			clean_cmds(msh->cmds);
 			return (1);
 		}
-		current = current->next;
 		index++;
 	}
 	return (0);
