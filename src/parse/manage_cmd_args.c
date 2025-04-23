@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 14:09:47 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 18:13:34 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:16:39 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,3 +182,5 @@ int	handle_cmd_args(t_msh *msh, t_cmd *cmd, int i)
 	cmd->cmd[arg_index] = NULL;
 	return (i);
 }
+
+

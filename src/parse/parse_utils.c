@@ -6,35 +6,39 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:25:54 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 08:45:34 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 07:57:09 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 /**
- * no_args - Creates a minimal argument array containing only the command.
+ * no_args - Creates an argument array with only the command.
  *
  * @cmd: Pointer to the command structure.
  * @i: Current position in the command string.
  *
- * Allocates memory for a command array with the command as the only argument.
- * Returns the current index if successful, or -1 on allocation failure.
+ * Allocates memory for an argument array containing the command as the sole
+ * argument. Returns the current position in the string or -1 on failure.
  */
 int	no_args(t_cmd *cmd, int i)
 {
-	cmd->cmd = ft_calloc(2, sizeof(char *));
-	if (!cmd->cmd)
+	cmd->args = ft_calloc(2, sizeof(char *));
+	if (!cmd->args)
 		return (-1);
-	cmd->cmd[0] = ft_strdup(cmd->command);
-	if (!cmd->cmd[0])
+
+	cmd->args[0] = ft_strdup(cmd->command);
+	if (!cmd->args[0])
 	{
-		free(cmd->cmd);
+		free(cmd->args);
+		cmd->args = NULL;
 		return (-1);
 	}
-	cmd->cmd[1] = NULL;
+	cmd->args[1] = NULL;
+	cmd->a_num = 1;
 	return (i);
 }
+
 
 /**
  * is_empty_command - Checks if a command segment is empty or invalid.
@@ -42,26 +46,32 @@ int	no_args(t_cmd *cmd, int i)
  * @cmd: Pointer to the command structure.
  * @i: Current position in the command string.
  *
- * Skips over whitespace and checks if the command is empty or ends
- * in an invalid state (like a trailing pipe).
- * Returns true if invalid or empty, false otherwise.
+ * Skips leading whitespace and checks if the command is either:
+ *   - empty
+ *   - ends with a pipe
+ *
+ * Return: true if the command is empty or invalid, false otherwise.
  */
 bool	is_empty_command(t_cmd *cmd, int i)
 {
 	int	len;
 
+	if (!cmd || !cmd->seg)
+		return (true);
+
 	len = ft_strlen(cmd->seg);
+
+	// Skip whitespace
 	while (cmd->seg[i] && ft_isspace(cmd->seg[i]))
 		i++;
-	if (i >= len || cmd->seg[i] == '|')
+
+	// If segment ends or only contains a pipe, it's invalid
+	if (!cmd->seg[i] || cmd->seg[i] == '|')
 		return (true);
-/* 			if (i != len - 1)
-	{
-		if (!cmd->seg[i] || cmd->seg[i] == '|')
-			return (true);
-	} */
+
 	return (false);
 }
+
 
 /**
  * add_char - Appends a single character from input to the expandable value.
@@ -77,16 +87,18 @@ int	add_char(char *str, t_expand *arg)
 	char	*temp;
 	char	*temp2;
 	char	*temp3;
-
+		//printf("_line: %d\n", __LINE__);
 	temp2 = ft_strndup(&str[arg->i], 1);
 	if (!temp2)
 		return (1);
+
 	temp3 = ft_strdup(arg->value);
 	if (!temp3)
 	{
 		free(temp2);
 		return (1);
 	}
+
 	temp = ft_strjoin(temp3, temp2);
 	free(temp2);
 	free(temp3);

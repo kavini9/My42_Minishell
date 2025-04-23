@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/19 22:46:28 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:05:54 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "minishell.h"
 
 
-typedef enum e_redirect_type
+/* typedef enum e_redirect_type
 {
     REDIR_HDOC,
 	REDIR_INP,
@@ -47,6 +47,6 @@ typedef struct s_cmd
     t_redir     *redir;
 	t_cmd       *next;
 } t_cmd;
-
+ */
 #endif
 

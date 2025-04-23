@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 13:04:34 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/15 13:46:25 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 22:39:58 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,11 @@ static int	quoted_cmd(t_expand *name, char *seg)
 int	handle_cmd_name(t_cmd *cmd, int i)
 {
 	t_expand	name;
-
 	i = skip_whitespace(cmd->seg, i);
 	the_arg(&name, i);
 	while (cmd->seg[name.i])
 	{
+
 		if (this_is_redirection(cmd, &name))
 			break ;
 		if (cmd->seg[name.i] == '\'' || cmd->seg[name.i] == '"')
@@ -103,7 +103,7 @@ int	handle_cmd_name(t_cmd *cmd, int i)
 		}
 		else if (add_char(cmd->seg, &name))
 			return (free(cmd->seg), 1);
-	}
+		}
 	cmd->command = ft_strdup(name.value);
 	free(name.value);
 	return (name.i);
