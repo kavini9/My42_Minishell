@@ -26,10 +26,16 @@
 
 typedef struct redir
 {
-    t_redir_type    type;
+    t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous edirection
     char    *fname_o_del;
     t_redir *next;
 }   t_redir;
+
+typedef struct s_errnote
+{
+	char *cmd_path;
+	char *strerr;
+} t_errnote;
 
 typedef struct s_cmd
 {
@@ -37,6 +43,7 @@ typedef struct s_cmd
     int			cmd_id;
 	int			hdoc_st_pos;
 	int			cmd_exit_code;
+	t_errnote	err_note;
     t_redir     *redir;
 	t_cmd       *next;
 } t_cmd;

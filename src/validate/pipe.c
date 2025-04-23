@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 15:27:53 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 23:21:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,36 +41,32 @@ static int	validate_pipe_position(char *line, int i, t_msh *msh)
 }
 
 /**
- * detect_consecutive_pipes - Checks for consecutive pipes without valid tokens.
+ * detect_consecutive_pipes - Checks for invalid usage of consecutive pipes.
  *
  * @line: Input string to check.
  * @msh: Shell structure managing shell state and exit status.
  *
- * Iterates through the input string, ensuring that pipes are not used
- * consecutively without valid commands between them. Skips quoted characters
- * and whitespace to prevent false errors.
+ * This function scans the input for pipe characters (`|`) and validates
+ * their positions using `validate_pipe_position()`. It ignores pipes that
+ * appear inside quotes. If any invalid usage is found, it sets the shell's
+ * exit code and returns 1.
  *
  * Return:
- * - 1 if syntax errors are found.
- * - 0 otherwise.
+ * - 1 if a syntax error is detected.
+ * - 0 if pipe usage is valid.
  */
 static int	detect_consecutive_pipes(char *line, t_msh *msh)
 {
 	int	i;
-	int	pipe_found;
 
 	i = 0;
-	pipe_found = 0;
 	while (line[i])
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
 		{
 			if (validate_pipe_position(line, i, msh))
 				return (1);
-			pipe_found = 1;
 		}
-		else if (!ft_isspace(line[i])) // Reset if a valid token is found
-			pipe_found = 0;
 		i++;
 	}
 	return (0);

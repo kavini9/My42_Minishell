@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipe_trailing.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:50:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 13:25:13 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 23:44:50 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,25 +101,18 @@ char *get_trailing_input(t_msh *msh, char *line)
     // Enter an infinite loop to keep reading additional input.
     while (1)
     {
-        // Prompt the user for additional input.
-        additional_input = readline("> ");
-
-        // Handle interruptions or empty input.
-        if (!additional_input || g_sig == SIGINT)
+        additional_input = readline("> ");// Prompt the user for additional input.
+        if (!additional_input)// || g_sig == SIGINT)// Handle interruptions or empty input.
         {
             g_sig = 0; // Reset the global signal flag.
            // msh->exit_code = restore_and_cleanup(msh, -1, 1); // Cleanup on interruption.
 		   	msh->exit_code = 2;
             free(line); // Free the initial input line.
             return (NULL); // Return NULL to indicate interruption.
-        }
-
-        // If the additional input is not empty, concatenate it with the initial line.
-        if (!is_input_empty(additional_input))
+        }        
+        if (!is_input_empty(additional_input))// If the additional input is not empty, concatenate it with the initial line.
             return (concat_and_cleanup(msh, line, additional_input));
-
-        // If the additional input is empty, free it and prompt again.
-        free(additional_input);
+        free(additional_input);// If the additional input is empty, free it and prompt again.
     }
 
     /* // Finalize processing and return the result.

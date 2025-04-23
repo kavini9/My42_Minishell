@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checker.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 18:19:14 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/11 17:44:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,16 @@
  */
 int	check_quotes(char *line, int limit)
 {
-	int	single_quote = 0;
-	int	double_quote = 0;
+	int	single_quote = 0;//1
+	int	double_quote = 0;//0
 	int	i = 0;
 
 	while (line[i] && (limit == FULL_LINE || i < limit))
 	{
 		if (line[i] == '\'' && !double_quote)
-			single_quote = !single_quote;
+			single_quote = !single_quote; 
 		else if (line[i] == '"' && !single_quote)
-			double_quote = !double_quote;
+			double_quote = !double_quote; 
 		i++;
 	}
 	return (single_quote || double_quote);

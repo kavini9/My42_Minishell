@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:43 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/20 21:30:59 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/15 22:31:26 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,16 @@
 
 void    builtin_pwd(t_msh *msh)
 {
-    printf("%s\n", msh -> cwd);
+    if (msh -> cwd)
+    {
+        printf("%s\n", msh -> cwd);
+        msh -> exit_code = EXIT_SUCCESS;
+    }
+    else
+    {
+        msh -> cwd = getcwd(NULL, 0);
+        if (!msh -> cwd)
+            return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_GETCWD, "cd"));//"minishell: cd: error retrieving current directory: getcwd: %s\n"
+        builtin_pwd(msh);
+    }  
 }
-
-//TODO: find a way to update exit status

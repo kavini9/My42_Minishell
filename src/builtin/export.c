@@ -6,13 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:26:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/03/29 02:43:36 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/15 19:58:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
 
-static int is_valid_id(char *x_var)
+int is_valid_id(char *x_var)
 {
     if (!*x_var || !(ft_isalpha(*x_var) || *x_var == '_'))
         return (0);
@@ -25,7 +25,7 @@ static int is_valid_id(char *x_var)
     return (1);
 }
 
-static void	format_print_x_var(char *x_var)
+static void	format_print_x_var(t_msh *msh, char *x_var)
 {
 	char	*eq;
 	char	*key;
@@ -35,7 +35,7 @@ static void	format_print_x_var(char *x_var)
 	{
 		key = ft_substr(x_var, 0, eq - x_var);
 		if (!key)
-			printf("format print c_var key error\n");
+			msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "export");//"minishell: fatal error: memory allocation failed in %s\n"
 		if (ft_strcmp(key, "_"))
 			printf("declare -x %s=\"%s\"\n", key, eq + 1);
 		free(key);
@@ -44,7 +44,7 @@ static void	format_print_x_var(char *x_var)
 		printf("declare -x %s\n", x_var);	
 }
 
-static void    display_x_var(char **envl, char *floor)
+static void    display_x_var(t_msh *msh, char **envl, char *floor)
 {
     char    **lex_min;
     char    **iter;
@@ -62,25 +62,25 @@ static void    display_x_var(char **envl, char *floor)
             lex_min++;
         while (*iter)
         {
-            if(ft_strcmp(*lex_min, *iter) > 0 && ft_strcmp(*iter, floor) > 0 )
+            if(ft_strcmp(*lex_min, *iter) > 0 && ft_strcmp(*iter, floor) > 0)
                 lex_min = iter;
             iter++;
         }
-        format_print_x_var(*lex_min);
+        format_print_x_var(msh, *lex_min);
         floor = *lex_min;
-    }  
+    }
+    msh -> exit_code = EXIT_SUCCESS;
 }
 
 void    builtin_export(t_msh *msh, char **cmd)
 {
     if (!*(++cmd))
-        return (display_x_var(msh -> envl, ""));
+        return (display_x_var(msh, msh -> envl, ""));
     while (*cmd)
     {
         if(!is_valid_id(*cmd))
-            printf_fd(STDERR_FILENO, "minishell: export: `%s': not a valid identifier\n", *cmd);//TODO:Errpr
-        else
-            set_env(msh, msh -> envl, *cmd);
+            return(msh_error(msh, LOG << 8 | 1, ERR_XPORTID,*cmd));// "minishell: export: `%s': not a valid identifier\n"
+        set_env(msh, msh -> envl, *cmd);
         cmd++;
     }
 }
