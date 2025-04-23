@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:32:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/02 15:27:43 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:00:33 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ static int	exp_while(t_msh *msh, t_cmd **cmd, t_expand *arg, char **expan)
 			arg->i = hd(cmd, arg, expan);
 		else if (arg->i != -1)
 			arg->i = s_unquoted(msh, cmd, arg, expan);
-
 		if (arg->i == -1)
 			return (1);
 	}

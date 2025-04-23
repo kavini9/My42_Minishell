@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 12:24:31 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 16:48:02 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 14:53:07 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ typedef struct s_cmd
 	char	*seg;
 	char	*command;
 	char	**cmd;
+	char	**args;
+	int		a_num;
 	int		cmd_index;
 	t_redir *redir_start;
 	t_redir *redir_end;

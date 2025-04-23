@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:07:44 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 14:38:53 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:20:55 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,22 @@ void	clean_cmds(t_cmd **cmds)
 	i = 0;
 	while (cmds[i])
 	{
-		free(cmds[i]->seg);
-		free(cmds[i]->command);
-		ft_free_array(cmds[i]->cmd);
-		clean_redir(cmds[i]->redir_start);
+		if (cmds[i]->seg)
+			free(cmds[i]->seg);
+		if (cmds[i]->command)
+			free(cmds[i]->command);
+		if (cmds[i]->cmd)
+			ft_free_array(cmds[i]->cmd);
+		if (cmds[i]->redir_start)
+			clean_redir(cmds[i]->redir_start);
+
 		free(cmds[i]);
+		cmds[i] = NULL;  // Optional: clear after free
 		i++;
 	}
 	free(cmds);
 }
+
 
 /**
  * cleaner_for_success - Cleans up resources after
@@ -126,33 +133,33 @@ void	cleaner_for_failure(t_msh *msh)
 /**
  * unlink_all_heredocs - Removes all temporary heredoc files from commands.
  *
- * @msh: Pointer to the main shell structure.
+ * @msh: Pointer to the main msh structure.
  *
  * Iterates through each command’s redirection list and removes any
  * temporary files created for heredoc (<<) redirections.
  */
-void	unlink_all_heredocs(t_msh *msh)
+void	unlink_all_heredocs(t_msh *line)
 {
-	int i;
-	t_redir *redir;
+	t_redir	*current;
+	int		i;
 
-	if (!msh->cmds)
-		return;
-
-	for (i = 0; i < msh->cmd_count; i++)
+	i = 0;
+	while (i < line->cmd_count)
 	{
-		if (!msh->cmds[i])
-			continue;
-		redir = msh->cmds[i]->redir_start;
-		while (redir)
+		current = line->cmds[i]->redir_start;
+		while (current)
 		{
-			if (redir->type == HEREDOC && redir->heredoc_name)
+			if (current->type == HEREDOC)
 			{
-				unlink(redir->heredoc_name);
-				free(redir->heredoc_name);
-				redir->heredoc_name = NULL;
+				if (current->heredoc_name)
+				{
+					unlink(current->heredoc_name);
+					free(current->heredoc_name);
+					current->heredoc_name = NULL;
+				}
 			}
-			redir = redir->next;
+			current = current->next;
 		}
+		i++;
 	}
 }

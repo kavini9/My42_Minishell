@@ -6,7 +6,7 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:00:53 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 11:42:42 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 08:22:07 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	count_pipes(char *line)
  */
 void	initialize_command_struct(t_cmd *cmd)
 {
-	cmd->seg = NULL;
+	cmd->args = NULL;
+	cmd->a_num = 0;
 	cmd->command = NULL;
 	cmd->cmd = NULL;
 	cmd->cmd_index = 0;

@@ -6,112 +6,105 @@
 /*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:43:11 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 08:42:03 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 09:19:47 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/**
- * cmd_string_while - Parses tokens inside a command segment string.
- *
- * @msh: Pointer to the shell structure.
- * @cmd: Pointer to the current command structure being parsed.
- * @i: Index for scanning the segment string.
- * @cmd_found: Pointer to a flag indicating if a command name has been found.
- *
- * Handles redirections, command name, and arguments. Skips whitespace,
- * and updates state as parsing progresses.
- *
- * Return: Updated index `i` on success, or -1 on failure.
- */
 int	cmd_string_while(t_msh *msh, t_cmd *cmd, int i, int *cmd_found)
 {
+	int	prev_i;
+
 	while (cmd->seg[i])
 	{
-		if (is_redirection(cmd, i))
-		{
+		prev_i = i;
+
+		if (is_redirection(cmd, i))      // handles <, >, etc.
 			i = handle_redirections(msh, cmd, i);
-			if (i == -1)
-				return (-1);
-			i = skip_whitespace(cmd->seg, i);
-		}
-		else if (*cmd_found == 0)
-		{
+		else if (*cmd_found == 0)        // no command yet? get it
 			i = handle_cmd_name(cmd, i);
-			if (i == -1)
-				return (-1);
-			*cmd_found = 1;
-		}
-		else
-		{
+		else                             // after command: parse args
 			i = handle_cmd_args(msh, cmd, i);
-			if (i == -1)
-				return (-1);
-		}
+
+		if (i == -1)
+			return (-1);
+
+		/* if (i == prev_i)                 // 🔥 THIS IS THE PROBLEM
+		{
+			fprintf(stderr, "No progress in loop at index %d\n", i);
+			return (-1);
+		} */
 	}
 	return (i);
 }
 
+
 /**
- * parse_cmd_string - Parses a command segment and expands variables.
+ * parse_cmd_string - Parses a command segment by handling expansion and tokenizing.
  *
  * @msh: Pointer to the shell structure.
- * @cmd: Pointer to the current command structure being parsed.
+ * @cmd: Pointer to the command structure to fill.
  *
- * Performs expansion and parses the segment for redirections,
- * command name, and arguments. If only the command is found with
- * no args, `no_args` initializes the args array.
- *
- * Return: 0 on success, or 1 on failure.
- */
-int	parse_cmd_string(t_msh *msh, t_cmd *cmd)
-{
-	int	i;
-	int	cmd_found;
-
-	i = 0;
-	cmd_found = 0;
-	if (handle_expand(msh, &cmd))
-		return (1);
-	i = cmd_string_while(msh, cmd, i, &cmd_found);
-	if (i == -1)
-		return (1);
-/* 	if (cmd_found && (!cmd->args || !cmd->args[0]))
-	{
-		if (no_args(cmd, i) == -1)
-			return (1);
-	} */
-	return (0);
-}
-
-/**
- * parse_line - Parses all command segments in the linked list.
- *
- * @msh: Pointer to the shell structure containing the command list.
- *
- * Iterates through each t_cmd node, assigns an index, and processes it
- * using `parse_cmd_string`. Handles cleanup on failure.
+ * This function:
+ *   1. Expands variables and tokens (e.g., $HOME, quotes, etc.)
+ *   2. Parses the segment string for redirections, command name, and arguments.
+ *   3. Ensures at least one argument is created if only command is found.
  *
  * Return: 0 on success, 1 on failure.
  */
+int	parse_cmd_string(t_msh *msh, t_cmd *cmd)
+{
+	int	i = 0;
+	int	cmd_found = 0;
+
+	if (handle_expand(msh, &cmd))
+		return (1);
+
+	i = cmd_string_while(msh, cmd, i, &cmd_found);
+	if (i == -1)
+		return (1);
+
+	if (cmd_found && (!cmd->args || !cmd->args[0]))
+	{
+		if (no_args(cmd, i) == -1)
+			return (1);
+	}
+
+	return (0);
+}
+
+
+/**
+ * parse_line - Parses all command segments in the msh structure.
+ *
+ * @msh: Pointer to the shell structure which holds the command array.
+ *
+ * This is the top-level parser that loops through all command segments
+ * (usually split by '|') and processes them one by one using `parse_cmd_string`.
+ * On failure, it performs cleanup and returns an error.
+ *
+ * Return: 0 on success, 1 if any command segment fails to parse.
+ */
 int	parse_line(t_msh *msh)
 {
-	int		index;
+	int	index = 0;
 
-	index = 0;
 	while (msh->cmds[index])
 	{
-		msh->cmds[index] ->cmd_index = index;
+		msh->cmds[index]->cmd_index = index;
 
 		if (parse_cmd_string(msh, msh->cmds[index]))
 		{
 			msh->exit_code = 1;
 			unlink_all_heredocs(msh);
-			clean_cmds(msh->cmds);
+			clean_cmds(msh->cmds);  // frees memory
+			msh->cmds = NULL;       // avoids double-free
 			return (1);
 		}
+
 		index++;
 	}
+
 	return (0);
 }
