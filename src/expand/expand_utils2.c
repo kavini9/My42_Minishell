@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 16:38:08 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/07 19:01:44 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/24 21:22:05 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int handle_value(t_msh *msh, t_vdata *data)
 			return (1);
 		return (0);
 	}
-	data->value = get_value(msh->env, data->name);
+	data->value = get_value(msh->envl, data->name);
 	if (data->value == (char *)-1)
 		return (1);
 	if (we_have_value(data->value, data->temp, data->expan) == -1)
@@ -114,7 +114,7 @@ int handle_value(t_msh *msh, t_vdata *data)
  */
 char *ft_strjoin_char(char *str, char c)
 {
-	size_t	len = str ? ft_strlen(str) : 0;
+	size_t	len = str ? ft_strlen(str) : 0;//TODO: can we even use this?
 	char	*new_str = malloc(len + 2);
 	size_t	i = 0;
 
@@ -155,7 +155,7 @@ int tildes_home(t_msh *msh, char *str, char **expan, t_expand *arg)
 	*expan = temp;
 	arg->i++;
 
-	value = get_value(msh->env, "HOME");
+	value = get_value(msh->envl, "HOME");
 	if (value)
 	{
 		temp = ft_strjoin(*expan, value);

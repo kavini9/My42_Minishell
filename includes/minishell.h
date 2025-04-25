@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/22 22:35:28 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:28:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ extern volatile __sig_atomic_t g_sig;
 
 typedef enum e_do_err {
     ERRNO 	= 0b00001,
-	  EXTRARG = 0b00010,
+	EXTRARG = 0b00010,
     LOG   	= 0b00100,
     CLEAN 	= 0b01000,
     EXIT  	= 0b10000
@@ -59,7 +59,7 @@ typedef struct s_msh
 	char	*old_wd;
 	char	*prompt;
 	char	**envl;
-	t_cmd	*cmd;
+	t_cmd	**cmd;
 	int		cmd_count; //  for command.c
 	int		hdocfd_l[HEREDOC_MAX];
 	int		exit_code;

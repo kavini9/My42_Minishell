@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 16:39:03 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/03/28 16:40:18 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 20:36:28 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ int handle_question(t_msh *msh, char *str, char **expan, t_expand *arg)
  * Sets quote flags to 0, sets index tracking, and allocates an empty
  * string to hold the expansion result. Returns 0 on success, 1 on failure.
  */
+
+/*
 int the_arg(t_expand *arg, int i)
 {
 	arg->sgl = 0;
@@ -106,7 +108,8 @@ int the_arg(t_expand *arg, int i)
 	arg->i = i;
 	arg->start = i;
 	arg->name = NULL;
-	arg->value = ft_strdup("");
+	arg->value = NULL;
+	arg->value = ft_strdup("");//TODO: We can make this just a pointer. Be cautios when freeing though.
 	if (!arg->value)
 	{
 		ft_putendl_fd("Malloc fail", 2);
@@ -114,6 +117,7 @@ int the_arg(t_expand *arg, int i)
 	}
 	return (0);
 }
+*/
 
 /**
  * init_expansion - Sets up initial context for expanding a command segment.
@@ -126,6 +130,8 @@ int the_arg(t_expand *arg, int i)
  *
  * Return: 0 on success, 1 on allocation failure.
  */
+
+/*
 int init_expansion(t_expand *arg, char **expan)
 {
 	*expan = ft_strdup("");
@@ -140,4 +146,4 @@ int init_expansion(t_expand *arg, char **expan)
 	free(arg->value);
 	arg->value = NULL;
 	return (0);
-}
+}*/

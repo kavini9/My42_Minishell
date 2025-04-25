@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:25:54 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/23 07:57:09 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/24 21:06:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ bool	is_empty_command(t_cmd *cmd, int i)
  * Adds the character at `arg->i` to `arg->value`, reallocating memory as needed.
  * Advances `arg->i`. Returns 0 on success, 1 on failure.
  */
+/*
 int	add_char(char *str, t_expand *arg)
 {
 	char	*temp;
@@ -109,4 +110,28 @@ int	add_char(char *str, t_expand *arg)
 	arg->i++;
 	return (0);
 }
+*/
 
+int	add_char(char *str, t_expand *arg)
+{
+	char	*temp;
+	int	len_arg_val;
+
+	len_arg_val = ft_strlen(arg -> value);
+	temp = malloc((len_arg_val + 2) * sizeof(char));
+	if (!temp)
+		return (1);
+	ft_memcpy(temp, arg -> value, len_arg_val);
+	temp[len_arg_val] = str[arg -> i];
+	temp[len_arg_val + 1] = '\0';
+	free(arg -> value);
+	arg -> value = temp;
+	arg -> i++;
+	return (0);
+}
+//no need to strdup arg-> value imo. it is already malllocked and we can do like
+/*
+temp =   arg -> value;
+arg -> value = ft_strjoin(temp3, str[arg -> i]);
+free(temp);
+*/

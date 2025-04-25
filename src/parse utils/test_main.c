@@ -26,15 +26,15 @@ void print_redirections(t_redir *redir)
  */
 void print_parsed_commands(t_msh *msh)
 {
-	if (!msh || !msh->cmds)
+	if (!msh || !msh->cmd)
 	{
 		printf("No commands parsed.\n");
 		return;
 	}
 printf("_line: %d\n", __LINE__);
-	for (int i = 0; i < msh->cmd_count && msh->cmds[i]; i++)
+	for (int i = 0; i < msh->cmd_count && msh->cmd[i]; i++)
 	{
-		t_cmd *cmd = msh->cmds[i];
+		t_cmd *cmd = msh->cmd[i];
 		printf("Command #%d:\n", i + 1);
 		printf("  Raw Segment: %s\n", cmd->seg ? cmd->seg : "NULL");
 		printf("  Command: %s\n", cmd->command ? cmd->command : "NULL");
@@ -95,7 +95,7 @@ static void msh_init(t_msh *msh, char **envp)
 		exit(EXIT_FAILURE);
 	}
 
-	msh->cmds = NULL; // Will be set in build_command_structs
+	msh->cmd = NULL; // Will be set in build_command_structs
 }
 
 /**
@@ -133,10 +133,10 @@ int main(int ac, char **av, char **envp)
 				print_parsed_commands(&msh);
 			}
 
-			if (msh.cmds)
+			if (msh.cmd)
 			{
-				clean_cmds(msh.cmds);  // <- already frees each t_cmd and msh.cmds itself
-				msh.cmds = NULL;       // <- avoid dangling pointer
+				clean_cmds(msh.cmd);  // <- already frees each t_cmd and msh.cmds itself
+				msh.cmd = NULL;       // <- avoid dangling pointer
 			}
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_handler.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 14:57:33 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 09:23:48 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:19:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

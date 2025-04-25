@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 14:16:56 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/16 12:42:07 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 19:03:29 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,14 @@ int	split_line_by_pipe(char *line, t_msh *msh)
 	{
 		if (line[i] == '|' && !check_quotes(line, i))
 		{
-			if (!msh->cmds[index] || segment_handler(msh->cmds[index], line, start, i))
+			if (!msh->cmd[index] || segment_handler(msh->cmd[index], line, start, i))
 				return (1);
 			index++;
 			start = i + 1;
 		}
 		i++;
 	}
-	if (!msh->cmds[index] || segment_handler(msh->cmds[index], line, start, i))
+	if (!msh->cmd[index] || segment_handler(msh->cmd[index], line, start, i))
 		return (1);
 	return (0);
 }

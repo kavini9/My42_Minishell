@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 14:07:44 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/22 20:20:55 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/25 18:46:28 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@
  */
 void	mini_cleaner(t_msh *msh)
 {
-	if (msh->env)
-		clean_env(msh->env, msh->envl);
-	if (msh->cmds)
-		clean_cmds(msh->cmds);
+	if (msh->envl)
+		clean_env(msh->envl, msh->envl);
+	if (msh->cmd)
+		clean_cmds(msh->cmd);
 	if (msh->cmd_count > 1 && msh->pipes)
 		ft_free_int_arr_with_size(msh->pipes, msh->cmd_count - 1);
 	free(msh->cwd);
@@ -41,30 +41,30 @@ void	mini_cleaner(t_msh *msh)
  * Frees each command's segments, arguments, redirections,
  * and the command structs themselves.
  */
-void	clean_cmds(t_cmd **cmds)
+void	clean_cmds(t_cmd **cmd  )
 {
 	int	i;
 
-	if (!cmds)
+	if (!cmd)
 		return;
 
 	i = 0;
-	while (cmds[i])
+	while (cmd[i])
 	{
-		if (cmds[i]->seg)
-			free(cmds[i]->seg);
-		if (cmds[i]->command)
-			free(cmds[i]->command);
-		if (cmds[i]->cmd)
-			ft_free_array(cmds[i]->cmd);
-		if (cmds[i]->redir_start)
-			clean_redir(cmds[i]->redir_start);
+		if (cmd[i]->seg)
+			free(cmd[i]->seg);
+		if (cmd[i]->command)
+			free(cmd[i]->command);
+		if (cmd[i]->cmd)
+			ft_free_array(cmd[i]->cmd);
+		if (cmd[i]->redir_start)
+			clean_redir(cmd[i]->redir_start);
 
-		free(cmds[i]);
-		cmds[i] = NULL;  // Optional: clear after free
+		free(cmd[i]);
+		cmd[i] = NULL;  // Optional: clear after free
 		i++;
 	}
-	free(cmds);
+	free(cmd);
 }
 
 
@@ -76,8 +76,8 @@ void	clean_cmds(t_cmd **cmds)
  */
 void	cleaner_for_success(t_msh *msh)
 {
-	if (msh->cmds)
-		clean_cmds(msh->cmds);
+	if (msh->cmd)
+		clean_cmds(msh->cmd);
 	if (msh->cmd_count > 1 && msh->pipes)
 	{
 		if (msh->pipes[msh->cmd_count - 2][0] > 0)
@@ -124,8 +124,8 @@ void	free_and_close_pipes(t_msh *msh)
 void	cleaner_for_failure(t_msh *msh)
 {
 	unlink_all_heredocs(msh);
-	if (msh->cmds)
-		clean_cmds(msh->cmds);
+	if (msh->cmd)
+		clean_cmds(msh->cmd);
 	if (msh->cmd_count > 1 && msh->pipes)
 		free_and_close_pipes(msh);
 }
@@ -146,7 +146,7 @@ void	unlink_all_heredocs(t_msh *line)
 	i = 0;
 	while (i < line->cmd_count)
 	{
-		current = line->cmds[i]->redir_start;
+		current = line->cmd[i]->redir_start;
 		while (current)
 		{
 			if (current->type == HEREDOC)

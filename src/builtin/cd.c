@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/21 17:13:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/25 18:52:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void    msh_wd_update(t_msh *msh)
     free(msh -> old_wd);
     msh -> old_wd = ft_strdup(msh -> cwd);
 	if (!msh -> old_wd)
-        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//This will exit. so no worries about freeing 
+        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//This will exit. so no worries about freeing. TODO: here since we are not going back to exec_buitin stdfds are not 
     free(msh -> cwd);
     msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)

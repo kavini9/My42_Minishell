@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 11:43:11 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/23 09:19:47 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:58:40 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,16 +90,16 @@ int	parse_line(t_msh *msh)
 {
 	int	index = 0;
 
-	while (msh->cmds[index])
+	while (msh->cmd[index])
 	{
-		msh->cmds[index]->cmd_index = index;
+		msh->cmd[index]->cmd_index = index;
 
-		if (parse_cmd_string(msh, msh->cmds[index]))
+		if (parse_cmd_string(msh, msh->cmd[index]))
 		{
 			msh->exit_code = 1;
 			unlink_all_heredocs(msh);
-			clean_cmds(msh->cmds);  // frees memory
-			msh->cmds = NULL;       // avoids double-free
+			clean_cmds(msh->cmd);  // frees memory
+			msh->cmd = NULL;       // avoids double-free
 			return (1);
 		}
 

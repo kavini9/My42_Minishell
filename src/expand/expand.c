@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 14:32:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/22 16:00:33 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/24 18:56:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,12 @@ int	handle_expand(t_msh *msh, t_cmd **cmd)
 	t_expand	arg;
 	char		*expan;
 
-	expan = NULL;
-	if (init_expansion(&arg, &expan))
-		return (1);
+	expan = ft_strdup("");//NEW
+	if (!expan)//NEW
+		return (1);//NEW
+	ft_memset(&arg, 0, sizeof(t_expand));//NEW
+	//if (init_expansion(&arg, &expan))
+	//	return (1);
 	if (exp_while(msh, cmd, &arg, &expan))
 	{
 		if (arg.value)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_array.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 12:00:53 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/23 08:22:07 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:24:24 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,17 +70,17 @@ static int	cmd_struct_while(t_msh *msh, int cmd_count)
 	i = 0;
 	while (i < cmd_count)
 	{
-		msh->cmds[i] = malloc(sizeof(t_cmd));
-		if (!msh->cmds[i])
+		msh-> cmd[i] = malloc(sizeof(t_cmd));
+		if (!msh->cmd[i])
 		{
 			ft_putendl_fd("Failed to allocate memory for command struct", 2);
-			clean_cmds(msh->cmds);
+			clean_cmds(msh->cmd);
 			return (1);
 		}
-		initialize_command_struct(msh->cmds[i]);
+		initialize_command_struct(msh->cmd[i]);
 		i++;
 	}
-	msh->cmds[cmd_count] = NULL; // null-terminate the array
+	msh->cmd[cmd_count] = NULL; // null-terminate the array
 	return (0);
 }
 
@@ -100,8 +100,8 @@ int	build_command_structs(t_msh *msh, char *line)
 
 	msh->cmd_count = cmd_count;
 
-	msh->cmds = ft_calloc(cmd_count + 1, sizeof(t_cmd *)); // +1 for NULL terminator
-	if (!msh->cmds)
+	msh->cmd = ft_calloc(cmd_count + 1, sizeof(t_cmd *)); // +1 for NULL terminator
+	if (!msh->cmd)
 	{
 		ft_putendl_fd("Failed to allocate memory for command pointer array", 2);
 		return (1);
