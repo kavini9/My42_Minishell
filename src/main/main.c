@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/22 22:35:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:40:52 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ void	msh_loop(t_msh *msh)
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
 				handle_parse_error(&msh);
+			printf("line OK: %s\n", line);
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-			msh_execute(msh);
-			//if (!ft_strcmp(line, "exit"))
-			//	break;
+			//msh_execute(msh);
+			if (!ft_strcmp(line, "exit"))
+				break;
 		}
 	}
 	rl_clear_history();

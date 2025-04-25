@@ -1,4 +1,4 @@
-#include "../../includes/minishell.h"
+#include "../includes/minishell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,7 +105,6 @@ int main(int ac, char **av, char **envp)
 {
 	(void)ac;
 	(void)av;
-
 	t_msh msh;
 	char *line;
 

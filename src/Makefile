@@ -5,7 +5,7 @@ NAME        = test_msh
 CC          = cc
 CFLAGS      = -Wall -Wextra -Werror -g -fsanitize=address,undefined
 
-LIBFT_DIR   = ../../lib/libft
+LIBFT_DIR   = ../lib/libft
 LIBFT_A     = $(LIBFT_DIR)/libft.a
 LIBFT       = -L$(LIBFT_DIR) -lft
 READLINE    = -lreadline
@@ -17,7 +17,10 @@ INCLUDES    = -Iincludes -I$(LIBFT_DIR)
 # ───────────────────────────────────────────────────────────────
 
 # Source files from subdirectories
-PARSE_SRC   = $(wildcard ./*.c)
+VALID_SRC  = $(wildcard ../validate/*.c)
+PARSE_SRC   = $(wildcard ./prse/*.c)
+EXPAND_SRC  = $(wildcard ../signal/*.c)
+PARSE_UTILS_SRC  = $(wildcard ../signal/*.c)
 SIGNAL_SRC  = $(wildcard ../signal/*.c)
 
 # Main file is in the root directory
