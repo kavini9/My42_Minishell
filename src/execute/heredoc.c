@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/16 05:48:35 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/25 23:05:10 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,6 @@ void    here_doc(t_msh *msh, t_cmd *cmd, int *hdocfd_l, int i)
             }
             redir = redir -> next;
         }
-        cmd = cmd -> next;
+        cmd++;
     }
 }

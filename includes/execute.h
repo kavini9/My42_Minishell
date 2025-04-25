@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/25 22:44:47 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/25 23:09:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	open_file(t_msh *msh, t_redir_type type, char *fname);
 int	dup_io(t_msh *msh, int oldfd, int newfd);
 void	close_all_hdocfd(int *hdocfd_l);
 
-void    here_doc(t_msh *msh, t_cmd *cmd, int *hdocfd_l, int i);
+void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i);
 void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd);
 #endif
 
