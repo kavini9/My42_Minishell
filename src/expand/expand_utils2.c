@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/28 16:38:08 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/24 21:22:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/27 23:18:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int handle_value(t_msh *msh, t_vdata *data)
 	return (0);
 }
 
-
+//TODO: probably these 3 functions can be put into one.
 
 /**
  * ft_strjoin_char - Appends a single character to a string.

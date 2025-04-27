@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/22 15:21:36 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/04/27 23:48:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,3 +37,4 @@ int	msh_parse(char *line, t_msh *msh)
 	return (0);
 }
 
+//TODO: isn't it better to create an array of items after expansion so we can just pick the items like redirections from the array and then what is left is moved to the command array.

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/25 23:09:45 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/27 19:12:46 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct redir
 {
     t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous edirection
     char    *fname_o_del;
+	char	*expand;
     t_redir *next;
 }   t_redir;
 
@@ -45,7 +46,6 @@ typedef struct s_cmd
 	int			cmd_exit_code;
 	t_errnote	err_note;
     t_redir     *redir;
-	t_cmd       *next;
 } t_cmd;
 
 

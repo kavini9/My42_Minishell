@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/23 16:28:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/27 22:11:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ extern volatile __sig_atomic_t g_sig;
 
 # include "define.h"
 
-typedef enum e_do_err {
+typedef enum e_do_err 
+{
     ERRNO 	= 0b00001,
 	EXTRARG = 0b00010,
     LOG   	= 0b00100,

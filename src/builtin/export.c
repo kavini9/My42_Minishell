@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:26:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 19:58:21 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/27 23:41:22 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	format_print_x_var(t_msh *msh, char *x_var)
 		printf("declare -x %s\n", x_var);	
 }
 
-static void    display_x_var(t_msh *msh, char **envl, char *floor)
+static void    display_sorted_x_var(t_msh *msh, char **envl, char *floor)
 {
     char    **lex_min;
     char    **iter;
@@ -75,7 +75,7 @@ static void    display_x_var(t_msh *msh, char **envl, char *floor)
 void    builtin_export(t_msh *msh, char **cmd)
 {
     if (!*(++cmd))
-        return (display_x_var(msh, msh -> envl, ""));
+        return (display_sorted_x_var(msh, msh -> envl, ""));
     while (*cmd)
     {
         if(!is_valid_id(*cmd))

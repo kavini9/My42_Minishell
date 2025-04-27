@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/20 05:45:21 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/27 20:16:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
             run_child_proc(msh, cmd, prev_rd_fd, pipe_fd[1]);
         else if (msh -> cmd_count > 1)// it won't go in here if the command count is 1.
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
-        cmd = cmd -> next;
+        cmd++;
         i++;//maybe this is not needed for me except to decide when not to create pipe 
     }
     if (i < msh -> cmd_count)
