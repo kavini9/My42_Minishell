@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 19:19:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/27 19:12:46 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/28 22:48:48 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ typedef enum e_redirect_type
 
 typedef struct redir
 {
-    t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous edirection
+    t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL
     char    *fname_o_del;
-	char	*expand;
+	int	*exp_flag;
     t_redir *next;
 }   t_redir;
 
@@ -41,9 +41,9 @@ typedef struct s_errnote
 typedef struct s_cmd
 {
 	char		**cmd;
-    int			cmd_id;
+//  int			cmd_id;
 	int			hdoc_st_pos;
-	int			cmd_exit_code;
+//	int			cmd_exit_code;
 	t_errnote	err_note;
     t_redir     *redir;
 } t_cmd;
@@ -68,5 +68,6 @@ void	close_all_hdocfd(int *hdocfd_l);
 
 void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i);
 void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd);
+
 #endif
 
