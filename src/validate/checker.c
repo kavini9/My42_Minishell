@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/11 17:44:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:21:52 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
  *
  * Return: 1 if an unclosed quote is found, 0 otherwise.
  */
-int	check_quotes(char *line, int limit)
+int	 check_quotes(char *line, int limit)
 {
 	int	single_quote = 0;//1
 	int	double_quote = 0;//0
