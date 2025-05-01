@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/29 22:59:27 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/01 14:56:55 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_redir
 {
     t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL
     char    *fname_o_del;
-	//int	*exp_flag;
+	char	*expan;
     struct s_redir *next;
 }   t_redir;
 
@@ -77,12 +77,24 @@ typedef struct s_errnote
 typedef struct s_cmd
 {
 	char		**cmd;
-//  int			cmd_id;
 	int			hdoc_st_pos;
-//	int			cmd_exit_code;
 	t_errnote	err_note;
     t_redir     *redir;
 } t_cmd;
+
+typedef struct s_token
+{
+    char    *token;
+    char    *expand;
+} t_token;
+
+typedef struct s_parse
+{
+    char        **seg;
+    int			sgl;
+	int			dbl;
+    t_token     **token;
+}   t_parse;
 
 typedef struct s_msh
 {
@@ -90,6 +102,7 @@ typedef struct s_msh
 	char	*old_wd;
 	char	*prompt;
 	char	**envl;
+	t_parse *aux;
 	t_cmd	**cmd;
 	int		cmd_count; //  for command.c
 	int		hdocfd_l[HEREDOC_MAX];

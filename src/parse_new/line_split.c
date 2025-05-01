@@ -6,13 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 17:27:41 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/29 22:29:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/01 15:55:39 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void line_split_bypipe(t_msh *msh, char *line)
+void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
 {
     char *start;
     char *seg;
@@ -30,7 +30,10 @@ void line_split_bypipe(t_msh *msh, char *line)
             free(temp);
             if (!seg)
                 printf("error segmenting the line by pipe\n");//TODO:error handling
-            
+            *seg_arr = seg;
+            seg_arr++;
+            start = line + 1;
         }
+        line++;
     }
 }
