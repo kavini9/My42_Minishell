@@ -6,9 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:57:47 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/02 20:58:22 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/05 22:58:44 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	seg_tokenize(t_msh *msh, t_parse *aux)
+{
+	
+}
