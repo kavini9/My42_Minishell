@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/05 22:50:23 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/06 22:41:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,10 @@ typedef struct s_cmd
 
 typedef struct s_token
 {
-    char    *token;
-	int		sgl;
-	int		dbl;
-    char    *expand;
+    char    		*token;
+	int				quote;
+	t_redir_type	redir;
+    char    		*expand;
 } t_token;
 
 typedef struct s_parse
