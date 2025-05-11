@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:57:47 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/06 22:40:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/11 20:51:34 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int set_redir_type(t_token *token, char *seg)
         token -> redir = REDIR_INP;
     else if (*seg == '>')
         token -> redir = REDIR_OUTP;
+    else
+        return (0);
     return (1);
 }
 
@@ -56,12 +58,16 @@ int get_token_len(t_token *token, char *seg, int tok_len)
 
 char *extract_token(t_msh *msh, t_parse *aux, char *seg)
 {
-    t_token ***token;
+    t_token **token;
     int     tok_len;
     
     token = aux -> token;
     while (*seg)
     {
+        if (!*token)
+            *token = ft_calloc(1, sizeof(t_token));
+        else
+            *token = ft_realloc(*token, 
         tok_len = get_token_len(token, seg, 0);
         
 
