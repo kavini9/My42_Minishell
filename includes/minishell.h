@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/11 18:51:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/06 22:41:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # define  HEREDOC_MAX 16
-
 
 # define X_KO 126
 # define F_KO 127
@@ -48,12 +47,9 @@ typedef enum e_do_err
     EXIT  	= 0b10000
 } t_do_err;
 
-// typedef enum e_err_type{
-// 	ERR_SYS_FUNC,
-// 	ERR_MALLOC
-// } t_err_type;
 typedef enum e_redirect_type
 {
+	REDIR_NONE,
     REDIR_HDOC,
 	REDIR_INP,
 	REDIR_OUTP,

@@ -11,6 +11,130 @@ void	init_token(t_msh *msh, int cmd_count);
 int	count_pipes(char *line);
 void line_split_bypipe(t_msh *msh, char *line, char **seg_arr);
 int	 check_quotes(char *start, char *curr);
+void	seg_tokenize(t_msh *msh, t_parse *aux);
+void extract_token(t_msh *msh, t_token **token, char *seg);
+void skip_whitespaces(char **str);
+void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
+int get_token_len(t_token *token, char *seg, int tok_len);
+int set_redir_type(t_token *token, char *seg);
+
+void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
+{
+	void	*ptr_new;
+
+	if (!ptr)
+		return (malloc(size_new));
+	if (!size_new)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	ptr_new = malloc(size_new);
+	if (!ptr_new)
+		return (NULL);
+	if (size_prev > 0)
+	{
+		if (size_prev > size_new)
+			ft_memcpy(ptr_new, ptr, size_new);
+		else
+			ft_memcpy(ptr_new, ptr, size_prev);
+	}
+	free(ptr);
+	return (ptr_new);
+}
+
+void skip_whitespaces(char **str)
+{
+    while (**str && ft_strchr(" \t\n\r\f\v", **str))
+        (*str)++;
+}
+
+int set_redir_type(t_token *token, char *seg)
+{
+    if (*seg == '<' && *(seg + 1) == '<')
+        token -> redir = REDIR_HDOC;
+    else if (*seg == '>' && *(seg + 1) == '>')
+        token -> redir = REDIR_APPEN;
+    else if (*seg == '<')
+        token -> redir = REDIR_INP;
+    else if (*seg == '>')
+        token -> redir = REDIR_OUTP;
+    else
+        return (0);
+    return (1);
+}
+
+int get_token_len(t_token *token, char *seg, int tok_len)
+{
+    int redir_flg;
+    int quote_flg;
+    int is_white;
+
+    redir_flg = 0;
+    quote_flg = 0;
+    while (*seg)
+    {
+        is_white = (ft_strchr(" \t\n\r\f\v", *seg) != NULL);
+        if ((*seg == '\'' || *seg == '"') && !quote_flg)
+            quote_flg = (int) *seg;
+        else if ((*seg == '\'' || *seg == '"') && quote_flg == (int) *seg)
+            quote_flg = 0;
+        if (redir_flg && !is_white)
+            redir_flg = 0;
+        if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg && tok_len)
+            break;
+        if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg)
+            redir_flg = set_redir_type(token, seg);
+        if (is_white && !quote_flg && !redir_flg)
+            break;
+        tok_len++;
+        seg++;
+    }
+    return (tok_len);
+}
+
+void extract_token(t_msh *msh, t_token **token, char *seg)
+{
+    int     tok_len;
+    int     arr_len;
+    int     size;
+
+    arr_len = 0;
+    size = sizeof(t_token);
+    while (*seg)
+    {
+        *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
+        if (!token)
+            exit(printf("Malloc Error token array\n"));
+        ft_memset(&(*token)[arr_len], 0, size);
+        tok_len = get_token_len(*token, seg, 0);
+        (*token)[arr_len].token = ft_substr(seg, 0, tok_len);
+        if (!(*token)[arr_len].token)
+            exit(printf("Malloc Error token %i\n", arr_len));
+        seg += tok_len;
+        skip_whitespaces(&seg);
+        arr_len++;
+    }
+    *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
+    if (!*token)
+        exit(printf("Malloc Error token array\n"));
+    ft_memset(&(*token)[arr_len], 0, sizeof(t_token));
+}
+
+void	seg_tokenize(t_msh *msh, t_parse *aux)
+{
+	char    **seg;
+    t_token **token;
+    
+    seg = aux -> seg;
+    token = aux -> token;
+    while (*seg)
+    {
+        extract_token(msh, token, *seg);
+        seg++;
+        token++;
+    } 
+}
 
 int	 check_quotes(char *start, char *curr)
 {
@@ -25,7 +149,6 @@ int	 check_quotes(char *start, char *curr)
 			double_quote = !double_quote; 
 		start++;
 	}
-    //printf("single: %i | double: %i\n", single_quote, double_quote);
 	return (single_quote || double_quote);
 }
 
@@ -38,7 +161,6 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
     start = line;
     while (*line)
     {
-        //printf("%c", *line);
         if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line))//change the check quotes function
         {
             seg = ft_substr(start, 0, line - start + 1);
@@ -48,7 +170,6 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
                 seg = ft_strtrim(temp, " \t\n\r\f\v");
                 free(temp);
             }
-            //printf("split_by_pipe: %s\n", seg);
             if (!seg)
                 exit(printf("# minishell: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
             *seg_arr = seg;
@@ -76,35 +197,41 @@ int	count_pipes(char *line)
 	return (pipe_count);
 }
 
-void	init_token(t_msh *msh, int cmd_count)
-{
-	msh -> aux -> token = ft_calloc(cmd_count + 1, sizeof(t_token *));
-	if (!msh -> aux -> token)
-		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
-	while (cmd_count--)
-	{
-		*(msh -> aux -> token) = ft_calloc(1, sizeof(t_token));
-		if (!*(msh -> aux -> token))
-			exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Since we calloced we can free until we find it NULL.
-		(msh -> aux -> token)++;
-	}
-}
-
 void init_parse_structs(t_msh *msh, char *line) 
 {
 	msh -> cmd_count = count_pipes(line) + 1;
 	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
 	if (!msh -> aux -> seg)
 		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
-	init_token(msh, msh -> cmd_count);
+    msh -> aux -> token = ft_calloc(msh -> cmd_count + 1, sizeof(t_token *));
+	if (!msh -> aux -> token)
+		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
 }
 
 void print_segments(char **seg)
 {
+    printf("pirnting segments\n");
     while (*seg)
     {
-        printf("<%s>\n", *seg);
+        printf("[%s]\n", *seg);
         seg++;
+    }
+}
+
+void print_tokens(t_token **token)
+{
+    t_token *tok_arr;
+
+    while (*token)
+    {
+        printf("pirnting tokens for each segment\n");
+        tok_arr = *token;
+        while(tok_arr -> token)
+        {
+            printf("[%s]\n", tok_arr -> token);
+            tok_arr++;
+        }
+        token++;
     }
 }
 
@@ -116,7 +243,8 @@ void	msh_parse(char *line, t_msh *msh)
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
     print_segments(msh -> aux -> seg);
-	seg_tokenize(msh);
+	seg_tokenize(msh, msh -> aux);
+    print_tokens(msh -> aux -> token);
 }
 
 void msh_init(t_msh *msh)

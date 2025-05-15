@@ -27,7 +27,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
             temp = seg;
             if (temp)
             {
-                seg = ft_strtrim(temp, " \t\n\r\v");
+                seg = ft_strtrim(temp, " \t\n\r\f\v");
                 free(temp);
             }
             if (!seg)
@@ -55,39 +55,37 @@ int	count_pipes(char *line)
 	}
 	return (pipe_count);
 }
+void	init_token(t_msh *msh, int cmd_count)
+{
+	msh -> aux -> token = ft_calloc(cmd_count + 1, sizeof(t_token **));
+	if (!msh -> aux -> token)
+		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
+	while (cmd_count--)
+	{
+		*(msh -> aux -> token) = ft_calloc(1, sizeof(t_token *));
+		if (!*(msh -> aux -> token))
+			exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Since we calloced we can free until we find it NULL.
+		(msh -> aux -> token)++;
+	}
+}
 
-// void	init_token(t_msh *msh, int cmd_count)
-// {
-// 	// while (cmd_count--)
-// 	// {
-// 	// 	*(msh -> aux -> token) = ft_calloc(1, sizeof(t_token));
-// 	// 	if (!*(msh -> aux -> token))
-// 	// 		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Since we calloced we can free until we find it NULL.
-// 	// }
-// }
-
-void init_parse_structs(t_msh *msh, char *line)
+void init_parse_structs(t_msh *msh, char *line) 
 {
 	msh -> cmd_count = count_pipes(line) + 1;
 	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
 	if (!msh -> aux -> seg)
 		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
-	msh -> aux -> token = ft_calloc(msh -> cmd_count + 1, sizeof(t_token *));
-	if (!msh -> aux -> token)
-		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
-	//init_token(msh, msh -> cmd_count);
+	init_token(msh, msh -> cmd_count);
 }
-
 
 int	msh_parse(char *line, t_msh *msh)
 {
 	t_parse	aux;//in static memory remember to assign to cmd struct before leaving this function.
 
-	ft_memset(&aux, 0, sizeof(t_parse));
 	msh -> aux = &aux;
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
-	seg_tokenize(msh, &aux);
+	seg_tokenize(msh);
 }
 
 int main(int ac, char **av, char **envp)

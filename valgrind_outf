@@ -1,0 +1,1 @@
+minishell> echo <out1<out2 | cat something
