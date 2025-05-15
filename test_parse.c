@@ -15,7 +15,7 @@ void	seg_tokenize(t_msh *msh, t_parse *aux);
 void extract_token(t_msh *msh, t_token **token, char *seg);
 void skip_whitespaces(char **str);
 void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
-int get_token_len(t_token *token, char *seg, int tok_len);
+int get_token_len(char *seg, t_token *token, int tok_len);
 int set_redir_type(t_token *token, char *seg);
 
 void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
@@ -31,7 +31,7 @@ void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
 	}
 	ptr_new = malloc(size_new);
 	if (!ptr_new)
-		return (NULL);
+		return (NULL);//shouldn't we free ptr?
 	if (size_prev > 0)
 	{
 		if (size_prev > size_new)
@@ -64,7 +64,7 @@ int set_redir_type(t_token *token, char *seg)
     return (1);
 }
 
-int get_token_len(t_token *token, char *seg, int tok_len)
+int get_token_len(char *seg, t_token *token, int tok_len)
 {
     int redir_flg;
     int quote_flg;
@@ -81,9 +81,9 @@ int get_token_len(t_token *token, char *seg, int tok_len)
             quote_flg = 0;
         if (redir_flg && !is_white)
             redir_flg = 0;
-        if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg && tok_len)
+        else if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg && tok_len)
             break;
-        if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg)
+        else if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg)
             redir_flg = set_redir_type(token, seg);
         if (is_white && !quote_flg && !redir_flg)
             break;
@@ -107,7 +107,7 @@ void extract_token(t_msh *msh, t_token **token, char *seg)
         if (!token)
             exit(printf("Malloc Error token array\n"));
         ft_memset(&(*token)[arr_len], 0, size);
-        tok_len = get_token_len(*token, seg, 0);
+        tok_len = get_token_len(seg, &(*token)[arr_len], 0);
         (*token)[arr_len].token = ft_substr(seg, 0, tok_len);
         if (!(*token)[arr_len].token)
             exit(printf("Malloc Error token %i\n", arr_len));
@@ -228,7 +228,7 @@ void print_tokens(t_token **token)
         tok_arr = *token;
         while(tok_arr -> token)
         {
-            printf("[%s]\n", tok_arr -> token);
+            printf("[%s]        redir: %i\n", tok_arr -> token, (int) tok_arr -> redir );
             tok_arr++;
         }
         token++;
