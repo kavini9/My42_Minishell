@@ -60,7 +60,7 @@ typedef struct s_redir
 {
     t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL
     char    *fname_o_del;
-	char	*expan;
+	int		expan;
     struct s_redir *next;
 }   t_redir;
 

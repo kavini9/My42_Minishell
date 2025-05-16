@@ -42,7 +42,7 @@ int main(int ac, char **av)
 		printf("input string     : %s\n", av[i]);
 		exitcode = ft_atol(av[i]);
 		printf("ft_atol num      : %li\n", exitcode);
-		printf("ft_atol as int8_t: %d\n", (uint8_t) exitcode);
+		printf("ft_atol as uint8_t: %d\n", (uint8_t) exitcode);
 		printf("atol num         : %li\n", atol(av[i]));
 		
 		i++;
