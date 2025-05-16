@@ -12,6 +12,10 @@
 
 # include "../../includes/minishell.h"
 
+void expand_and_setup_cmd(t_msh *msh, t_token **token)
+{
+
+}
 
 
 
