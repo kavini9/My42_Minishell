@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/18 22:38:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/20 22:54:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,28 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     {
         *tmp_cmd = ft_calloc(1, sizeof(t_cmd));
         if (!*tmp_cmd)
-            exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+             exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
         tmp_cmd++;
+    }
+}
+
+void expanscan_token(t_msh *msh, char *token, t_cmd *cmd)
+{
+    char *expan;
+    char *start;
+    char *key;
+
+    start = token;
+    expan = ft_calloc(ft_strlen(token), sizeof(char));
+    if (!expan)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+    while(*token)
+    {
+        if (token == '$' && check_quotes(start, token))
+        {
+            key = extract_env_key(msh, &(token + 1));
+            expand_parameter(msh, msh  -> aux -> token, key);
+        }
     }
 }
 
@@ -35,8 +55,8 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
     {
         while ((**token).token)
         {
-
-               
+            expanscan_token(msh, (**token).token, cmd);
+              
         }  
     }
 }
@@ -50,3 +70,14 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
 //when the key is found pass it to expand with quoted or unquoted flag.
 //create a array with the
 //tilde expansion should be done after variable expansion because variables can include tilde.
+
+
+
+
+//check quotes in the split pipe can be redundant if we can use a flag for it.
+//But flag will also have to be introduced to everywhere we have to check quote context.
+//So keep it for now.
+
+
+
+//if a export varaibe consist of a $ it should be expanded before adding to the env. 

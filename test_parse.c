@@ -144,9 +144,9 @@ int	 check_quotes(char *start, char *curr)
     while (*start && start != curr + 1)
 	{
 		if (*start == '\'' && !double_quote)
-			single_quote = !single_quote; 
+			single_quote = !single_quote * (int) *start ; 
 		else if (*start == '"' && !single_quote)
-			double_quote = !double_quote; 
+			double_quote = !double_quote * (int) *start; 
 		start++;
 	}
 	return (single_quote || double_quote);
@@ -245,7 +245,7 @@ void	msh_parse(char *line, t_msh *msh)
     print_segments(msh -> aux -> seg);
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);
-    init_cmd_struct(msh, msh -> cmd_count)
+    //init_cmd_struct(msh, msh -> cmd_count);
     //expand_and_setup_cmd(msh, msh -> aux -> token); 
 }
 
