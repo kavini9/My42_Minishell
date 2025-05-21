@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/20 22:54:21 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/21 23:45:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,29 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     }
 }
 
+char *extract_env_key(char **token)
+{
+    char *start;
+    int var_len;
+    
+    var_len = 0;
+    (*token)++;
+    start = *token;
+    while (!ft_isalnum(**token) || **token == '_')
+    {
+        var_len++;
+        (*token)++;
+        if (start == *token && ft_isdigit(**token))
+            break;
+    }
+    return (ft_substr(start, 0, var_len));  
+}
+
+void    expand_parameter(t_msh *msh,  char *expan, char *token, char *key)
+{
+    
+}
+
 void expanscan_token(t_msh *msh, char *token, t_cmd *cmd)
 {
     char *expan;
@@ -41,11 +64,17 @@ void expanscan_token(t_msh *msh, char *token, t_cmd *cmd)
         exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     while(*token)
     {
-        if (token == '$' && check_quotes(start, token))
+        if (token == '$' && check_quotes(start, token) != '\'' 
+        && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
         {
-            key = extract_env_key(msh, &(token + 1));
-            expand_parameter(msh, msh  -> aux -> token, key);
+            key = extract_env_key(&(token));
+            if (!key)
+                exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free expan
+            expand_parameter(msh,  expan, token, key);
         }
+        ft_memcpy(expan, token, sizeof(char));
+        token++;
+        expan++;
     }
 }
 
@@ -56,7 +85,7 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
         while ((**token).token)
         {
             expanscan_token(msh, (**token).token, cmd);
-              
+             
         }  
     }
 }
