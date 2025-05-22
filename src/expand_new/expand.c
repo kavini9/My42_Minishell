@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/21 23:45:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/22 22:40:52 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,27 @@ char *extract_env_key(char **token)
         if (start == *token && ft_isdigit(**token))
             break;
     }
-    return (ft_substr(start, 0, var_len));  
+    return (ft_substr(start, 0, var_len));
 }
 
 void    expand_parameter(t_msh *msh,  char *expan, char *token, char *key)
 {
+    int q_context;
+    char    *exp_val;
+    int     is_white;
+
+    q_context = check_quotes(expan, NULL);
+    exp_val = get_env(msh -> envl, key); //might have to write something to get env and handle digits and pid.
+    if (exp_val && !q_context)
+    {
+        is_white = (ft_strchr(" \t\n\r\f\v", *exp_val) != NULL);
+        
+    }
+        
     
 }
 
-void expanscan_token(t_msh *msh, char *token, t_cmd *cmd)
+void expan_scan_token(t_msh *msh, char *token, t_cmd *cmd)
 {
     char *expan;
     char *start;
@@ -64,7 +76,7 @@ void expanscan_token(t_msh *msh, char *token, t_cmd *cmd)
         exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     while(*token)
     {
-        if (token == '$' && check_quotes(start, token) != '\'' 
+        if (token == '$' && check_quotes(start, token + 1) != '\'' 
         && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
         {
             key = extract_env_key(&(token));
@@ -84,7 +96,7 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
     {
         while ((**token).token)
         {
-            expanscan_token(msh, (**token).token, cmd);
+            expan_scan_token(msh, (**token).token, cmd);
              
         }  
     }

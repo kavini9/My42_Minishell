@@ -136,12 +136,12 @@ void	seg_tokenize(t_msh *msh, t_parse *aux)
     } 
 }
 
-int	 check_quotes(char *start, char *curr)
+int	 check_quotes(char *start, char *end)
 {
 	int	single_quote = 0;
 	int	double_quote = 0;
 
-    while (*start && start != curr + 1)
+    while (*start && start != end)
 	{
 		if (*start == '\'' && !double_quote)
 			single_quote = !single_quote * (int) *start ; 
@@ -161,7 +161,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
     start = line;
     while (*line)
     {
-        if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line))//change the check quotes function
+        if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line + 1))//change the check quotes function
         {
             seg = ft_substr(start, 0, line - start + 1);
             temp = seg;
@@ -190,7 +190,7 @@ int	count_pipes(char *line)
 	start = line;
 	while (*line)
 	{
-		if (*line == '|' && !check_quotes(start, line))
+		if (*line == '|' && !check_quotes(start, line + 1))
 			pipe_count++;
 		line++;
 	}
