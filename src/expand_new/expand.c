@@ -51,14 +51,22 @@ void    expand_parameter(t_msh *msh,  char *expan, char *token, char *key)
 {
     int q_context;
     char    *exp_val;
-    int     is_white;
+    char    *tmp;
+    char    exp_split;
 
     q_context = check_quotes(expan, NULL);
     exp_val = get_env(msh -> envl, key); //might have to write something to get env and handle digits and pid.
     if (exp_val && !q_context)
     {
-        is_white = (ft_strchr(" \t\n\r\f\v", *exp_val) != NULL);
-        
+        //strdup exp_val
+        //replace \t\n\r\f\v with spaces
+        //split with spaces
+        //check in exp_val if there's leading 
+        exp_split = ft_split(exp_val, ' ');
+        if (!ft_strchr(" \t\n\r\f\v", *exp_val) != NULL)
+            tmp = ft_strjoin(exp_val, *)
+        trailing_spc = (ft_strchr(" \t\n\r\f\v", *(exp_val + ft_strlen(exp_val) -1) != NULL));
+
     }
         
     
