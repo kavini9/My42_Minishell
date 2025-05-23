@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/20 18:52:18 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/24 00:43:12 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ typedef struct s_token
 {
     char    		*token;
 	t_redir_type	redir;
-    char    		*expand;
+    char    		**expand;
 } t_token;
 
 typedef struct s_parse
