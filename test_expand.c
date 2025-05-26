@@ -1,16 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand2.c                                          :+:      :+:    :+:   */
+/*   test_expand.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/26 21:18:18 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:14:28 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/minishell.h"
+# include "includes/minishell.h"
+
+void expand_and_setup_cmd(t_msh *msh, t_token **token);
+void expscan_token(t_msh *msh, t_token token);
+void expscan_token(t_msh *msh, t_token token);
+char *extract_env_key(char **token);
+void init_exp(t_msh *msh, t_token token, t_expan *exp);
+
 void init_exp(t_msh *msh, t_token token, t_expan *exp)
 {
     ft_memset(exp, 0, sizeof(t_expan));
@@ -27,6 +34,7 @@ char *extract_env_key(char **token)
     char *start;
     int var_len;
     
+    printf("inside extract token\n");
     var_len = 0;
     (*token)++;
     start = *token;
@@ -48,7 +56,7 @@ void expscan_token(t_msh *msh, t_token token)
     t_expan exp;
 
     init_exp(msh, token, &exp);
-    while (exp.suffix)
+    while (*exp.suffix)
     {
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'') //do we need siffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
@@ -62,7 +70,7 @@ void expscan_token(t_msh *msh, t_token token)
     }
 }
 
-void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
+void expand_and_setup_cmd(t_msh *msh, t_token **token)
 {
     char *token_iter;
 
@@ -70,9 +78,11 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
     {
         while ((**token).token)
         {
-            token_iter = ft_strchr("$~", *(**token).token);
-            while (*token_iter && check_quotes((**token).token, token_iter + 1) == '\'')
-                token_iter = ft_strchr("$~", *(++token_iter) );
+            printf("printing tokens in expand: %s\n", (**token).token);
+            token_iter = ft_strchr(*(**token).token, '$');
+            printf("printing token_iter in expand: %s\n", token_iter);
+            while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
+                token_iter = ft_strchr(*(++token_iter), '$');
             if (token_iter)
                 expscan_token(msh, **token);
             (*token)++;

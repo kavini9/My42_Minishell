@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/24 00:43:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/26 21:26:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,14 @@ typedef struct s_cmd
 
 typedef struct s_expan
 {
-	char *token;
-	char *token_iter;
-	char *expan;
-	char *expan_iter;
+	char *tok;
+	char *suffix;
+	char *prefix;
+	char *exp;
+	char *key;
 	char **exp_arr;
 	int exp_arr_len;
+	int	newtok_offset;
 } t_expan;
 
 typedef struct s_token
@@ -115,6 +117,29 @@ typedef struct s_msh
 } t_msh;
 
 # include "../lib/libft/libft.h"
+
+
+void msh_init(t_msh *msh);
+void	msh_parse(char *line, t_msh *msh);
+void print_segments(char **seg);
+void init_parse_structs(t_msh *msh, char *line);
+void	init_token(t_msh *msh, int cmd_count);
+int	count_pipes(char *line);
+void line_split_bypipe(t_msh *msh, char *line, char **seg_arr);
+int	 check_quotes(char *start, char *curr);
+void	seg_tokenize(t_msh *msh, t_parse *aux);
+void extract_token(t_msh *msh, t_token **token, char *seg);
+void skip_whitespaces(char **str);
+void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
+int get_token_len(char *seg, t_token *token, int tok_len);
+int set_redir_type(t_token *token, char *seg);
+
+
+void expand_and_setup_cmd(t_msh *msh, t_token **token);
+void expscan_token(t_msh *msh, t_token token);
+void expscan_token(t_msh *msh, t_token token);
+char *extract_env_key(char **token);
+void init_exp(t_msh *msh, t_token token, t_expan *exp);
 //# include "envp.h"
 
 //# include "parse.h"
