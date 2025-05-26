@@ -78,6 +78,16 @@ typedef struct s_cmd
     t_redir     *redir;
 } t_cmd;
 
+typedef struct s_expan
+{
+	char *token;
+	char *token_iter;
+	char *expan;
+	char *expan_iter;
+	char **exp_arr;
+	int exp_arr_len;
+} t_expan;
+
 typedef struct s_token
 {
     char    		*token;
