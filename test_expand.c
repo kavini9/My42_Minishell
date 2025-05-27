@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/26 22:14:28 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/27 23:46:36 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,58 @@ char *extract_env_key(char **token)
     return (ft_substr(start, 0, var_len));
 }
 
+void    get_cur_exp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
+{
+    char *tmp_exp_dup;
+    
+    if (*exp_dup && q_context)
+    {
+        tmp_exp_dup = exp_dup;
+        while (*tmp_exp_dup)
+        {
+            if (ft_strchr("\t\n\r\f\v", *tmp_exp_dup))
+                *tmp_exp_dup = ' ';
+            tmp_exp_dup++;
+        }
+        exp -> cur_exp_arr = ft_split(exp_dup, ' ');
+        free(exp_dup);//see if this is appropriate. in else case we assign it to the array so we need to keep it. but here we have a brand new array. so no need of exp_dup.
+    }
+    else
+    {
+        exp -> cur_exp_arr = ft_calloc(2, sizeof(char *));
+        if (exp -> cur_exp_arr)
+            *(exp -> cur_exp_arr) = exp_dup;
+        else
+            free(exp_dup); //if array creation failed we will loose exp_dup because it is not in our struct
+    }
+    if (!exp -> cur_exp_arr)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));
+}
+
+void    concat_or_extend_exp_edge(t_msh *msh, t_expan *exp, char *exp_val)
+{
+    int leading_spc;
+    int trailing_spc;
+
+    leading_spc = (ft_strchr("\t\n\r\f\v", *exp_val) != NULL);
+    trailing_spc = (ft_strchr("\t\n\r\f\v", exp_val[ft_strlen(exp_val) - 1]) != NULL);//check if index is correct
+    //what id len is zero? it will make index -1
+}
+
 void    expand_parameter(t_msh *msh, t_expan *exp)
 {
-    int q_context;
     char    *exp_val;
+    char    *exp_dup;
 
-    q_context = check_quotes(exp -> exp, exp -> prefix);
     exp_val = get_env(msh -> envl, exp -> key);
-
+    if (exp_val)
+        exp_dup = ft_strdup(exp_val);
+    else
+        exp_dup = ft_strdup("");
+    if (!exp_dup)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));
+    get_cur_exp_arr(msh, exp, exp_dup, check_quotes(exp -> exp, exp -> prefix));
+    concat_or_extend_exp_edge(msh, exp, exp_val);
 }
 
 void expscan_token(t_msh *msh, t_token token)

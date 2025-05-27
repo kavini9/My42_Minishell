@@ -1,0 +1,80 @@
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_NO_LT_SPC="text1       text2       text3"
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR_NO_LT_SPC'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretexttext1]
+arg: [text2]
+arg: [text3posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR__L_SPC=" text1       text2       text3"
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR__L_SPC'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretext]
+arg: [text1]
+arg: [text2]
+arg: [text3posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR__T_SPC="text1       text2       text3 "
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR__T_SPC'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretexttext1]
+arg: [text2]
+arg: [text3]
+arg: [posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_LT_SPC=" text1       text2       text3 "
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR_LT_SPC'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretext]
+arg: [text1]
+arg: [text2]
+arg: [text3]
+arg: [posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_NO_LT_SPC="text1       text2       text3"
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR_NO_LT_SPC"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretexttext1       text2       text3posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR__L_SPC=" text1       text2       text3"
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR__L_SPC"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretext text1       text2       text3posttext]
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR__T_SPC="text1       text2       text3 "
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR__T_SPC"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretexttext1       text2       text3 posttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_LT_SPC=" text1       text2       text3 "
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR_LT_SPC"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretext text1       text2       text3 posttext]
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_NULL
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR_NULL'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretextposttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_NULL
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR_NULL"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretextposttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_MTY=
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext$VAR_MTY'posttext'
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretextposttext]
+
+
+wweerasi@c3r1p7:~/My42/minishell/Repo$ export VAR_MTY=
+wweerasi@c3r1p7:~/My42/minishell/Repo$ set -- pretext"$VAR_MTY"posttext
+wweerasi@c3r1p7:~/My42/minishell/Repo$ printf 'arg: [%s]\n' "$@"
+arg: [pretextposttext]

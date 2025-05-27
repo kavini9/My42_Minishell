@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/26 21:26:42 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/27 22:18:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_expan
 	char *prefix;
 	char *exp;
 	char *key;
+	char **cur_exp_arr;
 	char **exp_arr;
 	int exp_arr_len;
 	int	newtok_offset;
