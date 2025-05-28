@@ -6,20 +6,33 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 20:57:11 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/11 21:11:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:54:54 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_realloc(void *ptr, size_t size)
+void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
 {
-	void	*tmp;
+	void	*ptr_new;
 
-	if (size > UINT_MAX)
+	if (!ptr)
+		return (malloc(size_new));
+	if (!size_new)
+	{
+		free(ptr);
 		return (NULL);
-	tmp = malloc(size);
-	if (ptr != NULL)
-		ft_bzero(ptr, count * size);
-	return (ptr);
+	}
+	ptr_new = malloc(size_new);
+	if (!ptr_new)
+		return (NULL);//should I set errno to ENOMEM
+	if (size_prev > 0)
+	{
+		if (size_prev > size_new)
+			ft_memcpy(ptr_new, ptr, size_new);
+		else
+			ft_memcpy(ptr_new, ptr, size_prev);
+	}
+	free(ptr);
+	return (ptr_new);
 }

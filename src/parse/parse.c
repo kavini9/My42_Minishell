@@ -5,36 +5,66 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 12:53:36 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/27 23:48:41 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/04/28 22:29:12 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/05/28 17:04:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/**
- * msh_parse - Master parsing function that validates and structures input.
- *
- * @line: The raw user input string (not modified directly).
- * @msh: Pointer to the main shell structure to store parsed output.
- *
- * This function runs the full parsing pipeline:
- * - Validates syntax and unmatched quotes
- * - Allocates space for command structures
- * - Splits input into segments using unquoted pipes
- * - Parses each segment into command, arguments, and redirections
- *
- * Return: 0 if parsing was successful, 1 on any failure.
- */
-int	msh_parse(char *line, t_msh *msh)
+void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
 {
-	if (build_command_structs(msh, line))
-		return (1);
-	if (split_line_by_pipe(line, msh))
-		return (1);
-	if (parse_line(msh))
-		return (1);
-	return (0);
+    char *start;
+    char *seg;
+    char *temp;
+    
+    start = line;
+    while (*line)
+    {
+        if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line + 1))//change the check quotes function
+        {
+            seg = ft_substr(start, 0, line - start + 1);
+            temp = seg;
+            if (temp)
+            {
+                seg = ft_strtrim(temp, " \t\n\r\f\v");
+                free(temp);
+            }
+            if (!seg)
+                exit(printf("# minishell: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
+            *seg_arr = seg;
+            seg_arr++;
+            if (*(line + 1)) 
+                start = line + 2;
+        }
+        line++;
+    }
 }
 
-//TODO: isn't it better to create an array of items after expansion so we can just pick the items like redirections from the array and then what is left is moved to the command array.
+int	count_pipes(char *line)
+{
+	int	pipe_count;
+	char *start;
+
+	pipe_count = 0;
+	start = line;
+	while (*line)
+	{
+		if (*line == '|' && !check_quotes(start, line + 1))
+			pipe_count++;
+		line++;
+	}
+	return (pipe_count);
+}
+
+void init_parse_structs(t_msh *msh, char *line) 
+{
+	msh -> cmd_count = count_pipes(line) + 1;
+	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
+	if (!msh -> aux -> seg)
+		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+    msh -> aux -> token = ft_calloc(msh -> cmd_count + 1, sizeof(t_token *));
+	if (!msh -> aux -> token)
+		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
+}
+

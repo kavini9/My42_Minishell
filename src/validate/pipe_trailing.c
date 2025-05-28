@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:50:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/22 23:44:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:09:52 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,33 +89,57 @@ static char *concat_and_cleanup(t_msh *msh, char *line, char *additional_input)
  *
  * Return: The concatenated input line if valid input is provided, or NULL if interrupted or invalid.
  */
-char *get_trailing_input(t_msh *msh, char *line)
+// char *get_trailing_input(t_msh *msh, char *line)
+// {
+//     char *additional_input;
+
+//     additional_input = NULL; // Initialize a pointer to store additional user input.
+
+//     //Set a signal handler for SIGINT (Ctrl+C).
+//     //signal(SIGINT, sig_handler_hd);
+
+//     // Enter an infinite loop to keep reading additional input.
+//     while (1)
+//     {
+//         additional_input = readline("> ");// Prompt the user for additional input.
+//         if (!additional_input)// || g_sig == SIGINT)// Handle interruptions or empty input.
+//         {
+//             g_sig = 0; // Reset the global signal flag.
+//            // msh->exit_code = restore_and_cleanup(msh, -1, 1); // Cleanup on interruption.
+// 		   	msh->exit_code = 2;
+//             free(line); // Free the initial input line.
+//             return (NULL); // Return NULL to indicate interruption.
+//         }        
+//         if (!is_input_empty(additional_input))// If the additional input is not empty, concatenate it with the initial line.
+//             return (concat_and_cleanup(msh, line, additional_input));
+//         free(additional_input);// If the additional input is empty, free it and prompt again.
+//     }
+
+//     /* // Finalize processing and return the result.
+//     return (finalize_pipe_processing(msh, line)); */
+// 	return (line);
+// }
+
+char get_trailing_input(t_msh *msh, char line)
 {
-    char *additional_input;
+    char additional_input = NULL;
 
-    additional_input = NULL; // Initialize a pointer to store additional user input.
+    // Set signal handler for heredoc or continuation input
+    signal(SIGINT, sig_handler_hd);
 
-    // Set a signal handler for SIGINT (Ctrl+C).
-   // signal(SIGINT, sig_handler_hd);
-
-    // Enter an infinite loop to keep reading additional input.
     while (1)
     {
-        additional_input = readline("> ");// Prompt the user for additional input.
-        if (!additional_input)// || g_sig == SIGINT)// Handle interruptions or empty input.
+        additional_input = readline("> ");
+        if (!additional_input || g_sig == SIGINT)
         {
-            g_sig = 0; // Reset the global signal flag.
-           // msh->exit_code = restore_and_cleanup(msh, -1, 1); // Cleanup on interruption.
-		   	msh->exit_code = 2;
-            free(line); // Free the initial input line.
-            return (NULL); // Return NULL to indicate interruption.
-        }        
-        if (!is_input_empty(additional_input))// If the additional input is not empty, concatenate it with the initial line.
+            g_sig = 0; // Reset signal state
+            msh->exit_code = 2;
+            free(additional_input); // readline returns NULL, no issue if already NULL
+            free(line);
+            return (NULL);
+        }
+        if (!is_input_empty(additional_input))
             return (concat_and_cleanup(msh, line, additional_input));
-        free(additional_input);// If the additional input is empty, free it and prompt again.
+        free(additional_input); // Prompt again if input is empty
     }
-
-    /* // Finalize processing and return the result.
-    return (finalize_pipe_processing(msh, line)); */
-	return (line);
 }

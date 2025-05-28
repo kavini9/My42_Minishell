@@ -1,64 +1,72 @@
-# ───────────────────────────────────────────────────────────────
-#                     CONFIGURATION
-# ───────────────────────────────────────────────────────────────
-NAME        = test_msh
-CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -g -fsanitize=address,undefined
+NAME        = minishell
 
-LIBFT_DIR   = ../lib/libft
-LIBFT_A     = $(LIBFT_DIR)/libft.a
-LIBFT       = -L$(LIBFT_DIR) -lft
-READLINE    = -lreadline
+DIR_LIBFT   = ./lib/libft
+DIR_SRC     = ./src
+DIR_OBJ     = $(DIR_SRC)/objects
+DIR_INC     = ./includes
 
-INCLUDES    = -Iincludes -I$(LIBFT_DIR)
+HEADERS     = $(DIR_INC)/minishell.h
 
-# ───────────────────────────────────────────────────────────────
-#                     SOURCE FILES
-# ───────────────────────────────────────────────────────────────
+SOURCES = \
+    main/main.c \
+    main/msh_clean.c \
+    main/msh_error.c \
+    builtin/cd.c \
+    builtin/cd_unlinked_dir.c \
+    builtin/echo.c \
+    builtin/env.c \
+    builtin/exec_builtin.c \
+    builtin/exit.c \
+    builtin/export.c \
+    builtin/pwd.c \
+    builtin/unset.c \
+    envl/init_envp.c \
+    envl/utils_envl.c \
+    execute/exec_cmd.c \
+    execute/execin_child.c \
+    execute/heredoc.c \
+    execute/redir.c \
+    parse_new/parse.c \
+    parse_new/tokenize.c \
+    validate/checker.c \
+    validate/pipe_trailing.c \
+    validate/redirections.c \
+    validate/validate.c
 
-# Source files from subdirectories
-VALID_SRC  = $(wildcard ../validate/*.c)
-PARSE_SRC   = $(wildcard ./prse/*.c)
-EXPAND_SRC  = $(wildcard ../signal/*.c)
-PARSE_UTILS_SRC  = $(wildcard ../signal/*.c)
-SIGNAL_SRC  = $(wildcard ../signal/*.c)
+OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
+DEPS    = $(OBJECTS:.o=.d)
 
-# Main file is in the root directory
-TEST_MAIN   = ./test_main.c
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -I$(DIR_INC) -MMD -MP
+RM      = rm -rf
 
-# All sources needed to build test_msh
-SRC = $(filter-out ./test_main.c, $(PARSE_SRC)) $(SIGNAL_SRC) $(TEST_MAIN)
-OBJ         = $(SRC:.c=.o)
+LIBFT_FLAGS = -L $(DIR_LIBFT) -lft
 
-# ───────────────────────────────────────────────────────────────
-#                     BUILD TARGETS
-# ───────────────────────────────────────────────────────────────
-
-all: $(NAME)
-
-$(NAME): libft $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(INCLUDES) $(LIBFT) $(READLINE) -o $(NAME)
-
-# ───────────────────────────────────────────────────────────────
-#              Build libft if not already built
-# ───────────────────────────────────────────────────────────────
+all: libft $(NAME)
 
 libft:
-	@echo "🔧 Building libft..."
-	@make -C $(LIBFT_DIR)
+    @make -C $(DIR_LIBFT)
 
-# ───────────────────────────────────────────────────────────────
-#                        CLEANUP
-# ───────────────────────────────────────────────────────────────
+$(NAME): $(OBJECTS)
+    $(CC) $(OBJECTS) $(LIBFT_FLAGS) -o $@
+
+$(DIR_OBJ)/%.o: $(DIR_SRC)/%.c $(HEADERS)
+    @mkdir -p $(dir $@)
+    $(CC) $(CFLAGS) -c $< -o $@
+
+-include $(DEPS)
 
 clean:
-	rm -f $(OBJ)
-	make -C $(LIBFT_DIR) clean
+    @$(RM) $(DIR_OBJ)
+    @make -C $(DIR_LIBFT) clean
 
 fclean: clean
-	rm -f $(NAME)
-	make -C $(LIBFT_DIR) fclean
+    @$(RM) $(NAME)
+    @make -C $(DIR_LIBFT) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re libft
+debug: CFLAGS += -g
+debug: re
+
+.PHONY: all libft clean fclean re debug

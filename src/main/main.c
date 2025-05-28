@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/25 23:26:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 16:48:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,20 @@ void    msh_execute(t_msh *msh)
         execin_child(msh, msh -> cmd, -1, 0);
 }
 
+void	msh_parse(char *line, t_msh *msh)
+{
+	t_parse	aux;//in static memory remember to assign to cmd struct before leaving this function.
+
+	msh -> aux = &aux;
+	init_parse_structs(msh, line);
+	line_split_bypipe(msh, line, msh -> aux -> seg);
+    print_segments(msh -> aux -> seg);
+	seg_tokenize(msh, msh -> aux);
+    print_tokens(msh -> aux -> token);
+    //init_cmd_struct(msh, msh -> cmd_count);
+    expand_and_setup_cmd(msh, msh -> aux -> token);
+}
+
 void	msh_loop(t_msh *msh)
 {
 	char	*line;
@@ -48,6 +62,8 @@ void	msh_loop(t_msh *msh)
 	(void) *msh;
 	while(1)
 	{
+		if (isatty(fileno(stdin)))
+            init_sig();
 		line = readline("minishell> ");
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
@@ -55,9 +71,7 @@ void	msh_loop(t_msh *msh)
 			printf("line OK: %s\n", line);
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-			//msh_execute(msh);
-			if (!ft_strcmp(line, "exit"))
-				break;
+			msh_execute(msh);
 		}
 	}
 	rl_clear_history();

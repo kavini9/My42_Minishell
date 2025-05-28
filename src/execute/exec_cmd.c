@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/19 23:57:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:38:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,10 @@ int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path)
 			cmd -> err_note.strerr = strerror(errno);
 		else
 			return (0);
-		cmd -> cmd_exit_code = X_KO;
+		msh -> exit_code = X_KO;
 	}
-	else if (cmd -> cmd_exit_code != X_KO)
-		cmd -> cmd_exit_code = F_KO;
+	else if (msh -> exit_code != X_KO)
+		msh -> exit_code = F_KO;
 	return (-1);
 }
 
@@ -66,8 +66,8 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 		free(*cmd_path);
 		arr_path++;
 	}
-	if (cmd -> cmd_exit_code != X_KO)
-		cmd -> cmd_exit_code = F_KO;
+	if (msh -> exit_code != X_KO)
+		msh -> exit_code = F_KO;
 	if (cmd -> err_note.strerr == NULL)
 	 	cmd -> err_note.strerr = CMD_NOT_FOUND;
 	free_arr(arr_path);//check if this needs to be null. this should be destroyed going out of this function.
@@ -92,7 +92,8 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     	}
     	if (!cmd_path)
         	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
-    	execve(cmd_path, cmd_arr, msh -> envl);
+    	sig_reseted();//SIGNAL: is this in correct place
+		execve(cmd_path, cmd_arr, msh -> envl);
 		cmd -> err_note.cmd_path = cmd_path;
 		if (!cmd -> err_note.strerr)
 			cmd -> err_note.strerr = strerror(errno);

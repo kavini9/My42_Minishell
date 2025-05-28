@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/27 22:18:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:39:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <fcntl.h>//for file open flags
 # include <stdbool.h>
 # include <stddef.h>
+# include <signal.h>
 
 extern volatile __sig_atomic_t g_sig;
 
@@ -141,6 +142,88 @@ void expscan_token(t_msh *msh, t_token token);
 void expscan_token(t_msh *msh, t_token token);
 char *extract_env_key(char **token);
 void init_exp(t_msh *msh, t_token token, t_expan *exp);
+
+
+
+//cd
+void    builtin_cd(t_msh *msh, char **cmd);
+void    cd_path(t_msh *msh, char *path);
+void    cd_tilde(t_msh *msh, char *tilde_path);
+void    cd_env_var(t_msh *msh, char *dir);
+void    msh_wd_update(t_msh *msh);
+void    handle_unlinked_cwd(t_msh *msh, char *path);
+
+//echo
+void    builtin_echo(t_msh *msh, char **cmd);
+
+//env
+void    builtin_env(t_msh *msh, char **cmd);
+
+//exit
+void    builtin_exit(t_msh *msh, char **cmd);
+int is_numeric(char *str);
+
+//export
+void    builtin_export(t_msh *msh, char **cmd);
+int is_valid_id(char *x_var);
+
+//pwd
+void    builtin_pwd(t_msh *msh);
+
+//unset
+void    builtin_unset(t_msh *msh, char **cmd);
+void    unset_env(t_msh *msh, char **envl, char *key);
+
+//exec_builtin
+void execin_shell(t_msh *msh, char **cmd);
+void exec_builtin(t_msh *msh, char **cmd);
+int is_builtin(char **cmd);
+
+
+
+//execute
+void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i);
+void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_data_pack);
+void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i);
+void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd);
+void	wait_child(t_msh *msh, int i, pid_t pid);
+
+void    execute_cmd(t_msh *msh, t_cmd *cmd);
+void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path);
+char	*get_path_array(t_msh *msh, char **envl);
+int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path);
+
+void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i);
+void	redirect_pipe(t_msh *msh, int rd_fd, int wr_fd);
+int	open_file(t_msh *msh, t_redir_type type, char *fname);
+int	dup_io(t_msh *msh, int oldfd, int newfd);
+void	close_all_hdocfd(int *hdocfd_l);
+
+void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i);
+void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd);
+
+
+
+//envp
+void	duplicate_env(t_msh *msh, char **envp);
+void	generate_mini_env(t_msh *msh);
+void	set_shlvl(t_msh *msh, char **envl);
+
+char    *get_env(char **envl, char *var);
+void    update_env(t_msh *msh, char *key, char *value);
+void    set_env(t_msh *msh, char **envl, char *entry);
+void    add_env_var(t_msh *msh, char **envl, char *entry);
+void    overwrite_env_var(t_msh *msh, char **env_var, char *entry);
+
+
+
+void	sigint_handler(int sig);
+void	sig_handler_child(int sig);
+void	sig_handler_heredoc(int signum);
+void	init_sig(void);
+void	sig_handler_changer(void);
+void	sig_reseted(void);
+void	sig_heredoc(void);
 //# include "envp.h"
 
 //# include "parse.h"
