@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:39:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:18:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 # include <signal.h>
 
 extern volatile __sig_atomic_t g_sig;
-
+ 
 # include "define.h"
 
 typedef enum e_do_err 
@@ -89,7 +89,7 @@ typedef struct s_expan
 	char **cur_exp_arr;
 	char **exp_arr;
 	int exp_arr_len;
-	int	newtok_offset;
+	int	scan_offset;
 } t_expan;
 
 typedef struct s_token

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/27 23:46:36 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/29 22:35:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void    get_cur_exp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
 {
     char *tmp_exp_dup;
     
-    if (*exp_dup && q_context)
+    if (*exp_dup && !q_context)
     {
         tmp_exp_dup = exp_dup;
         while (*tmp_exp_dup)
@@ -77,30 +77,84 @@ void    get_cur_exp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
         exit(printf("# minishell: Error:Malloc Fail.\n"));
 }
 
-void    concat_or_extend_exp_edge(t_msh *msh, t_expan *exp, char *exp_val)
+size_t	ft_arrlen(void **arr)
 {
-    int leading_spc;
-    int trailing_spc;
+	size_t	len;
 
-    leading_spc = (ft_strchr("\t\n\r\f\v", *exp_val) != NULL);
-    trailing_spc = (ft_strchr("\t\n\r\f\v", exp_val[ft_strlen(exp_val) - 1]) != NULL);//check if index is correct
-    //what id len is zero? it will make index -1
+	len = 0;
+	while (*arr++)
+		len++;
+	return (len);
+}
+
+void    ext(t_msh *msh, t_expan *exp, int lead_spc, int trail_spc)
+{
+    
+
+    
+}
+
+void    concat_extend_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
+{
+    int lead_spc;
+    int trail_spc;
+    int len;
+    char tmp;
+
+    len = 0;
+    lead_spc = 0;
+    trail_spc = 0;
+    if (exp_val)
+        len = ft_strlen(exp_val);
+    if (len > 0 && !q_context)
+    {
+        lead_spc = (ft_strchr(" \t\n\r\f\v", exp_val[0]) != NULL);
+        trail_spc = (ft_strchr(" \t\n\r\f\v", exp_val[len - 1]) != NULL);//check if index is correct
+    }
+    len = ft_arrlen((void **) exp -> cur_exp_arr);
+    //strjoining if leading and trailing spaces are present
+    if (!lead_spc)
+    {
+        tmp = ft_strjoin(exp -> prefix, exp -> cur_exp_arr[0]);
+        free(exp -> cur_exp_arr[0]);
+        exp -> cur_exp_arr[0] = tmp;
+    }
+    else
+    {
+        exp -> cur_exp_arr = ft_realloc(exp -> cur_exp_arr, len , len + 1);
+        ft_memmove(exp -> cur_exp_arr, exp -> cur_exp_arr + 1, len);
+        exp -> cur_exp_arr[0] = ft_strdup(exp -> prefix); 
+    }
+    if (!trail_spc)
+    {
+        exp -> scan_offset = ft_strlen(exp -> cur_exp_arr[len - 1]);
+        tmp = ft_strjoin(exp -> cur_exp_arr[len - 1], exp -> suffix);
+        free((exp -> cur_exp_arr[len -1]));
+        exp -> cur_exp_arr[len - 1] = tmp;
+    }
+    else
+    {
+        exp -> cur_exp_arr = ft_realloc(exp -> cur_exp_arr, len , len + 1);
+        exp -> cur_exp_arr[len] = ft_strdup(exp -> suffix); 
+    }
 }
 
 void    expand_parameter(t_msh *msh, t_expan *exp)
 {
     char    *exp_val;
     char    *exp_dup;
+    int q_context;
 
-    exp_val = get_env(msh -> envl, exp -> key);
+    q_context = check_quotes(exp -> exp, exp -> prefix);
+    exp_val = get_env(msh -> envl, exp -> key);//this needs to be replaced to get ? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
     else
         exp_dup = ft_strdup("");
     if (!exp_dup)
         exit(printf("# minishell: Error:Malloc Fail.\n"));
-    get_cur_exp_arr(msh, exp, exp_dup, check_quotes(exp -> exp, exp -> prefix));
-    concat_or_extend_exp_edge(msh, exp, exp_val);
+    get_cur_exp_arr(msh, exp, exp_dup, q_context);
+    concat_extend_exp_edge(msh, exp, exp_val, q_context);
 }
 
 void expscan_token(t_msh *msh, t_token token)
@@ -119,10 +173,10 @@ void expscan_token(t_msh *msh, t_token token)
             printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
             expand_parameter(msh, &exp);
         }     
-        ft_memcpy(exp.prefix, exp.suffix, sizeof(char));
+        ft_memcpy(exp.exp, exp.suffix, sizeof(char));
         printf("exp.exp: %s\n", exp.exp);
         exp.suffix++;
-        exp.prefix++;
+        exp.exp++;
     }
 }
 
@@ -156,13 +210,8 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token)
 //create a array with the
 //tilde expansion should be done after variable expansion because variables can include tilde.
 
-
-
-
 //check quotes in the split pipe can be redundant if we can use a flag for it.
 //But flag will also have to be introduced to everywhere we have to check quote context.
 //So keep it for now.
-
-
 
 //if a export varaibe consist of a $ it should be expanded before adding to the env. 

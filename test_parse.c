@@ -79,7 +79,7 @@ int get_token_len(char *seg, t_token *token, int tok_len)
             quote_flg = (int) *seg;
         else if ((*seg == '\'' || *seg == '"') && quote_flg == (int) *seg)
             quote_flg = 0;
-        if (redir_flg && !is_white)
+        if (redir_flg && !is_white && !(*seg == '<' || *seg == '>'))
             redir_flg = 0;
         else if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg && tok_len)
             break;
@@ -91,6 +91,19 @@ int get_token_len(char *seg, t_token *token, int tok_len)
         seg++;
     }
     return (tok_len);
+}
+
+int redir_skip(char *seg)
+{
+    int skip;
+
+    skip = 0;
+    while(*seg && ft_strchr("< \t\n\r\f\v>", *seg))
+    {
+        skip++;
+        seg++;
+    }
+    return (skip);
 }
 
 void extract_token(t_msh *msh, t_token **token, char *seg)
@@ -108,7 +121,7 @@ void extract_token(t_msh *msh, t_token **token, char *seg)
             exit(printf("Malloc Error token array\n"));
         ft_memset(&(*token)[arr_len], 0, size);
         tok_len = get_token_len(seg, &(*token)[arr_len], 0);
-        (*token)[arr_len].token = ft_substr(seg, 0, tok_len);
+        (*token)[arr_len].token = ft_substr(seg, redir_skip(seg), tok_len - redir_skip(seg));
         if (!(*token)[arr_len].token)
             exit(printf("Malloc Error token %i\n", arr_len));
         seg += tok_len;
@@ -246,7 +259,7 @@ void	msh_parse(char *line, t_msh *msh)
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);
     //init_cmd_struct(msh, msh -> cmd_count);
-    expand_and_setup_cmd(msh, msh -> aux -> token);
+    //expand_and_setup_cmd(msh, msh -> aux -> token);
 }
 
 void msh_init(t_msh *msh)

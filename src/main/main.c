@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 16:48:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/28 21:42:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void    msh_execute(t_msh *msh)
         execin_child(msh, msh -> cmd, -1, 0);
 }
 
-void	msh_parse(char *line, t_msh *msh)
+void	msh_parse(t_msh *msh, char *line)
 {
 	t_parse	aux;//in static memory remember to assign to cmd struct before leaving this function.
 
