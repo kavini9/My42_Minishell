@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 21:42:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/04/25 23:26:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ void	msh_loop(t_msh *msh)
 	(void) *msh;
 	while(1)
 	{
-		if (isatty(fileno(stdin)))
-            init_sig();
 		line = readline("minishell> ");
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
@@ -71,26 +69,13 @@ void	msh_loop(t_msh *msh)
 			printf("line OK: %s\n", line);
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-			msh_execute(msh);
+			//msh_execute(msh);
+			if (!ft_strcmp(line, "exit"))
+				break;
 		}
 	}
 	rl_clear_history();
 }
-
-// int err_out(char *msg)
-// {
-// 	printf("minishell: error: exiting with exit_code %s\n", msg);
-// 	return(1); //temporary exitcodes. will be changed later
-// }
-
-// void print_envl(t_msh	*msh) //SUCCESS: unit test for envl duplication.
-// {
-// 	while (*msh -> envl)
-// 	{
-// 		printf("%s\n", *msh -> envl);
-// 		msh -> envl++;
-// 	}
-// }
 
 int	main(int ac, char **av, char **envp)
 {

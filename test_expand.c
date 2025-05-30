@@ -49,7 +49,7 @@ char *extract_env_key(char **token)
     return (ft_substr(start, 0, var_len));
 }
 
-void    get_cur_exp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
 {
     char *tmp_exp_dup;
     
@@ -62,18 +62,18 @@ void    get_cur_exp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
                 *tmp_exp_dup = ' ';
             tmp_exp_dup++;
         }
-        exp -> cur_exp_arr = ft_split(exp_dup, ' ');
+        exp -> tmp_arr = ft_split(exp_dup, ' ');
         free(exp_dup);//see if this is appropriate. in else case we assign it to the array so we need to keep it. but here we have a brand new array. so no need of exp_dup.
     }
     else
     {
-        exp -> cur_exp_arr = ft_calloc(2, sizeof(char *));
-        if (exp -> cur_exp_arr)
-            *(exp -> cur_exp_arr) = exp_dup;
+        exp -> tmp_arr = ft_calloc(2, sizeof(char *));
+        if (exp -> tmp_arr)
+            *(exp -> tmp_arr) = exp_dup;
         else
             free(exp_dup); //if array creation failed we will loose exp_dup because it is not in our struct
     }
-    if (!exp -> cur_exp_arr)
+    if (!exp -> tmp_arr)
         exit(printf("# minishell: Error:Malloc Fail.\n"));
 }
 
@@ -87,19 +87,48 @@ size_t	ft_arrlen(void **arr)
 	return (len);
 }
 
-void    ext(t_msh *msh, t_expan *exp, int lead_spc, int trail_spc)
+void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index)
 {
-    
+    char *tmp;
 
-    
+    if (spc == 0)
+        tmp = ft_strjoin(exp -> prefix, exp -> tmp_arr[index]);
+    else
+    {
+        exp -> scan_offset = ft_strlen(exp -> tmp_arr[index]);
+        tmp = ft_strjoin(exp -> tmp_arr[index], exp -> suffix);
+    }
+    if (!tmp)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));
+    free((exp -> tmp_arr[index]));
+    exp -> tmp_arr[index] = tmp;
 }
 
-void    concat_extend_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
+void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
+{
+    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, len , len + 1);
+    if (!exp -> tmp_arr)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));
+    if (index == 0)
+    {
+        ft_memmove(exp -> tmp_arr, exp -> tmp_arr + 1, len * sizeof(char *));
+        exp -> tmp_arr[index] = ft_strdup(exp -> prefix);
+    }
+    else
+    {
+        exp -> tmp_arr[index] = ft_strdup(exp -> suffix);
+        exp -> tmp_arr[index + 1] = NULL;
+    }
+    if (!exp -> tmp_arr[index])
+        exit(printf("# minishell: Error:Malloc Fail.\n"));
+    (*len)++;
+}
+
+void    fix_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 {
     int lead_spc;
     int trail_spc;
     int len;
-    char tmp;
 
     len = 0;
     lead_spc = 0;
@@ -111,32 +140,15 @@ void    concat_extend_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_co
         lead_spc = (ft_strchr(" \t\n\r\f\v", exp_val[0]) != NULL);
         trail_spc = (ft_strchr(" \t\n\r\f\v", exp_val[len - 1]) != NULL);//check if index is correct
     }
-    len = ft_arrlen((void **) exp -> cur_exp_arr);
-    //strjoining if leading and trailing spaces are present
+    len = ft_arrlen((void **) exp -> tmp_arr);
     if (!lead_spc)
-    {
-        tmp = ft_strjoin(exp -> prefix, exp -> cur_exp_arr[0]);
-        free(exp -> cur_exp_arr[0]);
-        exp -> cur_exp_arr[0] = tmp;
-    }
+        concat_exp_edge(msh, exp, 0, 0);
     else
-    {
-        exp -> cur_exp_arr = ft_realloc(exp -> cur_exp_arr, len , len + 1);
-        ft_memmove(exp -> cur_exp_arr, exp -> cur_exp_arr + 1, len);
-        exp -> cur_exp_arr[0] = ft_strdup(exp -> prefix); 
-    }
+        extend_exp_edge(msh, exp, 0, &len);
     if (!trail_spc)
-    {
-        exp -> scan_offset = ft_strlen(exp -> cur_exp_arr[len - 1]);
-        tmp = ft_strjoin(exp -> cur_exp_arr[len - 1], exp -> suffix);
-        free((exp -> cur_exp_arr[len -1]));
-        exp -> cur_exp_arr[len - 1] = tmp;
-    }
+        concat_exp_edge(msh, exp, len, len - 1);
     else
-    {
-        exp -> cur_exp_arr = ft_realloc(exp -> cur_exp_arr, len , len + 1);
-        exp -> cur_exp_arr[len] = ft_strdup(exp -> suffix); 
-    }
+        extend_exp_edge(msh, exp, len, &len);
 }
 
 void    expand_parameter(t_msh *msh, t_expan *exp)
@@ -153,8 +165,8 @@ void    expand_parameter(t_msh *msh, t_expan *exp)
         exp_dup = ft_strdup("");
     if (!exp_dup)
         exit(printf("# minishell: Error:Malloc Fail.\n"));
-    get_cur_exp_arr(msh, exp, exp_dup, q_context);
-    concat_extend_exp_edge(msh, exp, exp_val, q_context);
+    get_tmp_arr(msh, exp, exp_dup, q_context);
+    fix_exp_edge(msh, exp, exp_val, q_context);
 }
 
 void expscan_token(t_msh *msh, t_token token)

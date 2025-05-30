@@ -12,6 +12,19 @@
 
 #include "../../includes/minishell.h"
 
+void free_arr(char **arr)
+{
+    char **tmp;
+
+    tmp = arr;
+    while (*tmp)
+    {
+        free(*tmp);
+        tmp++
+    }
+    free(arr);
+}
+
 void    free_cmd(t_cmd *cmd)
 {
     t_redir *redir_list;
