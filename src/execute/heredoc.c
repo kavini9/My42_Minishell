@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 22:08:31 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 23:30:43 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
         free(line);
     }
     if (!line)
-        exit(printf(""));
+        exit(printf("heredoc error"));// TODO: ERROR 
     free(line);
     close(hd_pfd[1]);
     *hdoc_fd = hd_pfd[0];

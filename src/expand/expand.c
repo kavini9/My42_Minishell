@@ -5,161 +5,163 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/28 14:32:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/25 19:38:34 by wweerasi         ###   ########.fr       */
+/*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/05/24 01:14:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+# include "../../includes/minishell.h"
 
-/**
- * this_is_space - Appends a space character from the segment to the result.
- *
- * @cmd: Double pointer to the current command segment.
- * @arg: Expansion context pointer.
- * @expan: Pointer to the string being built.
- *
- * Return: Updated index or -1 on allocation failure.
- */
-static int	this_is_space(t_cmd **cmd, t_expand *arg, char **expan)
+void init_cmd_struct(t_msh *msh, int cmd_count)
 {
-	char *temp;
-
-	temp = *expan;
-	*expan = ft_strjoin_char(temp, (*cmd)->seg[arg->i]);
-	free(temp);
-	if (!*expan)
-		return (-1);
-	arg->i++;
-	return (arg->i);
+    t_cmd **tmp_cmd;
+    
+    msh -> cmd = ft_calloc(cmd_count + 1, sizeof(t_cmd *));
+    if (!msh -> cmd)
+		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+    tmp_cmd = msh -> cmd;
+    while (cmd_count--)
+    {
+        *tmp_cmd = ft_calloc(1, sizeof(t_cmd));
+        if (!*tmp_cmd)
+             exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+        tmp_cmd++;
+    }
 }
 
-/**
- * hd - Handles heredoc expansion from the segment.
- *
- * @cmd: Double pointer to the command being processed.
- * @arg: Expansion context pointer.
- * @expan: Pointer to the string being built.
- *
- * Appends heredoc content from `arg->value` to the expanded string.
- *
- * Return: Updated index or -1 on failure.
- */
-static int	hd(t_cmd **cmd, t_expand *arg, char **expan)
+char *extract_env_key(char **token)
 {
-	char *temp;
-
-	temp = *expan;
-	arg->i = we_have_heredoc(arg, (*cmd)->seg, 0);
-	if (arg->i == -1)
-		return (-1);
-	*expan = ft_strjoin(temp, arg->value);
-	if (!*expan)
-	{
-		free(temp);
-		return (-1);
-	}
-	free(temp);
-	free(arg->value);
-	arg->value = NULL;
-	return (arg->i);
+    char *start;
+    int var_len;
+    
+    var_len = 0;
+    (*token)++;
+    start = *token;
+    while (ft_isalnum(**token) || **token == '_')
+    {
+        var_len++;
+        (*token)++;
+        if (start == *token && ft_isdigit(**token))
+            break;
+    }
+    return (ft_substr(start, 0, var_len));
 }
 
-/**
- * quoted - Processes and expands a quoted section in the segment.
- *
- * @msh: Pointer to the shell structure.
- * @cmd: Double pointer to the command being processed.
- * @arg: Expansion context pointer.
- * @expan: Pointer to the string being built.
- *
- * Handles quoted content and appends it to the expanded result.
- *
- * Return: Updated index or -1 on failure.
- */
-static int	quoted(t_msh *msh, t_cmd **cmd, t_expand *arg, char **expan)
+void    concat_token_edge(t_msh *msh,  )
 {
-	char *temp;
-
-	temp = *expan;
-	arg->i = in_quotes(msh, (*cmd)->seg, arg->i, arg);
-	if (arg->i == -1)
-		return (-1);
-	*expan = ft_strjoin(temp, arg->value);
-	if (!*expan)
-	{
-		free(temp);
-		return (-1);
-	}
-	free(temp);
-	free(arg->value);
-	arg->value = NULL;
-	return (arg->i);
+    
 }
 
-/**
- * exp_while - Processes a segment and builds the expanded result.
- *
- * @msh: Pointer to the shell structure.
- * @cmd: Double pointer to the command being processed.
- * @arg: Pointer to the expansion context.
- * @expan: Pointer to the resulting expanded string.
- *
- * Loops through the segment and handles each character or section:
- * spaces, quotes, heredocs, or unquoted text.
- *
- * Return: 0 on success, 1 on failure.
- */
-static int	exp_while(t_msh *msh, t_cmd **cmd, t_expand *arg, char **expan)
+void    split_exp_param(t_msh *msh,  char *expan, char *token, char *expn_val)
 {
-	while ((*cmd)->seg[arg->i])
-	{
-		if (arg->i != -1 && ft_isspace((*cmd)->seg[arg->i]) && !arg->dbl && !arg->sgl)
-			arg->i = this_is_space(cmd, arg, expan);
-		else if (arg->i != -1 && ((*cmd)->seg[arg->i] == '\'' || (*cmd)->seg[arg->i] == '"'))
-			arg->i = quoted(msh, cmd, arg, expan);
-		else if (arg->i != -1 && (*cmd)->seg[arg->i] == '<' && (*cmd)->seg[arg->i + 1] == '<')
-			arg->i = hd(cmd, arg, expan);
-		else if (arg->i != -1)
-			arg->i = s_unquoted(msh, cmd, arg, expan);
-		if (arg->i == -1)
-			return (1);
-	}
-	return (0);
+    char *expn_dup;
+    char *tmp;
+    char **expn_split;
+
+    expn_dup = ft_strdup(expn_val);
+    if (!expn_dup)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC//free expan if exit
+    tmp = expn_dup;
+    while (*tmp)
+    {
+        if (ft_strchr("\t\n\r\f\v", *tmp))
+            *tmp = ' ';
+        tmp++;
+    }
+    expn_split = ft_split(expn_dup,' ');
+    if (!expn_split)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC//free expan and exp_dup
+    if (*expn_dup == ' ')
+        ft_strjoin(expan, *expn_split);
+    if (*(--tmp) == ' ')
+    {
+        while ()
+        ft_strjoin(*expn_split);
+    }
+    
 }
 
-/**
- * handle_expand - Expands variables, quotes, and heredocs in the segment.
- *
- * @msh: Pointer to the shell structure.
- * @cmd: Double pointer to the command structure.
- *
- * Performs command segment expansion and replaces the original segment
- * with the expanded result.
- *
- * Return: 0 on success, 1 on failure.
- */
-int	handle_expand(t_msh *msh, t_cmd **cmd)
+void    expand_parameter(t_msh *msh,  char *expan, char *token, char *key)
 {
-	t_expand	arg;
-	char		*expan;
+    int q_context;
+    char    *exp_val;
+    char    *tmp;
+    char    exp_split;
 
-	expan = ft_strdup("");//NEW
-	if (!expan)//NEW
-		return (1);//NEW
-	ft_memset(&arg, 0, sizeof(t_expand));//NEW
-	//if (init_expansion(&arg, &expan))
-	//	return (1);
-	if (exp_while(msh, cmd, &arg, &expan))
-	{
-		if (arg.value)
-			free(arg.value);
-		if (expan)
-			free(expan);
-		return (1);
-	}
-	free((*cmd)->seg);
-	(*cmd)->seg = expan;
-	return (0);
+    q_context = check_quotes(expan, NULL);
+    exp_val = get_env(msh -> envl, key); //might have to write something to get env and handle digits and pid.
+    if (exp_val && !q_context)
+    {
+        
+        //strdup exp_val
+        //replace \t\n\r\f\v with spaces
+        //split with spaces
+        //check in exp_val if there's leading 
+        
+
+    }
+        
+    
 }
 
+void expan_scan_token(t_msh *msh, char *token, t_cmd *cmd)
+{
+    char *expan;
+    char *exp_ptr;
+    char *tok_ptr;
+    char *key;
+
+    tok_ptr = token;
+    expan = ft_calloc(ft_strlen(token), sizeof(char));
+    if (!expan)
+        exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+    exp_ptr = expan;
+    while(*token)
+    {
+        if (token == '$' && check_quotes(tok_ptr, token + 1) != '\'' 
+        && (ft_isalnum(*(token + 1)) || *(token + 1) == '_'))
+        {
+            key = extract_env_key(&(token));
+            if (!key)
+                exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free expan
+            expand_parameter(msh, exp_ptr, token, key);
+        }
+        ft_memcpy(expan, token, sizeof(char));
+        token++;
+        expan++;
+    }
+}
+
+void expand_and_setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
+{
+    while (*token)
+    {
+        while ((**token).token)
+        {
+            
+            expan_scan_token(msh, (**token).token, cmd);
+             
+        }  
+    }
+}
+
+
+// if the expansion is within the "" the field splitting is not applied to the expanded output. otherwise split it with the spaces.
+
+//walk through the string while removing quotes
+//save what was the last quote type
+//when found $ sign pass it to find key 
+//when the key is found pass it to expand with quoted or unquoted flag.
+//create a array with the
+//tilde expansion should be done after variable expansion because variables can include tilde.
+
+
+
+
+//check quotes in the split pipe can be redundant if we can use a flag for it.
+//But flag will also have to be introduced to everywhere we have to check quote context.
+//So keep it for now.
+
+
+
+//if a export varaibe consist of a $ it should be expanded before adding to the env. 
