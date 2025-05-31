@@ -259,7 +259,7 @@ void	msh_parse(char *line, t_msh *msh)
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);
     //init_cmd_struct(msh, msh -> cmd_count);
-    //expand_and_setup_cmd(msh, msh -> aux -> token);
+    expand_and_setup_cmd(msh, msh -> aux -> token);
 }
 
 void msh_init(t_msh *msh)

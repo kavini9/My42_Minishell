@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/27 19:53:31 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/30 23:52:48 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void free_arr(char **arr)
     while (*tmp)
     {
         free(*tmp);
-        tmp++
+        tmp++;
     }
     free(arr);
 }

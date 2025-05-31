@@ -6,19 +6,38 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/29 22:35:45 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 03:06:36 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "includes/minishell.h"
-
-void expand_and_setup_cmd(t_msh *msh, t_token **token);
-void expscan_token(t_msh *msh, t_token token);
-void expscan_token(t_msh *msh, t_token token);
-char *extract_env_key(char **token);
 void init_exp(t_msh *msh, t_token token, t_expan *exp);
+void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
+char *extract_env_key(char **token);
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
+size_t	ft_arrlen(void **arr);
+void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);
+void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
+void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
+void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
+void expscan_token(t_msh *msh, t_token *token);
+void expand_and_setup_cmd(t_msh *msh, t_token **token);
+void free_arr(char **arr);
 
-void init_exp(t_msh *msh, t_token token, t_expan *exp)
+void free_arr(char **arr)
+{
+    char **tmp;
+
+    tmp = arr;
+    while (*tmp)
+    {
+        free(*tmp);
+        tmp++;
+    }
+    free(arr);
+}
+
+void init_exp(t_msh *msh, t_token token, t_expan *exp)//should I pass t_token *
 {
     ft_memset(exp, 0, sizeof(t_expan));
     exp -> tok = token.token;
@@ -27,6 +46,34 @@ void init_exp(t_msh *msh, t_token token, t_expan *exp)
     if (!exp -> prefix)
         exit(printf("# minishell: Error:Malloc Fail.\n"));
     exp -> exp = exp -> prefix;
+}
+
+void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
+{
+    int exp_len;
+    int tmp_len;
+    
+    exp_len = exp -> exp_arr_len;
+    tmp_len = ft_arrlen((void **) exp -> tmp_arr);
+    free(token -> token);//can this affect the memcpy.
+    exp -> exp_arr = ft_realloc(exp -> exp_arr, exp_len, exp_len + tmp_len);// this needs refining
+    if (!exp -> exp_arr)
+        exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
+    ft_memcpy(exp -> exp_arr[exp_len - 1], exp -> tmp_arr, tmp_len * sizeof(char *));
+    exp -> exp_arr_len = exp_len + tmp_len;
+        //exit(printf("# minishell: Error:Malloc Fail.\n"));
+    free(exp -> prefix);
+    token -> token = exp -> exp_arr[exp_len + tmp_len - 1];
+    exp -> tok = token -> token;
+    exp -> suffix = token -> token + exp -> scan_offset;
+    exp -> prefix = ft_calloc(ft_strlen(token -> token) - exp -> scan_offset, sizeof(char));
+    if (!exp -> prefix)
+        exit(printf("#!exp -> prefix minishell: Error:Malloc Fail.\n"));
+    exp -> exp = exp -> prefix;
+    free(exp -> key);
+    exp -> key = NULL;
+    free_arr(exp -> tmp_arr);
+    exp -> tmp_arr = NULL;
 }
 
 char *extract_env_key(char **token)
@@ -74,7 +121,7 @@ void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
             free(exp_dup); //if array creation failed we will loose exp_dup because it is not in our struct
     }
     if (!exp -> tmp_arr)
-        exit(printf("# minishell: Error:Malloc Fail.\n"));
+        exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail.\n"));
 }
 
 size_t	ft_arrlen(void **arr)
@@ -99,19 +146,19 @@ void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index)
         tmp = ft_strjoin(exp -> tmp_arr[index], exp -> suffix);
     }
     if (!tmp)
-        exit(printf("# minishell: Error:Malloc Fail.\n"));
+        exit(printf("#!tmp minishell: Error:Malloc Fail.\n"));
     free((exp -> tmp_arr[index]));
     exp -> tmp_arr[index] = tmp;
 }
 
 void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
 {
-    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, len , len + 1);
+    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, *len , *len + 1);
     if (!exp -> tmp_arr)
-        exit(printf("# minishell: Error:Malloc Fail.\n"));
+        exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail.\n"));
     if (index == 0)
     {
-        ft_memmove(exp -> tmp_arr, exp -> tmp_arr + 1, len * sizeof(char *));
+        ft_memmove(exp -> tmp_arr, exp -> tmp_arr + 1, *len * sizeof(char *));
         exp -> tmp_arr[index] = ft_strdup(exp -> prefix);
     }
     else
@@ -120,11 +167,11 @@ void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
         exp -> tmp_arr[index + 1] = NULL;
     }
     if (!exp -> tmp_arr[index])
-        exit(printf("# minishell: Error:Malloc Fail.\n"));
+        exit(printf("#!exp -> tmp_arr[index] minishell: Error:Malloc Fail.\n"));
     (*len)++;
 }
 
-void    fix_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
+void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 {
     int lead_spc;
     int trail_spc;
@@ -151,44 +198,58 @@ void    fix_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
         extend_exp_edge(msh, exp, len, &len);
 }
 
-void    expand_parameter(t_msh *msh, t_expan *exp)
+static char *get_env(void)
+{
+    return(ft_strdup("test1     test2       test3"));
+}
+
+void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
 {
     char    *exp_val;
     char    *exp_dup;
     int q_context;
 
     q_context = check_quotes(exp -> exp, exp -> prefix);
-    exp_val = get_env(msh -> envl, exp -> key);//this needs to be replaced to get ? $$
+    exp_val = get_env();//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
     else
         exp_dup = ft_strdup("");
     if (!exp_dup)
-        exit(printf("# minishell: Error:Malloc Fail.\n"));
+        exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
     get_tmp_arr(msh, exp, exp_dup, q_context);
-    fix_exp_edge(msh, exp, exp_val, q_context);
+    adjust_exp_edge(msh, exp, exp_val, q_context);
+    revise_exp_arr(msh, token, exp);
 }
 
-void expscan_token(t_msh *msh, t_token token)
+void expscan_token(t_msh *msh, t_token *token)
 {
     t_expan exp;
 
-    init_exp(msh, token, &exp);
+    init_exp(msh, *token, &exp);
     while (*exp.suffix)
     {
         printf("exp.suffix: %s\n", exp.suffix);
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')
-        { //do we need siffix + 1. why do I do that in test_parse
+        { //do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
-                exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
+                exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
-            expand_parameter(msh, &exp);
+            expand_parameter(msh, token, &exp);
+            printf("return from expand parameter\n");
         }     
         ft_memcpy(exp.exp, exp.suffix, sizeof(char));
         printf("exp.exp: %s\n", exp.exp);
         exp.suffix++;
         exp.exp++;
+    }
+    char **print = exp.exp_arr;
+    printf("printing exp array\n");
+    while (*print)
+    {
+        printf("[%s]\n", *print );
+        print++;
     }
 }
 
@@ -206,7 +267,7 @@ void expand_and_setup_cmd(t_msh *msh, t_token **token)
             while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
                 token_iter = ft_strchr((++token_iter), '$');
             if (token_iter)
-                expscan_token(msh, **token);
+                expscan_token(msh, &(**token));
             (*token)++;
         }
         token++;

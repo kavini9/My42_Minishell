@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/29 21:18:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 02:30:49 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ typedef struct s_expan
 	char *prefix;
 	char *exp;
 	char *key;
-	char **cur_exp_arr;
+	char **tmp_arr;
 	char **exp_arr;
 	int exp_arr_len;
 	int	scan_offset;
@@ -121,7 +121,7 @@ typedef struct s_msh
 # include "../lib/libft/libft.h"
 
 
-void msh_init(t_msh *msh);
+void msh_init(t_msh *msh);//change later
 void	msh_parse(char *line, t_msh *msh);
 void print_segments(char **seg);
 void init_parse_structs(t_msh *msh, char *line);
@@ -137,11 +137,17 @@ int get_token_len(char *seg, t_token *token, int tok_len);
 int set_redir_type(t_token *token, char *seg);
 
 
-void expand_and_setup_cmd(t_msh *msh, t_token **token);
-void expscan_token(t_msh *msh, t_token token);
-void expscan_token(t_msh *msh, t_token token);
-char *extract_env_key(char **token);
 void init_exp(t_msh *msh, t_token token, t_expan *exp);
+void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
+char *extract_env_key(char **token);
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
+size_t	ft_arrlen(void **arr);
+void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);
+void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
+void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
+void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
+void expscan_token(t_msh *msh, t_token *token);
+void expand_and_setup_cmd(t_msh *msh, t_token **token);
 
 
 
@@ -209,7 +215,7 @@ void	duplicate_env(t_msh *msh, char **envp);
 void	generate_mini_env(t_msh *msh);
 void	set_shlvl(t_msh *msh, char **envl);
 
-char    *get_env(char **envl, char *var);
+//char    *get_env(char **envl, char *var);
 void    update_env(t_msh *msh, char *key, char *value);
 void    set_env(t_msh *msh, char **envl, char *entry);
 void    add_env_var(t_msh *msh, char **envl, char *entry);
