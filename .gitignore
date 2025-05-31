@@ -11,3 +11,5 @@ cmd1.c
 cmd2.c
 ambi_redir.c
 a.out
+src/objects/*/*.o
+src/objects/*/*.d
