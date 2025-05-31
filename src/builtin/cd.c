@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 20:10:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 23:13:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void    cd_tilde(t_msh *msh, char *tilde_path)
     home = get_env(msh -> envl, "HOME");
     if (!home)
         return(msh_error(msh, (LOG|CLEAN) << 8 | 1, ERR_DIR_NOTSET, "HOME")); //"minishell: cd: %s not set.\n"
-    if (chdir(path) == -1) //bash: cd: dir1: Permission denied
-        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//ERROR_MESSAGE //check what this should be.
+    // if (chdir(path) == -1) //bash: cd: dir1: Permission denied
+    //     msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//ERROR_MESSAGE 
     path = ft_strjoin(home, tilde_path + 1);
     if (!path)
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "cd");//ERROR_MESSAGE
