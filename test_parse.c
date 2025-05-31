@@ -3,21 +3,6 @@
 #include <readline/readline.h> //for readline
 #include <readline/history.h> 
 
-void msh_init(t_msh *msh);
-void	msh_parse(char *line, t_msh *msh);
-void print_segments(char **seg);
-void init_parse_structs(t_msh *msh, char *line);
-void	init_token(t_msh *msh, int cmd_count);
-int	count_pipes(char *line);
-void line_split_bypipe(t_msh *msh, char *line, char **seg_arr);
-int	 check_quotes(char *start, char *curr);
-void	seg_tokenize(t_msh *msh, t_parse *aux);
-void extract_token(t_msh *msh, t_token **token, char *seg);
-void skip_whitespaces(char **str);
-void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
-int get_token_len(char *seg, t_token *token, int tok_len);
-int set_redir_type(t_token *token, char *seg);
-
 void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
 {
 	void	*ptr_new;

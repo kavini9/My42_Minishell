@@ -6,14 +6,14 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/15 19:47:56 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:13:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
 
-void    unset_env(t_msh *msh, char **envl, char *key)
-{
+void    unset_env(char **envl, char *key)// msh is unused here. so removed. Alo check if it is passing by value or not
+{    
     int env_len;
     int k_len;
     char **env_iter;
@@ -44,7 +44,7 @@ void    builtin_unset(t_msh *msh, char **cmd)
         if (!is_valid_id(*cmd) || ft_strchr(*cmd, '='))
             return ;
         else
-            unset_env(msh, msh -> envl, *cmd);
+            unset_env(msh -> envl, *cmd);
         cmd++;
     }
     msh -> exit_code = EXIT_SUCCESS;

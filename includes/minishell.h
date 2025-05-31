@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 02:30:49 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:42:09 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <signal.h>
+# include <sys/wait.h>
 
 extern volatile __sig_atomic_t g_sig;
  
@@ -121,8 +122,8 @@ typedef struct s_msh
 # include "../lib/libft/libft.h"
 
 
-void msh_init(t_msh *msh);//change later
-void	msh_parse(char *line, t_msh *msh);
+void msh_init(t_msh *msh, char **envp);
+void    msh_parse(t_msh *msh, char *line);
 void print_segments(char **seg);
 void init_parse_structs(t_msh *msh, char *line);
 void	init_token(t_msh *msh, int cmd_count);
@@ -132,9 +133,10 @@ int	 check_quotes(char *start, char *curr);
 void	seg_tokenize(t_msh *msh, t_parse *aux);
 void extract_token(t_msh *msh, t_token **token, char *seg);
 void skip_whitespaces(char **str);
-void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
+//void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
 int get_token_len(char *seg, t_token *token, int tok_len);
 int set_redir_type(t_token *token, char *seg);
+int redir_skip(char *seg);
 
 
 void init_exp(t_msh *msh, t_token token, t_expan *exp);
@@ -149,7 +151,32 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
 void expscan_token(t_msh *msh, t_token *token);
 void expand_and_setup_cmd(t_msh *msh, t_token **token);
 
+//validate
+int	msh_validate_line(t_msh *msh, char **line);
+int	validate_pipe(char *line, t_msh *msh);
+//static int	handle_trailing_pipe(t_msh *msh, char *line);
+//static int	detect_consecutive_pipes(char *line, t_msh *msh);
+//static int	validate_pipe_position(char *line, int i, t_msh *msh);
 
+int check_redirects(char *line, t_msh *msh);
+//static int check_out_redirects(char *line, t_msh *msh, int *i);
+//static int check_in_redirects(char *line, t_msh *msh, int *i);
+int validate_redirect(char *line, t_msh *msh, int *i, char *type);
+
+int	skip_whitespace(char *str, int i);
+int is_input_empty(const char *input);
+int	ft_isspace(char c);
+int	 check_quote(char *line, int limit);
+
+
+//clean
+void msh_clean(t_msh *msh);
+void    free_cmd(t_cmd **cmd);
+void free_arr(char **arr);
+
+//error
+void msh_error(t_msh *msh, t_do_err opt_exc, char *err_msg, char *param);
+void error_log(char *err_msg, char *param, int err_no, int extrarg);
 
 //cd
 void    builtin_cd(t_msh *msh, char **cmd);
@@ -163,7 +190,7 @@ void    handle_unlinked_cwd(t_msh *msh, char *path);
 void    builtin_echo(t_msh *msh, char **cmd);
 
 //env
-void    builtin_env(t_msh *msh, char **cmd);
+void    builtin_env(t_msh *msh);//, char **cmd);
 
 //exit
 void    builtin_exit(t_msh *msh, char **cmd);
@@ -178,17 +205,17 @@ void    builtin_pwd(t_msh *msh);
 
 //unset
 void    builtin_unset(t_msh *msh, char **cmd);
-void    unset_env(t_msh *msh, char **envl, char *key);
+void    unset_env(char **envl, char *key);
 
 //exec_builtin
-void execin_shell(t_msh *msh, char **cmd);
-void exec_builtin(t_msh *msh, char **cmd);
+void execin_shell(t_msh *msh, t_cmd *cmd);
+int	exec_builtin(t_msh *msh, char **cmd);
 int is_builtin(char **cmd);
 
 
 
 //execute
-void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i);
+void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i);
 void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_data_pack);
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i);
 void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd);
@@ -196,7 +223,7 @@ void	wait_child(t_msh *msh, int i, pid_t pid);
 
 void    execute_cmd(t_msh *msh, t_cmd *cmd);
 void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path);
-char	*get_path_array(t_msh *msh, char **envl);
+char	**get_path_array(t_msh *msh, char **envl);
 int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path);
 
 void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i);
@@ -215,7 +242,7 @@ void	duplicate_env(t_msh *msh, char **envp);
 void	generate_mini_env(t_msh *msh);
 void	set_shlvl(t_msh *msh, char **envl);
 
-//char    *get_env(char **envl, char *var);
+char    *get_env(char **envl, char *var);
 void    update_env(t_msh *msh, char *key, char *value);
 void    set_env(t_msh *msh, char **envl, char *entry);
 void    add_env_var(t_msh *msh, char **envl, char *entry);
@@ -230,6 +257,11 @@ void	init_sig(void);
 void	sig_handler_changer(void);
 void	sig_reseted(void);
 void	sig_heredoc(void);
+
+
+//debug
+void print_segments(char **seg);
+void print_tokens(t_token **token);
 //# include "envp.h"
 
 //# include "parse.h"

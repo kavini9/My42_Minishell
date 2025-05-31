@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/30 23:52:48 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:53:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,20 @@ void free_arr(char **arr)
     free(arr);
 }
 
-void    free_cmd(t_cmd *cmd)
+void    free_cmd(t_cmd **cmd)
 {
     t_redir *redir_list;
     
-    while (cmd)
+    while (*cmd)
     {
-        if (cmd -> cmd)
-            free_arr(cmd -> cmd);
-        redir_list = cmd -> redir;
+        if ((*cmd) -> cmd)
+            free_arr((*cmd) -> cmd);
+        redir_list = (*cmd) -> redir;
         while (redir_list)
         { 
             free(redir_list -> fname_o_del);
-            if (redir_list -> expand)
-                free(redir_list -> expand);
+            // if (redir_list -> expand)
+            //     free(redir_list -> expand);
             redir_list = redir_list -> next; //did not free the t_redir struct assuming it is not allocated since it has a type value and two pointers.
         }
         ft_memset(cmd, 0, sizeof(t_cmd));
@@ -54,7 +54,7 @@ void msh_clean(t_msh *msh)
         free(msh -> old_wd);
     if (msh -> envl)
         free_arr(msh -> envl);
-    if (msh -> cmd);
+    if (msh -> cmd)
         free_cmd(msh -> cmd);
     ft_memset(msh, 0, offsetof(t_msh, exit_code));
 }

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:38:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:28:03 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path)
 	return (-1);
 }
 
-char	*get_path_array(t_msh *msh, char **envl)
+char	**get_path_array(t_msh *msh, char **envl)
 {
 	char *env_path;
-    char *arr_path;
+    char **arr_path;
 
     env_path = get_env(envl, "PATH");
 	if (*env_path)
@@ -43,6 +43,7 @@ char	*get_path_array(t_msh *msh, char **envl)
 		arr_path = ft_split(".", ' ');// will create {"./", NULL} so I can search current folder if the env path is unset.
 	if (!arr_path)
 		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "split");//"minishell: fatal error: memory allocation failed in %s\n"
+	return (arr_path);
 }
 
 void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
@@ -80,7 +81,7 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     char *cmd_path;
 
 	cmd_path = NULL;
-	if (!execif_builtin(msh, cmd))
+	if (!exec_builtin(msh, cmd -> cmd))
 	{
     	cmd_arr = cmd -> cmd;
     	if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))

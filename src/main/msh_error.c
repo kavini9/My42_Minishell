@@ -6,28 +6,29 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:31:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/19 23:50:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:59:22 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-void error_log(int err_msg, char *param, int err_no, int extrarg)
+
+void error_log(char *err_msg, char *param, int err_no, int extrarg)
 {
     t_errnote *err_note;
     
     if (extrarg)
     {
         err_note = (t_errnote *) param;
-        fd_printf(STDERR_FILENO, err_msg, err_note -> cmd_path, err_note -> strerr);
+        printf_fd(STDERR_FILENO, err_msg, err_note -> cmd_path, err_note -> strerr);
     }
     if (param && err_no)
-        fd_printf(STDERR_FILENO, err_msg, param, strerror(err_no));
+        printf_fd(STDERR_FILENO, err_msg, param, strerror(err_no));
     else if (param && !err_no)
-        fd_printf(STDERR_FILENO, err_msg, param);
+        printf_fd(STDERR_FILENO, err_msg, param);
     else if (!param && err_no)
-        fd_printf(STDERR_FILENO, err_msg, strerror(err_no));
+        printf_fd(STDERR_FILENO, err_msg, strerror(err_no));
     else
-        fd_printf(STDERR_FILENO, err_msg);
+        printf_fd(STDERR_FILENO, err_msg);
 }
 
 void msh_error(t_msh *msh, t_do_err opt_exc, char *err_msg, char *param)

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/25 23:26:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:04:26 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    msh_execute(t_msh *msh)
 {
 	here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);//what kind of errors can occur with this? pipe open, read and write to pipe
     if (msh -> cmd_count == 1 && is_builtin((*msh->cmd) -> cmd))//TODO: see the dereference here. see if it needs too be chnged in struct.
-        execin_shell(msh, (*msh->cmd) -> cmd);
+        execin_shell(msh, *msh -> cmd);
     else
         execin_child(msh, msh -> cmd, -1, 0);
 }
@@ -65,7 +65,7 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
-				handle_parse_error(&msh);
+				printf("Syntax Error\n");//write a function or this
 			printf("line OK: %s\n", line);
 			add_history(line);
 			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
@@ -83,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 	(void) av;
 	
 	if (ac != 1)
-		exit(err_out("# minishell: Error: Invalid number of arguments."
+		exit(printf("# minishell: Error: Invalid number of arguments."
 		"\n# Usage: ./minishell"));
 	msh_init(&msh, envp);
 //	print_envl(&msh);

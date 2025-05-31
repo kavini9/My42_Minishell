@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:24 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/18 23:54:18 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:05:54 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void    builtin_exit(t_msh *msh, char **cmd)
     digi_count = 0;
     num = 0;
     if (msh -> cmd_count == 1)
-        ft_putendl_fd(STDERR_FILENO, "exit");
+        ft_putendl_fd("exit", STDERR_FILENO);
     if(++cmd)
         digi_count = is_numeric(*cmd);
     if (digi_count)

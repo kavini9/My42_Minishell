@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:25:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/15 20:00:13 by aoshinth         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:01:14 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,13 @@ int check_redirects(char *line, t_msh *msh)
 	while (line[i])
 	{
 		// Check for output redirection ('>') while ensuring it's outside quotes
-		if (line[i] == '>' && !check_quotes(line, i))
+		if (line[i] == '>' && !check_quote(line, i))
 		{
 			if (check_in_redirects(line, msh, &i))
 				return (1);
 		}
 		// Check for input redirection ('<') while ensuring it's outside quotes
-		else if (line[i] == '<' && !check_quotes(line, i))
+		else if (line[i] == '<' && !check_quote(line, i))
 		{
 			if (check_out_redirects(line, msh, &i))
 				return (1);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 15:56:24 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/29 18:21:52 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:59:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #define FULL_LINE -1
 
 /**
- * check_quotes - Checks for unclosed quotes within a given line.
+ * 
+ * - Checks for unclosed quotes within a given line.
  *
  * @line: The input string to check for unclosed quotes.
  * @limit: The index up to which to check for unclosed quotes (-1 for full string).
@@ -26,7 +27,7 @@
  *
  * Return: 1 if an unclosed quote is found, 0 otherwise.
  */
-int	 check_quotes(char *line, int limit)
+int	 check_quote(char *line, int limit)
 {
 	int	single_quote = 0;//1
 	int	double_quote = 0;//0

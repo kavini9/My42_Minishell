@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:36:04 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/04/22 23:21:31 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:59:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	validate_pipe_position(char *line, int i, t_msh *msh)
 	int	j;
 
 	j = skip_whitespace(line, i + 1);
-	if (line[j] == '|' && !check_quotes(line, j))
+	if (line[j] == '|' && !check_quote(line, j))
 	{
 		ft_putstr_fd("syntax error near unexpected token '|'", 2);
 		msh->exit_code = 2;
@@ -62,7 +62,7 @@ static int	detect_consecutive_pipes(char *line, t_msh *msh)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '|' && !check_quotes(line, i))
+		if (line[i] == '|' && !(line, i))
 		{
 			if (validate_pipe_position(line, i, msh))
 				return (1);
@@ -94,7 +94,7 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
 	i = ft_strlen(line) - 1;
 	while (i >= 0 && ft_isspace(line[i])) // Ignore trailing spaces
 		i--;
-	if (i >= 0 && line[i] == '|' && !check_quotes(line, i))
+	if (i >= 0 && line[i] == '|' && !(line, i))
 	{
 		extended_line = get_trailing_input(msh, line);
 		if (!extended_line)
@@ -134,7 +134,7 @@ int	validate_pipe(char *line, t_msh *msh)
 	i = skip_whitespace(line, 0);
 
 	// Check if the first non-space character is '|'
-	if (line[i] == '|' && !check_quotes(line, i))
+	if (line[i] == '|' && !(line, i))
 	{
 		j = i;
 		while (line[j] == '|') // Capture multiple consecutive pipes

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:57:47 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:06:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:19:30 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int get_token_len(char *seg, t_token *token, int tok_len)
             quote_flg = (int) *seg;
         else if ((*seg == '\'' || *seg == '"') && quote_flg == (int) *seg)
             quote_flg = 0;
-        if (redir_flg && !is_white)
+        if (redir_flg && !is_white && !(*seg == '<' || *seg == '>'))
             redir_flg = 0;
         else if ((*seg == '<' || *seg == '>') && !quote_flg && !redir_flg && tok_len)
             break;
@@ -71,7 +71,7 @@ void extract_token(t_msh *msh, t_token **token, char *seg)
             exit(printf("Malloc Error token array\n"));
         ft_memset(&(*token)[arr_len], 0, size);
         tok_len = get_token_len(seg, &(*token)[arr_len], 0);
-        (*token)[arr_len].token = ft_substr(seg, 0, tok_len);
+        (*token)[arr_len].token = ft_substr(seg, redir_skip(seg), tok_len - redir_skip(seg));
         if (!(*token)[arr_len].token)
             exit(printf("Malloc Error token %i\n", arr_len));
         seg += tok_len;

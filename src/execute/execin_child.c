@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:16:59 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 21:41:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
     sig_handler_changer();//SIGNAL: signal added
     redirect_pipe(msh, rd_fd, wr_fd);
     redirect_io(msh, cmd, -1, 0);//might have to add a return value for this
-    execute_cmd(msh, cmd);
+    execute_cmd(msh, cmd);//what happens if cmd is null. can we add a  if condition if (cmd) ==> execute, else set exit code.
 }
 
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
@@ -68,7 +68,7 @@ void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_da
 }
 
 //here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.
-void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
+void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
 {
     int pipe_fd[2];
     pid_t pid;
@@ -83,7 +83,7 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
         if (pid < 0)
             break;
         if (pid == 0)
-            run_child_proc(msh, cmd, prev_rd_fd, pipe_fd[1]);
+            run_child_proc(msh, *cmd, prev_rd_fd, pipe_fd[1]);
         else if (msh -> cmd_count > 1)// it won't go in here if the command count is 1.
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
         cmd++;
@@ -92,7 +92,7 @@ void    execin_child(t_msh *msh, t_cmd *cmd, int prev_rd_fd, int i)
     if (i < msh -> cmd_count)
         safe_pipefork_fail(msh, prev_rd_fd, pipe_fd , (i << 8) | (pid & 0xFF));
     if (i > 0)
-        wait_child(i, pid, msh);//see where i am cleaning cmd shit
+        wait_child(msh, i, pid);//see where i am cleaning cmd shit
 }
 
 // void    execin_child(t_msh *msh)

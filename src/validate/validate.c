@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:41:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 15:53:20 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:01:46 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 // 	char	*extra_line;
 // 	char	*temp;
 
-// 	while (check_quotes(*line, ft_strlen(*line)))
+// 	while (check_quote(*line, ft_strlen(*line)))
 // 	{
 // 		extra_line = readline(">");
 // 		if (!extra_line)
@@ -68,7 +68,7 @@
 // 	i = 0;
 // 	while ((*line)[i])
 // 	{
-// 		if (!check_quotes(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
+// 		if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
 // 		{
 // 			ft_putendl_fd("invalid syntax", 2);
 // 			msh->exit_code = 2;
@@ -87,7 +87,7 @@ static int	validate_pipe_position(char *line, int i, t_msh *msh)
 	int	j;
 
 	j = skip_whitespace(line, i + 1);
-	if (line[j] == '|' && !check_quotes(line, j))
+	if (line[j] == '|' && !check_quote(line, j))
 	{
 		ft_putstr_fd("syntax error near unexpected token '|'", 2);
 		msh->exit_code = 2;
@@ -103,7 +103,7 @@ static int	detect_consecutive_pipes(char *line, t_msh *msh)
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '|' && !check_quotes(line, i))
+		if (line[i] == '|' && !check_quote(line, i))
 		{
 			if (validate_pipe_position(line, i, msh))
 				return (1);
@@ -121,7 +121,7 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
 	i = ft_strlen(line) - 1;
 	while (i >= 0 && ft_isspace(line[i])) // Ignore trailing spaces
 		i--;
-	if (i >= 0 && line[i] == '|' && !check_quotes(line, i))
+	if (i >= 0 && line[i] == '|' && !check_quote(line, i))
 	{
 		extended_line = get_trailing_input(msh, line);
 		if (!extended_line)
@@ -142,7 +142,7 @@ int	validate_pipe(char *line, t_msh *msh)
 	i = skip_whitespace(line, 0);
 
 	// Check if the first non-space character is '|'
-	if (line[i] == '|' && !check_quotes(line, i))
+	if (line[i] == '|' && !check_quote(line, i))
 	{
 		j = i;
 		while (line[j] == '|') // Capture multiple consecutive pipes
@@ -166,7 +166,7 @@ int	msh_validate_line(t_msh *msh, char **line)
 {
 	int	i;
 
-		if (!check_quotes(*line, i))
+		if (!check_quote(*line, i))
 		{
 			ft_putendl_fd("syntax error: unmatched quotes", 2);
 			msh->exit_code = 2;
@@ -177,7 +177,7 @@ int	msh_validate_line(t_msh *msh, char **line)
 	i = 0;
 	while ((*line)[i])
 	{
-		if (!check_quotes(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
+		if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
 		{
 			ft_putendl_fd("invalid syntax", 2);
 			msh->exit_code = 2;

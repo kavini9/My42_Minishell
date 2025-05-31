@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:37 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/28 17:05:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:20:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,46 @@ void skip_whitespaces(char **str)
 {
     while (**str && ft_strchr(" \t\n\r\f\v", **str))
         (*str)++;
+}
+
+int redir_skip(char *seg)
+{
+    int skip;
+
+    skip = 0;
+    while(*seg && ft_strchr("< \t\n\r\f\v>", *seg))
+    {
+        skip++;
+        seg++;
+    }
+    return (skip);
+}
+
+//auxiliary. delete later
+
+void print_segments(char **seg)
+{
+    printf("pirnting segments\n");
+    while (*seg)
+    {
+        printf("[%s]\n", *seg);
+        seg++;
+    }
+}
+
+void print_tokens(t_token **token)
+{
+    t_token *tok_arr;
+
+    while (*token)
+    {
+        printf("pirnting tokens for each segment\n");
+        tok_arr = *token;
+        while(tok_arr -> token)
+        {
+            printf("[%s]        redir: %i\n", tok_arr -> token, (int) tok_arr -> redir );
+            tok_arr++;
+        }
+        token++;
+    }
 }

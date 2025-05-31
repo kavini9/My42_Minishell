@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:50:10 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/05/28 17:09:52 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 19:30:51 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ char get_trailing_input(t_msh *msh, char line)
     char additional_input = NULL;
 
     // Set signal handler for heredoc or continuation input
-    signal(SIGINT, sig_handler_hd);
+    signal(SIGINT, sig_handler_heredoc);
 
     while (1)
     {
