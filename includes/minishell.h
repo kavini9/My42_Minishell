@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 21:42:09 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:24:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,8 +228,8 @@ int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path);
 
 void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i);
 void	redirect_pipe(t_msh *msh, int rd_fd, int wr_fd);
-int	open_file(t_msh *msh, t_redir_type type, char *fname);
-int	dup_io(t_msh *msh, int oldfd, int newfd);
+int	open_file(t_redir_type type, char *fname);
+int	dup_io(int oldfd, int newfd);
 void	close_all_hdocfd(int *hdocfd_l);
 
 void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i);

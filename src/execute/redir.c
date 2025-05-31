@@ -6,13 +6,13 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/20 05:52:16 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:25:06 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
 
-int	dup_io(t_msh *msh, int oldfd, int newfd)//we added a return type to here so when redirecting pipefds if redir rdfd fails you have to close wrfd. so cannont exit minishell from here.
+int	dup_io(int oldfd, int newfd)//we added a return type to here so when redirecting pipefds if redir rdfd fails you have to close wrfd. so cannont exit minishell from here.
 {
 	if (dup2(oldfd, newfd) == -1)
 	{
@@ -23,7 +23,7 @@ int	dup_io(t_msh *msh, int oldfd, int newfd)//we added a return type to here so 
 	return (oldfd);
 }
 
-int	open_file(t_msh *msh, t_redir_type type, char *fname)
+int	open_file(t_redir_type type, char *fname)
 {
 	int fd;
 	
@@ -43,11 +43,11 @@ void	redirect_pipe(t_msh *msh, int rd_fd, int wr_fd)
 	
 	dup_ret = 0;
 	if (rd_fd != -1)
-		dup_ret = dup_io(msh, rd_fd, STDIN_FILENO);
+		dup_ret = dup_io(rd_fd, STDIN_FILENO);
 	if (dup_ret < 0)
 		close(wr_fd);
 	else if (wr_fd != -1)
-		dup_ret = dup_io(msh, wr_fd, STDOUT_FILENO);
+		dup_ret = dup_io(wr_fd, STDOUT_FILENO);
 	if (dup_ret < 0)
 		msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "dup");
 }
@@ -78,7 +78,7 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 	while (redir) // check if redir -> fname exist. ex: <$NONEXIST_FILE. should give ambiguous redirection 
 	{
 		if (redir -> type != REDIR_HDOC)
-			fd = open_file(msh, redir -> type, redir -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
+			fd = open_file(redir -> type, redir -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
 		else
 		{
 			fd = *(msh ->  hdocfd_l + cmd -> hdoc_st_pos + i);
@@ -88,11 +88,11 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 		if (fd == -1)
 			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, redir -> fname_o_del));
 		else if (redir -> type == REDIR_INP || redir -> type == REDIR_HDOC)
-				dup_ret = dup_io(msh, fd, STDIN_FILENO);
+				dup_ret = dup_io(fd, STDIN_FILENO);
 		else
-				dup_ret = dup_io(msh, fd, STDOUT_FILENO);
+				dup_ret = dup_io(fd, STDOUT_FILENO);
 		if (dup_ret < 0)
-			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC_DUP, fd));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
+			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
 	}
 	close_all_hdocfd(msh -> hdocfd_l);
 }

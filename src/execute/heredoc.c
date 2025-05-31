@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/25 23:05:10 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/05/31 22:08:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
             break;
         if (ft_strcmp(line, redir -> fname_o_del))
             break;
-        ft_puendl_fd(line, hd_pfd[1]);
+        ft_putendl_fd(line, hd_pfd[1]);
         free(line);
     }
     if (!line)
@@ -38,19 +38,19 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
 
 //TODO: expansion for heredoc
 
-void    here_doc(t_msh *msh, t_cmd *cmd, int *hdocfd_l, int i)
+void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i)
 {
     t_redir *redir;
 
-    while(cmd)
+    while(*cmd)
     {
-        redir = cmd -> redir;
-        cmd -> hdoc_st_pos = i;
+        redir = (*cmd) -> redir;
+        (*cmd) -> hdoc_st_pos = i;
         while(redir)
         {
             if (redir -> type == REDIR_HDOC)
             {
-                get_heredoc_inp(msh, redir , hdocfd_l);
+                get_here_doc(msh, redir , hdocfd_l);
                 i++;
             }
             redir = redir -> next;

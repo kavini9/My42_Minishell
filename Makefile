@@ -1,4 +1,4 @@
-NAME        = minishell
+ NAME        = minishell
 
 DIR_LIBFT   = ./lib/libft
 DIR_SRC     = ./src
@@ -25,12 +25,13 @@ SOURCES = main/main.c \
 	  execute/execin_child.c \
 	  execute/heredoc.c \
 	  execute/redir.c \
-	  parse_new/parse.c \
-	  parse_new/tokenize.c \
 	  validate/checker.c \
 	  validate/pipe_trailing.c \
 	  validate/redirections.c \
-	  validate/validate.c
+	  validate/validate.c \
+	  parse/parse.c \
+	  parse/tokenize.c
+	  
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 DEPS    = $(OBJECTS:.o=.d) #what is  this?
