@@ -10,19 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "includes/minishell.h"
-void init_exp(t_msh *msh, t_token token, t_expan *exp);
-void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
-char *extract_env_key(char **token);
-void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
-size_t	ft_arrlen(void **arr);
-void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);
-void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
-void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
-void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
-void expscan_token(t_msh *msh, t_token *token);
-void expand_and_setup_cmd(t_msh *msh, t_token **token);
-void free_arr(char **arr);
+# include "minitest.h"
 
 void free_arr(char **arr)
 {
@@ -219,6 +207,7 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
         exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
     get_tmp_arr(msh, exp, exp_dup, q_context);
     adjust_exp_edge(msh, exp, exp_val, q_context);
+
     revise_exp_arr(msh, token, exp);
 }
 
@@ -253,7 +242,7 @@ void expscan_token(t_msh *msh, t_token *token)
     }
 }
 
-void expand_and_setup_cmd(t_msh *msh, t_token **token)
+void expand_tokens(t_msh *msh, t_token **token)
 {
     char *token_iter;
 

@@ -28,3 +28,10 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
         tmp_cmd++;
     }
 }
+
+init_cmd_struct(msh, msh -> cmd_count);
+
+void setup_cmd(t_msh *msh, t_token **token)
+{
+  init_cmd_struct(msh, msh -> cmd_count);
+}

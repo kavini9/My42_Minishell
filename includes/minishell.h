@@ -133,7 +133,6 @@ int	 check_quotes(char *start, char *curr);
 void	seg_tokenize(t_msh *msh, t_parse *aux);
 void extract_token(t_msh *msh, t_token **token, char *seg);
 void skip_whitespaces(char **str);
-//void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new);
 int get_token_len(char *seg, t_token *token, int tok_len);
 int set_redir_type(t_token *token, char *seg);
 int redir_skip(char *seg);
