@@ -34,4 +34,5 @@ init_cmd_struct(msh, msh -> cmd_count);
 void setup_cmd(t_msh *msh, t_token **token)
 {
   init_cmd_struct(msh, msh -> cmd_count);
+  
 }

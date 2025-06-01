@@ -162,28 +162,29 @@ int	validate_pipe(char *line, t_msh *msh)
 	return (0);
 }
 
-int	msh_validate_line(t_msh *msh, char **line)
-{
-	int	i;
+int msh_validate_line(t_msh *msh, char **line)  
+{  
+    int i = 0;
 
-		if (!check_quote(*line, i))
-		{
-			ft_putendl_fd("syntax error: unmatched quotes", 2);
-			msh->exit_code = 2;
-			return (1);
-		}
-	if (validate_pipe(*line, msh))
-		return (1);
-	i = 0;
-	while ((*line)[i])
-	{
-		if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
-		{
-			ft_putendl_fd("invalid syntax", 2);
-			msh->exit_code = 2;
-			return (1);
-		}
-		i++;
-	}
-	return (check_redirects(*line, msh));
+    if (check_quote(*line, ft_strlen(*line)))  
+    {
+        ft_putendl_fd("syntax error: unmatched quotes", 2);  
+        msh->exit_code = 2;  
+        return (1);  
+    }
+
+    if (validate_pipe(*line, msh))  
+        return (1);
+
+    while ((*line)[i])  
+    {  
+        if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))  
+        {
+            ft_putendl_fd("invalid syntax", 2);  
+            msh->exit_code = 2;  
+            return (1);  
+        }  
+        i++;  
+    }  
+    return (check_redirects(*line, msh));  
 }

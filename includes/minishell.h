@@ -88,16 +88,17 @@ typedef struct s_expan
 	char *exp;
 	char *key;
 	char **tmp_arr;
-	char **exp_arr;
-	int exp_arr_len;
+	// char **exp_arr;
+	// int exp_arr_len;
 	int	scan_offset;
 } t_expan;
 
 typedef struct s_token
 {
     char    		*token;
+    char    		**expn;
+	int expn_len
 	t_redir_type	redir;
-    char    		**expand;
 } t_token;
 
 typedef struct s_parse

@@ -41,17 +41,16 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     int exp_len;
     int tmp_len;
     
-    exp_len = exp -> exp_arr_len;
+    exp_len = token -> expn_len;
     tmp_len = ft_arrlen((void **) exp -> tmp_arr);
     free(token -> token);//can this affect the memcpy.
-    exp -> exp_arr = ft_realloc(exp -> exp_arr, exp_len, exp_len + tmp_len);// this needs refining
-    if (!exp -> exp_arr)
+    token -> expn = ft_realloc(exp -> exp_arr, exp_len, exp_len + tmp_len);// this needs refining
+    if (!token -> expn)
         exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
-    ft_memcpy(exp -> exp_arr[exp_len - 1], exp -> tmp_arr, tmp_len * sizeof(char *));
-    exp -> exp_arr_len = exp_len + tmp_len;
-        //exit(printf("# minishell: Error:Malloc Fail.\n"));
+    ft_memcpy(token -> expn[exp_len - 1], exp -> tmp_arr, tmp_len * sizeof(char *));
+    token -> expn_len = exp_len + tmp_len - 1;
     free(exp -> prefix);
-    token -> token = exp -> exp_arr[exp_len + tmp_len - 1];
+    token -> token = token -> expn[exp_len + tmp_len - 1];
     exp -> tok = token -> token;
     exp -> suffix = token -> token + exp -> scan_offset;
     exp -> prefix = ft_calloc(ft_strlen(token -> token) - exp -> scan_offset, sizeof(char));
@@ -207,7 +206,6 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
         exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
     get_tmp_arr(msh, exp, exp_dup, q_context);
     adjust_exp_edge(msh, exp, exp_val, q_context);
-
     revise_exp_arr(msh, token, exp);
 }
 

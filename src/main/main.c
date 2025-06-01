@@ -62,6 +62,8 @@ void	msh_loop(t_msh *msh)
 	(void) *msh;
 	while(1)
 	{
+		if (isatty(fileno(stdin)))
+            init_sig();
 		line = readline("minishell> ");
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case

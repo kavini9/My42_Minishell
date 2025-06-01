@@ -48,7 +48,7 @@ void    builtin_exit(t_msh *msh, char **cmd)
         num = ft_atol(*cmd);
     if ((*cmd && !digi_count) || (digi_count >= 19 && (num == 0 || num == -1)))
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 2, ERR_EXIT_NONUMERIC, *cmd);
-    else if (cmd + 2)
+    else if (*(cmd + 2))
         return(msh_error(msh, (LOG) << 8 | 1, ERR_EXIT_XTRARG, NULL));//see if clean is required here
     else
         msh -> exit_code = (uint8_t) num;
