@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:41:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 19:01:46 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:58:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,6 @@ int msh_validate_line(t_msh *msh, char **line)
         msh->exit_code = 2;  
         return (1);  
     }
-
     if (validate_pipe(*line, msh))  
         return (1);
 

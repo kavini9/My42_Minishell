@@ -8,13 +8,13 @@ void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
 	void	*ptr_new;
 
 	if (!ptr)
-		return (malloc(size_new));
+		return (ft_calloc(size_new, 1));
 	if (!size_new)
 	{
 		free(ptr);
 		return (NULL);
 	}
-	ptr_new = malloc(size_new);
+	ptr_new = ft_calloc(size_new , 1);
 	if (!ptr_new)
 		return (NULL);//shouldn't we free ptr?
 	if (size_prev > 0)
@@ -233,7 +233,7 @@ void print_tokens(t_token **token)
     }
 }
 
-void	msh_parse(char *line, t_msh *msh)
+void	msh_parse(t_msh *msh, char *line)
 {
 	t_parse	aux;//in static memory remember to assign to cmd struct before leaving this function.
 
@@ -244,7 +244,7 @@ void	msh_parse(char *line, t_msh *msh)
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);
     expand_tokens(msh, msh -> aux -> token);
-    setup_cmd(msh, msh -> aux -> token);
+    //setup_cmd(msh, msh -> aux -> token);
     
 }
 
@@ -268,6 +268,6 @@ int main(void)
 
 	msh_init(&msh);
     line = readline("minishell> ");
-    msh_parse(line , &msh);
+    msh_parse(&msh, line);
     return (1);
 }

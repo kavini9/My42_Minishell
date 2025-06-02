@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 03:06:36 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/03 00:48:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void free_arr(char **arr)
 void init_exp(t_msh *msh, t_token token, t_expan *exp)//should I pass t_token *
 {
     ft_memset(exp, 0, sizeof(t_expan));
-    exp -> tok = token.token;
+    exp -> tok = token.token;//hope it doesn't matter parsing token by value cause the pointer pointing to token string will stil be the same number so it still points to the same block  
     exp -> suffix = token.token;
     exp -> prefix = ft_calloc(ft_strlen(token.token), sizeof(char));
     if (!exp -> prefix)
@@ -40,26 +40,47 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
 {
     int exp_len;
     int tmp_len;
+    int size;
+    int new_exp_len;
     
     exp_len = token -> expn_len;
+    size = sizeof(char *);
     tmp_len = ft_arrlen((void **) exp -> tmp_arr);
+    if (!exp_len)
+        new_exp_len = tmp_len + 1;// when exp_len is zero in the initial expansion there won't be space for NULL terminator.
+    else
+        new_exp_len = exp_len + tmp_len;
     free(token -> token);//can this affect the memcpy.
-    token -> expn = ft_realloc(exp -> exp_arr, exp_len, exp_len + tmp_len);// this needs refining
+    token -> expn = ft_realloc(token -> expn, (exp_len) * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
         exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
-    ft_memcpy(token -> expn[exp_len - 1], exp -> tmp_arr, tmp_len * sizeof(char *));
-    token -> expn_len = exp_len + tmp_len - 1;
+
+    if (exp_len > 0)
+    {
+        free(*((token -> expn) + exp_len - 1));
+        ft_memcpy((token -> expn) + exp_len - 1, exp -> tmp_arr, tmp_len * sizeof(char *));
+    }
+    else
+        ft_memcpy((token -> expn) + exp_len, exp -> tmp_arr, tmp_len * sizeof(char *));
+    token -> expn_len = new_exp_len;
     free(exp -> prefix);
-    token -> token = token -> expn[exp_len + tmp_len - 1];
+    token -> token = token -> expn[new_exp_len - 2];
     exp -> tok = token -> token;
     exp -> suffix = token -> token + exp -> scan_offset;
+    // char **print = token -> expn;//testing
+    // printf("printing exp array\n");
+    // while (*print)
+    // {
+    //     printf_fd(1, "[%s]\n", *print );
+    //     print++;
+    // }
     exp -> prefix = ft_calloc(ft_strlen(token -> token) - exp -> scan_offset, sizeof(char));
     if (!exp -> prefix)
         exit(printf("#!exp -> prefix minishell: Error:Malloc Fail.\n"));
     exp -> exp = exp -> prefix;
     free(exp -> key);
     exp -> key = NULL;
-    free_arr(exp -> tmp_arr);
+    free(exp -> tmp_arr);
     exp -> tmp_arr = NULL;
 }
 
@@ -115,9 +136,13 @@ size_t	ft_arrlen(void **arr)
 {
 	size_t	len;
 
+    //printf("ft_arrlen\n");
 	len = 0;
-	while (*arr++)
+	while (*arr)
+    {
 		len++;
+        arr++;
+    }
 	return (len);
 }
 
@@ -212,6 +237,7 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
 void expscan_token(t_msh *msh, t_token *token)
 {
     t_expan exp;
+    char **print;
 
     init_exp(msh, *token, &exp);
     while (*exp.suffix)
@@ -223,39 +249,66 @@ void expscan_token(t_msh *msh, t_token *token)
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
-            expand_parameter(msh, token, &exp);
-            printf("return from expand parameter\n");
-        }     
-        ft_memcpy(exp.exp, exp.suffix, sizeof(char));
-        printf("exp.exp: %s\n", exp.exp);
-        exp.suffix++;
-        exp.exp++;
+            if (*exp.key)//this is for when we have something like $%
+            {
+                expand_parameter(msh, token, &exp);
+                print = token -> expn;//testing
+                printf("printing exp array\n");
+                while (*print)
+                {
+                    printf_fd(1, "[%s]\n", *print );
+                    print++;
+                }
+                printf_fd(1, "[%s]\n", *(print) );
+            }
+            else 
+                exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
+            printf("returned from expand parameter\n");
+        }
+        // printf("in a loop: exp.prefix: %s\n", exp.prefix);
+        // printf("in a loop:exp.suffix: %s\n", exp.suffix);
+        // printf("in a loop:exp.exp: %s\n", exp.exp);
+        if (*exp.suffix)
+        {
+            ft_memcpy(exp.exp, exp.suffix, sizeof(char));
+            exp.suffix++;
+            exp.exp++;
+        }
     }
-    char **print = exp.exp_arr;
+    /*
+    print = token -> expn;//testing
     printf("printing exp array\n");
     while (*print)
     {
         printf("[%s]\n", *print );
         print++;
     }
+    */
 }
 
 void expand_tokens(t_msh *msh, t_token **token)
 {
     char *token_iter;
+    t_token *tok_tmp;
 
     while (*token)
     {
-        while ((**token).token)
+        tok_tmp = *token;
+        while ((*tok_tmp).token)//use 
         {
-            printf("printing tokens in expand: %s\n", (**token).token);
-            token_iter = ft_strchr((**token).token, '$');
+            printf("printing tokens in expand: %s\n", (*tok_tmp).token);
+            token_iter = ft_strchr((*tok_tmp).token, '$');
             printf("printing token_iter in expand: %s\n", token_iter);
-            while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
-                token_iter = ft_strchr((++token_iter), '$');
-            if (token_iter)
-                expscan_token(msh, &(**token));
-            (*token)++;
+            // while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
+            //     token_iter = ft_strchr((++token_iter), '$');//this part was added because I checked the availability of the tilde here as well may be we dont need it here just add the condition check quotes in if
+            printf("here, token_iter: START%sEND\n", token_iter);
+            if ((*tok_tmp).redir != REDIR_HDOC && token_iter 
+            && check_quotes((*tok_tmp).token, token_iter) != '\'')
+            {
+                //printf("adasdasdasdadasdasdasdadasdasdasdadasdasdasdadasdasdasdadasdasdasd\n");
+                expscan_token(msh, tok_tmp);//&(*tok_tmp)
+            }
+            (tok_tmp)++;
         }
         token++;
     }
@@ -275,3 +328,19 @@ void expand_tokens(t_msh *msh, t_token **token)
 //So keep it for now.
 
 //if a export varaibe consist of a $ it should be expanded before adding to the env. 
+
+
+
+//when two expansions in one token joining them did not go well
+// printing exp array
+// [Hellotest1]
+// [test2]
+// [==1337066== Invalid read of size 1
+
+// ==1337066== 
+// test3#jdksks$VA'kjshhsk']
+// [#jdkskstest1]
+// [test2]
+// [test3'kjshhsk']
+// [(nil)]
+//may be a problem in concatenation logic

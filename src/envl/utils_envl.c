@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/27 23:41:55 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/02 18:47:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char    *get_env(char **envl, char *var)
 {
     size_t  var_len;
     
-    if(!envl || !*var)
+    if(!envl || !*var)//should I also add the condition  || !var
         return (NULL);
     var_len = ft_strlen(var);
     while (*envl)

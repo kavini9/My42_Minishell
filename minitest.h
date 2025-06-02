@@ -27,7 +27,7 @@
 
 extern volatile __sig_atomic_t g_sig;
  
-# include "define.h"
+//# include "define.h"
 
 typedef enum e_do_err 
 {
@@ -86,7 +86,7 @@ typedef struct s_token
 {
     char    		*token;
     char    		**expn;
-	int expn_len
+	int expn_len;
 	t_redir_type	redir;
 } t_token;
 
@@ -110,7 +110,7 @@ typedef struct s_msh
 } t_msh;
 
 
-void msh_init(t_msh *msh, char **envp);
+void msh_init(t_msh *msh);
 void    msh_parse(t_msh *msh, char *line);
 void print_segments(char **seg);
 void init_parse_structs(t_msh *msh, char *line);
@@ -137,3 +137,5 @@ void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
 void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
 void expscan_token(t_msh *msh, t_token *token);
 void expand_tokens(t_msh *msh, t_token **token);
+
+#endif
