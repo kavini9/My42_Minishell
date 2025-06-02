@@ -29,10 +29,31 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     }
 }
 
-init_cmd_struct(msh, msh -> cmd_count);
-
 void setup_cmd(t_msh *msh, t_token **token)
 {
+  char **exp_arr;
+  char **cmd;
+
   init_cmd_struct(msh, msh -> cmd_count);
-  
+  cmd = msh -> cmd;
+  while (*token)
+  {
+    while ((**token).token)
+    {
+      if ((**token).expn)
+      {
+        exp_arr = (**token).expn;
+        while (*exp_arr)
+        {
+          quote_remove(*exp_arr);
+          add_to_cmd(t_msh *msh, *cmd, exp_arr);//inside this check if redir flag exist and and to two arrays accordingly.
+           exp_arr++;
+        }
+      }
+      else
+        quote_remove((**token).token);
+
+
+    }
+  }
 }
