@@ -7,9 +7,21 @@ DIR_INC     = ./includes
 
 HEADERS     = $(DIR_INC)/minishell.h
 
+#vpath %.c main/ builtin/ envl/
+
 SOURCES = main/main.c \
 	  main/msh_clean.c \
 	  main/msh_error.c \
+	  validate/checker.c \
+	  validate/pipe_trailing.c \
+	  validate/redirections.c \
+	  validate/validate.c \
+	  parse/parse.c \
+	  parse/tokenize.c \
+	  parse/parse_utils.c \
+	  parse/expand.c \
+	  parse/expand_arr_utils.c \
+	  parse/exp_struct_handle.c \
 	  builtin/cd.c \
 	  builtin/cd_unlinked_dir.c \
 	  builtin/echo.c \
@@ -25,19 +37,14 @@ SOURCES = main/main.c \
 	  execute/execin_child.c \
 	  execute/heredoc.c \
 	  execute/redir.c \
-	  validate/checker.c \
-	  validate/pipe_trailing.c \
-	  validate/redirections.c \
-	  validate/validate.c \
-	  parse/parse.c \
-	  parse/tokenize.c
-	  
+	  signal/signal_handler.c \
+	  signal/signal_utils.c
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 DEPS    = $(OBJECTS:.o=.d) #what is  this?
 
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -I$(DIR_INC) -MMD -MP
+CFLAGS  = -Wall -Wextra -Werror -I$(DIR_INC) -MMD -MP 
 RM      = rm -rf
 
 LIBFT_FLAGS = -L $(DIR_LIBFT) -lft
@@ -48,7 +55,8 @@ libft:
 	@make -C $(DIR_LIBFT)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBFT_FLAGS) -o $@
+	$(CC) $(OBJECTS) $(LIBFT_FLAGS) -lreadline -o $@ 
+#see where exactly to add readline flags
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)

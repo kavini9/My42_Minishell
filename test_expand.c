@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 00:48:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:28:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     int tmp_len;
     int size;
     int new_exp_len;
-    
+
     exp_len = token -> expn_len;
     size = sizeof(char *);
     tmp_len = ft_arrlen((void **) exp -> tmp_arr);
@@ -50,7 +50,8 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
         new_exp_len = tmp_len + 1;// when exp_len is zero in the initial expansion there won't be space for NULL terminator.
     else
         new_exp_len = exp_len + tmp_len;
-    free(token -> token);//can this affect the memcpy.
+    if (!token->token)
+        free(token -> token);//can this affect the memcpy.
     token -> expn = ft_realloc(token -> expn, exp_len * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
         exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
@@ -61,8 +62,11 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     printf("exp_len : %i\n", exp_len);
     if (exp_len > 0)
     {
-        free(*((token -> expn) + exp_len));
-        ft_memcpy((token -> expn) + exp_len, exp -> tmp_arr, tmp_len * sizeof(char *));    
+        printf("*((token -> expn) + exp_len - 1) after realloc : %s\n", *((token -> expn) + exp_len - 1));
+      //  free(*((token -> expn) + exp_len - 1));
+        //*((token -> expn) + exp_len - 1) = NULL;
+       /// printf("*((token -> expn) + exp_len - 1) after free : %s\n", *((token -> expn) + exp_len - 1));
+        ft_memcpy((token -> expn) + exp_len - 1, exp -> tmp_arr, tmp_len * sizeof(char *));    
     }
     else
         ft_memcpy((token -> expn), exp -> tmp_arr, tmp_len * sizeof(char *));
@@ -74,8 +78,10 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     exp -> prefix = ft_calloc(ft_strlen(token -> token), sizeof(char));
     if (!exp -> prefix)
         exit(printf("#!exp -> prefix minishell: Error:Malloc Fail.\n"));
+    printf("e12341251235xp -> prefix after memcpy: '%s' '%s'\n", exp -> prefix, exp->tok );
+
     ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
-    printf("exp -> prefix after memcpy: %s\n", exp -> prefix );
+   // printf("exp -> prefix after memcpy: %s  VAL%d'\n", exp -> prefix, exp->prefix[5]);
     printf("exp -> suffix after reassign: %s\n", exp -> suffix );
     exp -> exp = exp -> prefix + exp -> scan_offset;
     free(exp -> key);
@@ -213,7 +219,7 @@ void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 
 static char *get_env(void)
 {
-    return(ft_strdup("test1     test2       test3"));
+    return(ft_strdup("text1     text2       text3"));
 }
 
 void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)

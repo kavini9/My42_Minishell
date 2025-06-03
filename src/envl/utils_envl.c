@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/02 18:47:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/03 23:03:02 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char    *get_env(char **envl, char *var)
     var_len = ft_strlen(var);
     while (*envl)
     {
-        if (ft_strncmp(*envl, var, var_len) && *(*envl + var_len) == '=')
+        if (!ft_strncmp(*envl, var, var_len) && *(*envl + var_len) == '=')
             return (*envl + var_len + 1);//TODO; there's a case when we have to print the whole line not just the value.
         envl++;
     }

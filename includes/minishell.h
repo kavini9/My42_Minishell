@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/02 16:48:14 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:45:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,45 +122,18 @@ typedef struct s_msh
 
 # include "../lib/libft/libft.h"
 
-
+//main
 void msh_init(t_msh *msh, char **envp);
-void    msh_parse(t_msh *msh, char *line);
-void print_segments(char **seg);
-void init_parse_structs(t_msh *msh, char *line);
-void	init_token(t_msh *msh, int cmd_count);
-int	count_pipes(char *line);
-void line_split_bypipe(t_msh *msh, char *line, char **seg_arr);
-int	 check_quotes(char *start, char *curr);
-void	seg_tokenize(t_msh *msh, t_parse *aux);
-void extract_token(t_msh *msh, t_token **token, char *seg);
-void skip_whitespaces(char **str);
-int get_token_len(char *seg, t_token *token, int tok_len);
-int set_redir_type(t_token *token, char *seg);
-int redir_skip(char *seg);
-
-
-void init_exp(t_msh *msh, t_token token, t_expan *exp);
-void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
-char *extract_env_key(char **token);
-void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
-size_t	ft_arrlen(void **arr);
-void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);
-void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
-void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
-void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
-void expscan_token(t_msh *msh, t_token *token);
-void expand_and_setup_cmd(t_msh *msh, t_token **token);
+void    msh_execute(t_msh *msh);
+void	msh_parse(t_msh *msh, char *line);
+void	msh_loop(t_msh *msh);
 
 //validate
 int	msh_validate_line(t_msh *msh, char **line);
 int	validate_pipe(char *line, t_msh *msh);
-//static int	handle_trailing_pipe(t_msh *msh, char *line);
-//static int	detect_consecutive_pipes(char *line, t_msh *msh);
-//static int	validate_pipe_position(char *line, int i, t_msh *msh);
+char *get_trailing_input(t_msh *msh, char *line);
 
 int check_redirects(char *line, t_msh *msh);
-//static int check_out_redirects(char *line, t_msh *msh, int *i);
-//static int check_in_redirects(char *line, t_msh *msh, int *i);
 int validate_redirect(char *line, t_msh *msh, int *i, char *type);
 
 int	skip_whitespace(char *str, int i);
@@ -168,6 +141,38 @@ int is_input_empty(const char *input);
 int	ft_isspace(char c);
 int	 check_quote(char *line, int limit);
 
+//parse
+void init_parse_structs(t_msh *msh, char *line);
+int	count_pipes(char *line);
+void line_split_bypipe(t_msh *msh, char *line, char **seg_arr);
+
+//tokenize
+void	seg_tokenize(t_msh *msh, t_parse *aux);
+void extract_token(t_msh *msh, t_token **token, char *seg);
+int get_token_len(char *seg, t_token *token, int tok_len);
+int set_redir_type(t_token *token, char *seg);
+
+//parse_utils
+int	 check_quotes(char *start, char *end);
+void skip_whitespaces(char **str);
+int redir_skip(char *seg);
+
+//expand
+void expand_tokens(t_msh *msh, t_token **token);
+void expscan_token(t_msh *msh, t_token *token);
+void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
+char *extract_env_key(char **token);
+
+//expand_arr
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
+void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
+void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
+void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);
+size_t	ft_arrlen(void **arr);
+
+//expand_struct
+void init_exp(t_msh *msh, t_token token, t_expan *exp);
+void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
 
 //clean
 void msh_clean(t_msh *msh);
@@ -212,8 +217,6 @@ void execin_shell(t_msh *msh, t_cmd *cmd);
 int	exec_builtin(t_msh *msh, char **cmd);
 int is_builtin(char **cmd);
 
-
-
 //execute
 void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i);
 void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_data_pack);
@@ -235,8 +238,6 @@ void	close_all_hdocfd(int *hdocfd_l);
 void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i);
 void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd);
 
-
-
 //envp
 void	duplicate_env(t_msh *msh, char **envp);
 void	generate_mini_env(t_msh *msh);
@@ -248,26 +249,19 @@ void    set_env(t_msh *msh, char **envl, char *entry);
 void    add_env_var(t_msh *msh, char **envl, char *entry);
 void    overwrite_env_var(t_msh *msh, char **env_var, char *entry);
 
-
-
+//signal
 void	sigint_handler(int sig);
 void	sig_handler_child(int sig);
 void	sig_handler_heredoc(int signum);
+
 void	init_sig(void);
 void	sig_handler_changer(void);
 void	sig_reseted(void);
 void	sig_heredoc(void);
 
-
 //debug
-void print_segments(char **seg);
-void print_tokens(t_token **token);
-//# include "envp.h"
-
-//# include "parse.h"
-//# include "envp.h"
-///# include "execute.h"
-//# include "builtin.h"
+void print_segments(char **seg); //in parse_utils
+void print_tokens(t_token **token);//in parse utils
 
 
 /* void msh_init(t_msh *msh, char **envp);
