@@ -48,11 +48,12 @@ void	msh_parse(t_msh *msh, char *line)
 	msh -> aux = &aux;
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
-    print_segments(msh -> aux -> seg);
+    print_segments(msh -> aux -> seg);//debugging purpose
 	seg_tokenize(msh, msh -> aux);
-    print_tokens(msh -> aux -> token);
-    //init_cmd_struct(msh, msh -> cmd_count);
+    print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
+	init_cmd_struct(msh, msh -> cmd_count);
+	setup_cmd(*msh, msh -> aux -> token, msh -> cmd);
 }
 
 void	msh_loop(t_msh *msh)

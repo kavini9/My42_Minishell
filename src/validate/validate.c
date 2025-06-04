@@ -113,25 +113,21 @@ static int	detect_consecutive_pipes(char *line, t_msh *msh)
 	return (0);
 }
 
-static int	handle_trailing_pipe(t_msh *msh, char *line)
+static int    handle_trailing_pipe(t_msh *msh, char *line)
 {
-	int		i;
-	char	*extended_line;
+    int        i;
+    char    *extended_line;
 
-	i = ft_strlen(line) - 1;
-	while (i >= 0 && ft_isspace(line[i])) // Ignore trailing spaces
-		i--;
-	if (i >= 0 && line[i] == '|' && !check_quote(line, i))
-	{
-		extended_line = get_trailing_input(msh, line);
-		if (!extended_line)
-		{
-			line = NULL;
-			return (1);
-		}
-		line = extended_line;
-	}
-	return (0);
+    i = ft_strlen(line) - 1;
+    while (i >= 0 && ft_isspace(line[i])) // Ignore trailing spaces
+        i--;
+    if (i >= 0 && line[i] == '|')
+    {
+        ft_putendl_fd("minishell: syntax error near unexpected token `|'", 2);
+        msh->exit_code = 2;
+        return (1);
+    }
+    return (0);
 }
 
 int	validate_pipe(char *line, t_msh *msh)

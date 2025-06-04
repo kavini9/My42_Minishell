@@ -35,10 +35,12 @@
 # include <stddef.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include "../lib/libft/libft.h"
+# include "define.h"
 
 extern volatile __sig_atomic_t g_sig;
  
-# include "define.h"
+
 
 typedef enum e_do_err 
 {
@@ -63,7 +65,7 @@ typedef struct s_redir
     t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL
     char    *fname_o_del;
 	int		expan;
-    struct s_redir *next;
+    //struct s_redir *next;
 }   t_redir;
 
 typedef struct s_errnote
@@ -120,7 +122,7 @@ typedef struct s_msh
 	int		exit_code;
 } t_msh;
 
-# include "../lib/libft/libft.h"
+
 
 //main
 void msh_init(t_msh *msh, char **envp);
@@ -131,7 +133,7 @@ void	msh_loop(t_msh *msh);
 //validate
 int	msh_validate_line(t_msh *msh, char **line);
 int	validate_pipe(char *line, t_msh *msh);
-char *get_trailing_input(t_msh *msh, char *line);
+//char *get_trailing_input(t_msh *msh, char *line);
 
 int check_redirects(char *line, t_msh *msh);
 int validate_redirect(char *line, t_msh *msh, int *i, char *type);

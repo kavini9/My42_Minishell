@@ -115,6 +115,7 @@ void expscan_token(t_msh *msh, t_token *token)
     printf("8\n");
 }
 
+//need to add another condition to avoid splitting token with redir flags.
 void expand_tokens(t_msh *msh, t_token **token)
 {
     char *token_iter;

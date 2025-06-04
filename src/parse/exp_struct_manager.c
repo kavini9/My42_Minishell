@@ -26,22 +26,14 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
         new_exp_len = tmp_len + 1;// when exp_len is zero in the initial expansion there won't be space for NULL terminator.
     else
         new_exp_len = exp_len + tmp_len;
-    if (!token->token)
-        free(token -> token);//can this affect the memcpy.
+    // if (!token->token)
+    free(token -> token);//can this affect the memcpy.
     token -> expn = ft_realloc(token -> expn, exp_len * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
         exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
-    // printf("*(token -> expn) after realloc : %s\n", *(token -> expn));
-    // printf("*(token -> expn + 1) after realloc : %s\n", *(token -> expn + 1));
-    // printf("*(token -> expn + 2) after realloc : %s\n", *(token -> expn + 2));
-    // printf("*(token -> expn + 3) after realloc : %s\n", *(token -> expn + 3));
-    printf("exp_len : %i\n", exp_len);
     if (exp_len > 0)
     {
-        // printf("*((token -> expn) + exp_len - 1) after realloc : %s\n", *((token -> expn) + exp_len - 1));
-      //  free(*((token -> expn) + exp_len - 1));
-        //*((token -> expn) + exp_len - 1) = NULL;
-       /// printf("*((token -> expn) + exp_len - 1) after free : %s\n", *((token -> expn) + exp_len - 1));
+        // free(*((token -> expn) + exp_len - 1));//this was causing double free
         ft_memcpy((token -> expn) + exp_len - 1, exp -> tmp_arr, tmp_len * sizeof(char *));    
     }
     else
@@ -54,11 +46,7 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     exp -> prefix = ft_calloc(ft_strlen(token -> token), sizeof(char));
     if (!exp -> prefix)
         exit(printf("#!exp -> prefix minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
-    printf("e12341251235xp -> prefix after memcpy: '%s' '%s'\n", exp -> prefix, exp->tok );
-
     ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
-   // printf("exp -> prefix after memcpy: %s  VAL%d'\n", exp -> prefix, exp->prefix[5]);
-    printf("exp -> suffix after reassign: %s\n", exp -> suffix );
     exp -> exp = exp -> prefix + exp -> scan_offset;
     free(exp -> key);
     exp -> key = NULL;

@@ -13,7 +13,6 @@ SOURCES = main/main.c \
 	  main/msh_clean.c \
 	  main/msh_error.c \
 	  validate/checker.c \
-	  validate/pipe_trailing.c \
 	  validate/redirections.c \
 	  validate/validate.c \
 	  parse/parse.c \
@@ -21,7 +20,7 @@ SOURCES = main/main.c \
 	  parse/parse_utils.c \
 	  parse/expand.c \
 	  parse/expand_arr_utils.c \
-	  parse/exp_struct_handle.c \
+	  parse/exp_struct_manager.c \
 	  builtin/cd.c \
 	  builtin/cd_unlinked_dir.c \
 	  builtin/echo.c \
