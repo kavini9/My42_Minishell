@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 14:28:25 by wweerasi          #+#    #+#             */
-/*   Updated: 2024/05/06 15:51:10 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 00:34:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	while (*s++ != '\0')
+	while (*s != '\0')
+	{
 		len++;
+		s++;
+	}
 	return (len);
 }

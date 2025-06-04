@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:41:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 16:36:59 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:23:50 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static int	detect_consecutive_pipes(t_msh *msh, char *line)
 static int	handle_trailing_pipe(t_msh *msh, char *line)
 {
 	int		i;
-	char	*extended_line;
+	//char	*extended_line;
 
 	i = ft_strlen(line) - 1;
 	while (i >= 0 && ft_isspace(line[i]))

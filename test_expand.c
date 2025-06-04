@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 19:28:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:25:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,6 @@ size_t	ft_arrlen(void **arr)
 {
 	size_t	len;
 
-    //printf("ft_arrlen\n");
 	len = 0;
 	while (*arr)
     {

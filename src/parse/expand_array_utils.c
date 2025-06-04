@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand_arr_utils.c                                 :+:      :+:    :+:   */
+/*   expand_array_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 22:19:38 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 00:38:38 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ size_t	ft_arrlen(void **arr)
 {
 	size_t	len;
 
-    //printf("ft_arrlen\n");
 	len = 0;
 	while (*arr)
     {
@@ -44,25 +43,55 @@ void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index)
     exp -> tmp_arr[index] = tmp;
 }
 
+//index is the 0 when called for handling leading space 
+//index is (arr_len - 1) when called for handling trailing space
+/*
+This function is is used to add a extra element to the front or end of the tmp_arr 
+and fill it with prefix or suffix respectively.
+*/
 void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
 {
-    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, *len , *len + 1);
+    printf("extend_exp_edge: before realloc: exp -> prefix : %s\n", exp -> prefix);
+    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr) : %s\n", *(exp -> tmp_arr));
+    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 1) : %s\n", *(exp -> tmp_arr + 1));
+    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 2) : %s\n", *(exp -> tmp_arr + 2));
+    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 3) : %s\n", *(exp -> tmp_arr + 3));
+    printf("extend_exp_edge: len : %i\n", *len);
+    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, *len + 1, *len + 2);
     if (!exp -> tmp_arr)
         exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
     if (index == 0)
     {
-        ft_memmove(exp -> tmp_arr, exp -> tmp_arr + 1, *len * sizeof(char *));
-        exp -> tmp_arr[index] = ft_strdup(exp -> prefix);
+        printf("11111111111111111111111111111111111\n");
+        ft_memmove(exp -> tmp_arr + 1, exp -> tmp_arr, (*len) * sizeof(char *));
+        printf("22222222222222222222222222222222222\n");
+        printf("extend_exp_edge: exp -> prefix : %s\n", exp -> prefix);
+        printf("extend_exp_edge: *(exp -> tmp_arr) : %s\n", *(exp -> tmp_arr));
+        printf("extend_exp_edge: *(exp -> tmp_arr + 1) : %s\n", *(exp -> tmp_arr + 1));
+        printf("extend_exp_edge: *(exp -> tmp_arr + 2) : %s\n", *(exp -> tmp_arr + 2));
+        printf("extend_exp_edge: *(exp -> tmp_arr + 3) : %s\n", *(exp -> tmp_arr + 3));
+        *(exp -> tmp_arr) = strdup(exp -> prefix);
+        printf("33333333333333333333333333333333333\n");
+        printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", index, exp -> tmp_arr[index]);
     }
     else
     {
         exp -> tmp_arr[index] = ft_strdup(exp -> suffix);
         exp -> tmp_arr[index + 1] = NULL;
+        printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", index, exp -> tmp_arr[index]);
     }
     if (!exp -> tmp_arr[index])
         exit(printf("#!exp -> tmp_arr[index] minishell: Error:Malloc Fail.\n"));
     (*len)++;
 }
+//print array block
+    // char **tmp = exp -> tmp_arr;
+    // int c = 0;
+    // while(*tmp[c])
+    // {
+    //     printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", c,  exp -> tmp_arr[c]);
+    //     c++;
+    // }
 
 void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 {
@@ -91,11 +120,11 @@ void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
         extend_exp_edge(msh, exp, len, &len);
 }
 
-void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int quote_or_redir)
 {
     char *tmp_exp_dup;
     
-    if (*exp_dup && !q_context)
+    if (*exp_dup && !quote_or_redir)
     {
         tmp_exp_dup = exp_dup;
         while (*tmp_exp_dup)

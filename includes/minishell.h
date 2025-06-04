@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 16:41:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 21:42:55 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ typedef enum e_redirect_type
 
 typedef struct s_redir
 {
-    t_redir_type    type;//ambiguoous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL
+    t_redir_type    type;//ambiguous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL(empty after the expansion)
     char    *fname_o_del;
 	int		expan;
-    //struct s_redir *next;
+    struct s_redir *next;//make this just a struct so our redirs are in an array
 }   t_redir;
 
 typedef struct s_errnote
@@ -95,6 +95,11 @@ typedef struct s_expan
 	int	scan_offset;
 } t_expan;
 
+/*
+for ambiguous redirect we might need to save this token as it is. 
+So may be we should not mess with tis butthe exp -> token. 
+Isn't that the whole idea of setting up exp -> token. Why I am lapsing?
+*/
 typedef struct s_token
 {
     char    		*token;
@@ -166,7 +171,7 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
 char *extract_env_key(char **token);
 
 //expand_arr
-void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context);
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int quote_or_redir);
 void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
 void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len);
 void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index);

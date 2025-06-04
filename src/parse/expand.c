@@ -6,13 +6,11 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 23:28:26 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 23:13:27 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
-
-
 
 char *extract_env_key(char **token)
 {
@@ -48,12 +46,10 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
         exp_dup = ft_strdup("");
     if (!exp_dup)
         exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
-    get_tmp_arr(msh, exp, exp_dup, q_context);
+    get_tmp_arr(msh, exp, exp_dup, q_context || token -> redir);//I hope sending argument like this will prevent it from spliting expand when token is redir type
     adjust_exp_edge(msh, exp, exp_val, q_context);
     revise_exp_arr(msh, token, exp);
 }
-
-
 
 void expscan_token(t_msh *msh, t_token *token)
 {
@@ -62,23 +58,18 @@ void expscan_token(t_msh *msh, t_token *token)
 
     init_exp(msh, *token, &exp);
     //printf("exp.suffix: %s\n", exp.suffix);
-    printf("1\n");
     while (*(exp.suffix))
     {
         // printf("exp.suffix: %s\n", exp.suffix);
-        printf("2\n");
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')
         { //do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
-            printf("3\n");
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             // printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
-            printf("4\n");
             if (*exp.key)//this is for when we have something like $%
             {
                 expand_parameter(msh, token, &exp);
-                /*
                 print = token -> expn;//testing
                 printf("printing exp array\n");
                 while (*print)
@@ -87,32 +78,27 @@ void expscan_token(t_msh *msh, t_token *token)
                     print++;
                 }
                 printf("[%s]\n", *(print) );
-                */
             }
             else 
                 exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
             printf("returned from expand parameter\n");
         }
-        printf("5\n");
         if (*(exp.suffix))
         {
             ft_memcpy(exp.exp, exp.suffix, sizeof(char));
             exp.suffix++;
             exp.exp++;
         }
-        printf("6\n");
     }
     print = token -> expn;//testing
     printf("printing exp array\n");
-    printf("7\n");
-    int c = 0;
+    //int c = 0;
     while (*print)
     {
         printf("[%s]\n", *print);
         print++;
-        printf("%i \n", c++);
+        //printf("%i \n", c++);
     }
-    printf("8\n");
 }
 
 //need to add another condition to avoid splitting token with redir flags.

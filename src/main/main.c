@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 23:33:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:14:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	msh_parse(t_msh *msh, char *line)
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
-	init_cmd_struct(msh, msh -> cmd_count);
-	setup_cmd(*msh, msh -> aux -> token, msh -> cmd);
+	//init_cmd_struct(msh, msh -> cmd_count);
+	//setup_cmd(*msh, msh -> aux -> token, msh -> cmd);
 }
 
 void	msh_loop(t_msh *msh)

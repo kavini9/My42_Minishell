@@ -19,7 +19,7 @@ SOURCES = main/main.c \
 	  parse/tokenize.c \
 	  parse/parse_utils.c \
 	  parse/expand.c \
-	  parse/expand_arr_utils.c \
+	  parse/expand_array_utils.c \
 	  parse/exp_struct_manager.c \
 	  builtin/cd.c \
 	  builtin/cd_unlinked_dir.c \
@@ -56,6 +56,7 @@ libft:
 $(NAME): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LIBFT_FLAGS) -lreadline -o $@ 
 #see where exactly to add readline flags
+#-g -fsanitize=address
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)

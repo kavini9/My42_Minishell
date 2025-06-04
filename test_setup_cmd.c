@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:17:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 16:29:35 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:49:58 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     
     msh -> cmd = ft_calloc(cmd_count + 1, sizeof(t_cmd *));
     if (!msh -> cmd)
-		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+		  exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     tmp_cmd = msh -> cmd;
     while (cmd_count--)
     {
@@ -32,15 +32,29 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
 void  add_to_cmd_struct(t_msh *msh, t_cmd *cmd, char *q_arg, int redir)
 {
   char *arg;
-
+  size_t len;
+  
+  if (cmd -> cmd)
+    len = ft_arrlen((void *) cmd -> cmd);
+  else
+    len = 0;
   remove_quotes(arg);
-  arg = ft_strdup(q_arg);//the q_arg needs to be freed. but do it in a later stage at once otherwise might loose some the reference to later elements.
+  arg = ft_strdup(q_arg);//the q_arg needs to be freed. but do it in a later stage at once with all exp_utils otherwise might loose some the reference to later elements.
   if (!arg)
     exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC.
   if (!redir)
   {
-    cmd -> cmd = ft_realloc(cmd -> cmd,  )
+    cmd -> cmd = ft_realloc(cmd -> cmd, (len + 1) * sizeof(char *), (len + 2) * sizeof(char *));
+    if (cmd -> cmd)
+      exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+    cmd -> cmd[len + 1] = arg;
   }
+  else
+  {
+    
+  }
+    
+  
 }
 //what happens when a token with redir flag is coming in a array. See if it is avoided in the expansion
 
@@ -59,12 +73,12 @@ void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
         exp_arr = (*token_iter).expn;
         while (*exp_arr)
         {
-          add_to_cmd_struct(msh, *cmd, *exp_arr, (*token_iter).redir );//inside this check if redir flag exist and and to two arrays accordingly.
+          add_to_cmd_struct(msh, *cmd, *exp_arr, (*token_iter).redir);//inside this check if redir flag exist and and to two arrays accordingly.
            exp_arr++;
         }
       }
       else
-        add_to_cmd_struct(msh, *cmd, (*token_iter).token);
+        add_to_cmd_struct(msh, *cmd, (*token_iter).token, (*token_iter).redir);
       token_iter++;
     }
     cmd++;
