@@ -79,7 +79,7 @@ typedef struct s_cmd
 	char		**cmd;
 	int			hdoc_st_pos;
 	t_errnote	err_note;
-    t_redir     *redir;
+    t_redir     *redir;//make this double array
 } t_cmd;
 
 typedef struct s_expan
