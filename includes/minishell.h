@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 22:45:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:41:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ typedef struct s_cmd
 	char		**cmd;
 	int			hdoc_st_pos;
 	t_errnote	err_note;
-    t_redir     *redir;//make this double array
+    t_redir     *redir;//make this double array and change name in tooken redir type is also redir
 } t_cmd;
 
 typedef struct s_expan
@@ -132,11 +132,11 @@ void	msh_loop(t_msh *msh);
 
 //validate
 int	msh_validate_line(t_msh *msh, char **line);
-int	validate_pipe(char *line, t_msh *msh);
+int	validate_pipe(t_msh *msh, char *line);
 //char *get_trailing_input(t_msh *msh, char *line);
 
-int check_redirects(char *line, t_msh *msh);
-int validate_redirect(char *line, t_msh *msh, int *i, char *type);
+int check_redirects(t_msh *msh, char *line);
+int validate_redirect(t_msh *msh, char *line, int *i, char *type);
 
 int	skip_whitespace(char *str, int i);
 int is_input_empty(const char *input);

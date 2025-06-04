@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:17:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 20:35:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/04 16:29:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,25 @@ void  add_to_cmd_struct(t_msh *msh, t_cmd *cmd, char *q_arg, int redir)
 void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
 {
   char **exp_arr;
-  char *token_iter;
+  t_token *token_iter;
 
   while (*token)
   {
     token_iter = *token;
-    while ((**token_iter).token)
+    while ((*token_iter).token)
     {
-      if ((**token_iter).expn)
+      if ((*token_iter).expn)
       {
-        exp_arr = (**token_iter).expn;
+        exp_arr = (*token_iter).expn;
         while (*exp_arr)
         {
-          add_to_cmd_struct(t_msh *msh, *cmd, *exp_arr, );//inside this check if redir flag exist and and to two arrays accordingly.
+          add_to_cmd_struct(msh, *cmd, *exp_arr, (*token_iter).redir );//inside this check if redir flag exist and and to two arrays accordingly.
            exp_arr++;
         }
       }
       else
-        add_to_cmd_struct(t_msh *msh, *cmd, (**token_iter).token);
+        add_to_cmd_struct(msh, *cmd, (*token_iter).token);
+      token_iter++;
     }
     cmd++;
     token++;
