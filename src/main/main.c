@@ -67,15 +67,18 @@ void	msh_loop(t_msh *msh)
 		if (isatty(fileno(stdin)))
             init_sig();
 		line = readline("minishell> ");
+		add_history(line);//brought this back to here since we are not handling unmatched quotes
 		if (*line)
 		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
 				printf("Syntax Error\n");//write a function or this
-			printf("line OK: %s\n", line);
-			add_history(line);
-			msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-			//msh_execute(msh);
-			if (!ft_strcmp(line, "exit"))
-				break;
+			else 
+			{
+				printf("line OK: %s\n", line);
+				msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
+				//msh_execute(msh);
+				if (!ft_strcmp(line, "exit"))
+					break;
+			}
 		}
 	}
 	rl_clear_history();
