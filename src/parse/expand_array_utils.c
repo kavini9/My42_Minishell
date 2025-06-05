@@ -51,34 +51,18 @@ and fill it with prefix or suffix respectively.
 */
 void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
 {
-    printf("extend_exp_edge: before realloc: exp -> prefix : %s\n", exp -> prefix);
-    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr) : %s\n", *(exp -> tmp_arr));
-    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 1) : %s\n", *(exp -> tmp_arr + 1));
-    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 2) : %s\n", *(exp -> tmp_arr + 2));
-    printf("extend_exp_edge: before realloc: *(exp -> tmp_arr + 3) : %s\n", *(exp -> tmp_arr + 3));
-    printf("extend_exp_edge: len : %i\n", *len);
-    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, *len + 1, *len + 2);
+    exp -> tmp_arr = ft_realloc(exp -> tmp_arr, (*len + 1) * sizeof(char *), (*len + 2) * sizeof(char *));
     if (!exp -> tmp_arr)
         exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
     if (index == 0)
     {
-        printf("11111111111111111111111111111111111\n");
         ft_memmove(exp -> tmp_arr + 1, exp -> tmp_arr, (*len) * sizeof(char *));
-        printf("22222222222222222222222222222222222\n");
-        printf("extend_exp_edge: exp -> prefix : %s\n", exp -> prefix);
-        printf("extend_exp_edge: *(exp -> tmp_arr) : %s\n", *(exp -> tmp_arr));
-        printf("extend_exp_edge: *(exp -> tmp_arr + 1) : %s\n", *(exp -> tmp_arr + 1));
-        printf("extend_exp_edge: *(exp -> tmp_arr + 2) : %s\n", *(exp -> tmp_arr + 2));
-        printf("extend_exp_edge: *(exp -> tmp_arr + 3) : %s\n", *(exp -> tmp_arr + 3));
         *(exp -> tmp_arr) = strdup(exp -> prefix);
-        printf("33333333333333333333333333333333333\n");
-        printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", index, exp -> tmp_arr[index]);
     }
     else
     {
         exp -> tmp_arr[index] = ft_strdup(exp -> suffix);
         exp -> tmp_arr[index + 1] = NULL;
-        printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", index, exp -> tmp_arr[index]);
     }
     if (!exp -> tmp_arr[index])
         exit(printf("#!exp -> tmp_arr[index] minishell: Error:Malloc Fail.\n"));

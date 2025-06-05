@@ -20,7 +20,7 @@ char *extract_env_key(char **token)
     var_len = 0;
     (*token)++;
     start = *token;
-    while (ft_isalnum(**token) || **token == '_' || **token == '?' )
+    while (**token && (ft_isalnum(**token) || **token == '_' || **token == '?'))//added **token && (other cases) for when command line ends with $
     {
         if (var_len == 0 || **token != '?')
             var_len++;
@@ -68,17 +68,7 @@ void expscan_token(t_msh *msh, t_token *token)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             // printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
             if (*exp.key)//this is for when we have something like $%
-            {
                 expand_parameter(msh, token, &exp);
-                print = token -> expn;//testing
-                printf("printing exp array\n");
-                while (*print)
-                {
-                    printf("[%s]\n", *print );
-                    print++;
-                }
-                printf("[%s]\n", *(print) );
-            }
             else 
                 exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
             printf("returned from expand parameter\n");
