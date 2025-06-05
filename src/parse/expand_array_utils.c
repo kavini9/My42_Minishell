@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 00:38:38 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:39:40 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,7 @@ void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
         exit(printf("#!exp -> tmp_arr[index] minishell: Error:Malloc Fail.\n"));
     (*len)++;
 }
-//print array block
-    // char **tmp = exp -> tmp_arr;
-    // int c = 0;
-    // while(*tmp[c])
-    // {
-    //     printf("extend_exp_edge: exp -> tmp_arr[%i] : %s\n", c,  exp -> tmp_arr[c]);
-    //     c++;
-    // }
+
 
 void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 {

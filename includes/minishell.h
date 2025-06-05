@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 21:42:55 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:07:34 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_redir
     struct s_redir *next;//make this just a struct so our redirs are in an array
 }   t_redir;
 
-typedef struct s_errnote
+typedef struct s_errnote  // check this. As I remember I did not exliplitly set these sructs in minishell. mayybe inherited from pipex code
 {
 	char *cmd_path;
 	char *strerr;
@@ -90,8 +90,6 @@ typedef struct s_expan
 	char *exp;
 	char *key;
 	char **tmp_arr;
-	// char **exp_arr;
-	// int exp_arr_len;
 	int	scan_offset;
 } t_expan;
 

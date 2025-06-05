@@ -1,0 +1,5 @@
+token: echo
+token: $USER$VAR1
+[wweerasi$VAR1]
+
+VAR1 shoulld be expanded.check logic

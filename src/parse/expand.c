@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 23:13:27 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 21:33:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,13 @@ char *extract_env_key(char **token)
     var_len = 0;
     (*token)++;
     start = *token;
-    while (**token && (ft_isalnum(**token) || **token == '_' || **token == '?'))//added **token && (other cases) for when command line ends with $
+    while (**token && (ft_isalnum(**token) || **token == '_' || **token == '?' || **token == '$'))//added **token && (other cases) for when command line ends with $
     {
-        if (var_len == 0 || **token != '?')
+        if (var_len == 0 || (**token != '?' && **token != '$'))
             var_len++;
         (*token)++;
         if ((start == *token - 1 && ft_isdigit(*(*token - 1))) 
-        || *(*token - 1) == '?')
+        || *(*token - 1) == '?' || *(*token - 1) == '$')
             break;
     }
     return (ft_substr(start, 0, var_len));
@@ -58,21 +58,25 @@ void expscan_token(t_msh *msh, t_token *token)
     init_exp(msh, *token, &exp);
     while (*(exp.suffix))
     {
+        printf("exp.suffix: %s ", exp.suffix);
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
+            printf("exp.key: %s ----- exp.suffix after the key: %s \n", exp.key, exp.suffix);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
             else 
                 exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
         }
-        if (*(exp.suffix))
+        if (*(exp.suffix) && !(*(exp.suffix) == '$' && *exp.key)) //&& *(exp.suffix) != '$')//$$runs this into a infinite 
         {
             ft_memcpy(exp.exp, exp.suffix, sizeof(char));
             exp.suffix++;
+            printf("exp.suffix after memcpy: %s \n", exp.suffix);
             exp.exp++;
+            printf("exp.exp after memcpy: %s \n", exp.exp);
         }
     }
 }

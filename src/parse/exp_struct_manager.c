@@ -6,11 +6,28 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 20:32:19 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 22:04:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:43:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../../includes/minishell.h"
+
+void update_exp_state(t_msh *msh, t_token *token, t_expan *exp)
+{
+    free(exp -> prefix);
+    exp -> tok = token -> expn[token -> expn_len - 1];//prevviously this line was: exp -> tok = token -> expn[new_exp_len - 2];
+    exp -> suffix = exp -> tok + exp -> scan_offset;
+    exp -> prefix = ft_calloc(ft_strlen(exp -> tok), sizeof(char));
+    if (!exp -> prefix)
+        exit(printf("#!exp -> prefix minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
+    ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
+    exp -> exp = exp -> prefix + exp -> scan_offset;
+    free(exp -> key);
+    exp -> key = NULL;
+    free(exp -> tmp_arr);
+    exp -> tmp_arr = NULL;
+    exp -> scan_offset = 0;
+}
 
 void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
 {
@@ -37,18 +54,7 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
     else
         ft_memcpy((token -> expn), exp -> tmp_arr, tmp_len * sizeof(char *));
     token -> expn_len = new_exp_len - 1;//when this -1 was added to when setting new exp len it did not work for realloc.
-    free(exp -> prefix);
-    exp -> tok = token -> expn[new_exp_len - 2];
-    exp -> suffix = exp -> tok + exp -> scan_offset;
-    exp -> prefix = ft_calloc(ft_strlen(exp -> tok), sizeof(char));
-    if (!exp -> prefix)
-        exit(printf("#!exp -> prefix minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
-    ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
-    exp -> exp = exp -> prefix + exp -> scan_offset;
-    free(exp -> key);
-    exp -> key = NULL;
-    free(exp -> tmp_arr);
-    exp -> tmp_arr = NULL;
+    update_exp_state(msh, token, exp);
 }
 
 void init_exp(t_msh *msh, t_token token, t_expan *exp)//should I pass t_token *

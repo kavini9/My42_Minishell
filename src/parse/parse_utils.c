@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:37 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 22:13:29 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/05 15:45:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void print_expand_arrays(t_token **token)
         tok_arr = *token;
         while(tok_arr -> token)
         {
-            printf("pirnting expn for token: %s\n", tok_arr -> token);
+            printf("token: %s\n", tok_arr -> token);
             expn = tok_arr -> expn;
             while(expn && *expn)
             {
