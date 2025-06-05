@@ -269,7 +269,7 @@ void	sig_heredoc(void);
 //debug
 void print_segments(char **seg); //in parse_utils
 void print_tokens(t_token **token);//in parse utils
-
+void  print_expand_arrays(t_token **token);
 
 /* void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);

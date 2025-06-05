@@ -52,6 +52,7 @@ void	msh_parse(t_msh *msh, char *line)
 	seg_tokenize(msh, msh -> aux);
     print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
+	print_expand_arrays(msh -> aux -> token);
 	//init_cmd_struct(msh, msh -> cmd_count);
 	//setup_cmd(*msh, msh -> aux -> token, msh -> cmd);
 }

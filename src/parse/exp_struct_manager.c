@@ -26,22 +26,18 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
         new_exp_len = tmp_len + 1;// when exp_len is zero in the initial expansion there won't be space for NULL terminator.
     else
         new_exp_len = exp_len + tmp_len;
-    // if (!token->token)
-    //     free(token -> token);//can this affect the memcpy.
     token -> expn = ft_realloc(token -> expn, exp_len * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
         exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
     if (exp_len > 0)
     {
-        //free(*((token -> expn) + exp_len - 1));//this was causing double free
+        free(*((token -> expn) + exp_len - 1));//this was causing double free but now okay
         ft_memcpy((token -> expn) + exp_len - 1, exp -> tmp_arr, tmp_len * sizeof(char *));    
     }
     else
         ft_memcpy((token -> expn), exp -> tmp_arr, tmp_len * sizeof(char *));
     token -> expn_len = new_exp_len - 1;//when this -1 was added to when setting new exp len it did not work for realloc.
     free(exp -> prefix);
-    // token -> token = token -> expn[new_exp_len - 2];
-    // exp -> tok = token -> token;
     exp -> tok = token -> expn[new_exp_len - 2];
     exp -> suffix = exp -> tok + exp -> scan_offset;
     exp -> prefix = ft_calloc(ft_strlen(exp -> tok), sizeof(char));

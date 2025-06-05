@@ -54,24 +54,19 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
 void expscan_token(t_msh *msh, t_token *token)
 {
     t_expan exp;
-    char **print;
 
     init_exp(msh, *token, &exp);
-    //printf("exp.suffix: %s\n", exp.suffix);
     while (*(exp.suffix))
     {
-        // printf("exp.suffix: %s\n", exp.suffix);
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')
-        { //do we need suffix + 1. why do I do that in test_parse
+        {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
-            // printf("key: %s\nexp.suffix: %s\n", exp.key, exp.suffix);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
             else 
                 exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
-            printf("returned from expand parameter\n");
         }
         if (*(exp.suffix))
         {
@@ -80,18 +75,9 @@ void expscan_token(t_msh *msh, t_token *token)
             exp.exp++;
         }
     }
-    print = token -> expn;//testing
-    printf("printing exp array\n");
-    //int c = 0;
-    while (*print)
-    {
-        printf("[%s]\n", *print);
-        print++;
-        //printf("%i \n", c++);
-    }
 }
 
-//need to add another condition to avoid splitting token with redir flags.
+//need to add another condition to avoid splitting token with redir flags. SECOND: added this inside because it still needs to be expanded
 void expand_tokens(t_msh *msh, t_token **token)
 {
     char *token_iter;

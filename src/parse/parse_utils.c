@@ -75,3 +75,27 @@ void print_tokens(t_token **token)
         token++;
     }
 }
+
+void print_expand_arrays(t_token **token)
+{
+    t_token *tok_arr;
+    char **expn;
+
+    while (*token)
+    {
+        printf("pirnting expn for each segment\n");
+        tok_arr = *token;
+        while(tok_arr -> token)
+        {
+            printf("pirnting expn for token: %s\n", tok_arr -> token);
+            expn = tok_arr -> expn;
+            while(expn && *expn)
+            {
+                printf("[%s]\n", *expn);
+                expn++;
+            }
+            tok_arr++;
+        }
+        token++;
+    }
+}
