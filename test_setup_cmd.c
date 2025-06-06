@@ -29,11 +29,15 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     }
 }
 
+void  set_redir_arr(t_msh *msh, t_cmd *cmd, char *q_arg, int redir)
+{
+
+}
+
 void  add_to_cmd_struct(t_msh *msh, t_cmd *cmd, char *q_arg, int redir)
 {
   char *arg;
   size_t len;
-  
   
   remove_quotes(q_arg);
   arg = ft_strdup(q_arg);//the q_arg needs to be freed. but do it in a later stage at once with all exp_utils otherwise might loose some the reference to later elements.
@@ -45,10 +49,11 @@ void  add_to_cmd_struct(t_msh *msh, t_cmd *cmd, char *q_arg, int redir)
       len = ft_arrlen((void *) cmd -> cmd);
     else
       len = 0;
-    cmd -> cmd = ft_realloc(cmd -> cmd, (len + 1) * sizeof(char *), (len + 2) * sizeof(char *));
+    cmd -> cmd = ft_realloc(cmd -> cmd, (len + 1) * sizeof(char *), (len + 2) * sizeof(char *));//if pointer is NULL, then sizeprev is not used in ft_realloc
     if (cmd -> cmd)
       exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     cmd -> cmd[len + 1] = arg;
+    cmd -> cmd[len + 2] = NULL;
   }
   else
     set_redir_arr()

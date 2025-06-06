@@ -23,11 +23,16 @@ char *extract_env_key(char **token)
     while (**token && (ft_isalnum(**token) || **token == '_' || **token == '?' || **token == '$'))//added **token && (other cases) for when command line ends with $
     {
         if (var_len == 0 || (**token != '?' && **token != '$'))
+        {
             var_len++;
-        (*token)++;
+            (*token)++;
+        }
         if ((start == *token - 1 && ft_isdigit(*(*token - 1))) 
-        || *(*token - 1) == '?' || *(*token - 1) == '$')
+        || **token == '?' || **token == '$')
             break;
+        // if ((start == *token - 1 && ft_isdigit(*(*token - 1))) 
+        // || *(*token - 1) == '?' || *(*token - 1) == '$')
+        //     break;
     }
     return (ft_substr(start, 0, var_len));
 }
@@ -58,25 +63,23 @@ void expscan_token(t_msh *msh, t_token *token)
     init_exp(msh, *token, &exp);
     while (*(exp.suffix))
     {
-        printf("exp.suffix: %s ", exp.suffix);
-        if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')
+        if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix + 1) != '\'')//why quote condition doesnt work here
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
-            printf("exp.key: %s ----- exp.suffix after the key: %s \n", exp.key, exp.suffix);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
-            else 
+            else
                 exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
         }
-        if (*(exp.suffix) && !(*(exp.suffix) == '$' && *exp.key)) //&& *(exp.suffix) != '$')//$$runs this into a infinite 
+        if (*(exp.suffix) && !(*(exp.suffix) == '$' 
+        && (ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '_' 
+        || *(exp.suffix + 1) == '?' || *(exp.suffix + 1) == '$')))// && *exp.key)) //&& *(exp.suffix) != '$')//$$runs this into a infinite 
         {
             ft_memcpy(exp.exp, exp.suffix, sizeof(char));
             exp.suffix++;
-            printf("exp.suffix after memcpy: %s \n", exp.suffix);
             exp.exp++;
-            printf("exp.exp after memcpy: %s \n", exp.exp);
         }
     }
 }
