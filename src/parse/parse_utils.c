@@ -20,12 +20,16 @@ int	 check_quotes(char *start, char *end)
     while (*start && start != end)
 	{
 		if (*start == '\'' && !double_quote)
-			single_quote = !single_quote * (int) *start ; 
+			single_quote = !single_quote * ((int) *start) ; 
 		else if (*start == '"' && !single_quote)
-			double_quote = !double_quote * (int) *start; 
+			double_quote = !double_quote * ((int) *start); 
 		start++;
 	}
-	return (single_quote || double_quote);
+	if (single_quote)
+	    return (single_quote);
+    if (double_quote)
+	    return (double_quote);
+    return (0);
 }
 
 void skip_whitespaces(char **str)

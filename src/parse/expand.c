@@ -63,15 +63,16 @@ void expscan_token(t_msh *msh, t_token *token)
     init_exp(msh, *token, &exp);
     while (*(exp.suffix))
     {
-        if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix + 1) != '\'')//why quote condition doesnt work here
+        printf("check quotes: %i\n", check_quotes(exp.tok, exp.suffix));
+        if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')//why quote condition doesnt work here
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
                 exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
-            else
-                exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
+            // else
+            //     exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
         }
         if (*(exp.suffix) && !(*(exp.suffix) == '$' 
         && (ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '_' 
