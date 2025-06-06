@@ -1,0 +1,35 @@
+token: echo
+token: $USER$VAR1
+[wweerasi$VAR1]
+
+VAR1 shoulld be expanded.check logic
+
+
+echo '$VAR1'$USER
+token: echo
+token: '$VAR1'$USER //solved I guess
+
+
+token: "$VAR1'$USER'"
+["text1]
+[text2]
+[text3'$USER'"] //this is wierd
+
+
+token: $VAR2""'$USER'
+[]
+[text4]
+[text5]
+[text6]
+[""'$USER']
+What is this empty one in the begining. should be in the extend_tmp_arr 
+
+
+token: $VAR1$VAR2
+[text1]
+[text2]
+[text3]
+[text4]
+[text5]
+[text6]
+[]

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 15:39:40 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 21:41:56 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ and fill it with prefix or suffix respectively.
 */
 void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
 {
+    if ((index == 0 && !*exp -> prefix) || (index > 0 && !*exp -> suffix))
+        return;
     exp -> tmp_arr = ft_realloc(exp -> tmp_arr, (*len + 1) * sizeof(char *), (*len + 2) * sizeof(char *));
     if (!exp -> tmp_arr)
         exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
@@ -97,11 +99,11 @@ void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
         extend_exp_edge(msh, exp, len, &len);
 }
 
-void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int quote_or_redir)
+void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
 {
     char *tmp_exp_dup;
     
-    if (*exp_dup && !quote_or_redir)
+    if (*exp_dup && !q_context)
     {
         tmp_exp_dup = exp_dup;
         while (*tmp_exp_dup)

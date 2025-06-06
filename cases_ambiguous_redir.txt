@@ -1,0 +1,31 @@
+wweerasi@c1r5p1:~/My42/minishell/Repo$ unset MYFILE
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo $MYFILE
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export MYFILE
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >$MYFILE
+bash: $MYFILE: ambiguous redirect
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export MYFILE=
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >$MYFILE
+bash: $MYFILE: ambiguous redirect
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export MYFILE=""
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >$MYFILE
+bash: $MYFILE: ambiguous redirect
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export MYFILE="       "
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >$MYFILE
+bash: $MYFILE: ambiguous redirect
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export MYFILE="my     file"
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >$MYFILE
+bash: $MYFILE: ambiguous redirect
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo Hello >"$MYFILE"
+wweerasi@c1r5p1:~/My42/minishell/Repo$ ls
+ ambi_redir.c   dir1			   lib	       'my     file'	  test_atol.c	  test_export.c
+ cmd1	        dir2			   LICENSE      pipe_trailing.c   test_cd.c	  test_parse.c
+ cmd1.c         expand_split_example.txt   Makefile     README.md	  test_execve.c   test_setup_cmd.c
+ cmd2	        fault_cases.txt		   minishell    src		  test_exp	  test_validate.c
+ cmd2.c         includes		   minitest.h   test		  test_expand.c   validate_test
+wweerasi@c1r5p1:~/My42/minishell/Repo$ 

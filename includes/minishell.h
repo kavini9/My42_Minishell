@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 18:07:34 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 20:17:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_redir
 {
     t_redir_type    type;//ambiguous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL(empty after the expansion)
     char    *fname_o_del;
-	int		expan;
+	int		ambi_o_hdexp;
     struct s_redir *next;//make this just a struct so our redirs are in an array
 }   t_redir;
 

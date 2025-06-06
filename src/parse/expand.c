@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 21:33:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 21:28:24 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
     char    *exp_dup;
     int q_context;
 
-    q_context = check_quotes(exp -> exp, exp -> prefix);
+    q_context = check_quotes(exp -> tok, exp -> suffix);//there's somthing wrong in this. q_context is wrong.//before if was (exp -> exp, exp -> prefix)
+    printf("q_context in expand parameter: %i\n", q_context);
     exp_val = get_env(msh -> envl, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
@@ -51,7 +52,7 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
         exp_dup = ft_strdup("");
     if (!exp_dup)
         exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
-    get_tmp_arr(msh, exp, exp_dup, q_context || token -> redir);//I hope sending argument like this will prevent it from spliting expand when token is redir type
+    get_tmp_arr(msh, exp, exp_dup, q_context);//I hope sending argument like this will prevent it from spliting expand when token is redir type
     adjust_exp_edge(msh, exp, exp_val, q_context);
     revise_exp_arr(msh, token, exp);
 }
@@ -63,7 +64,7 @@ void expscan_token(t_msh *msh, t_token *token)
     init_exp(msh, *token, &exp);
     while (*(exp.suffix))
     {
-        printf("check quotes: %i\n", check_quotes(exp.tok, exp.suffix));
+        printf("check quotes: %i\n", check_quotes(exp.tok, exp.suffix));//runs in to a infinite loop when the expand is splitted.
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')//why quote condition doesnt work here
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
@@ -74,7 +75,7 @@ void expscan_token(t_msh *msh, t_token *token)
             // else
             //     exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
         }
-        if (*(exp.suffix) && !(*(exp.suffix) == '$' 
+        if (*(exp.suffix) && !(*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\''//what if we add check_quote here. it solved infinite loop, but '$VAR1'$USER doesn't work now.
         && (ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '_' 
         || *(exp.suffix + 1) == '?' || *(exp.suffix + 1) == '$')))// && *exp.key)) //&& *(exp.suffix) != '$')//$$runs this into a infinite 
         {
