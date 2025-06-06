@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 19:53:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:53:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,19 @@ void free_arr(char **arr)
 
 void    free_cmd(t_cmd **cmd)
 {
-    t_redir *redir_list;
+    t_redir *redir_arr;
     
     while (*cmd)
     {
         if ((*cmd) -> cmd)
             free_arr((*cmd) -> cmd);
-        redir_list = (*cmd) -> redir;
-        while (redir_list)
+        redir_arr = (*cmd) -> redir;
+        while (redir_arr)
         { 
-            free(redir_list -> fname_o_del);
+            free(redir_arr -> fname_o_del);
             // if (redir_list -> expand)
             //     free(redir_list -> expand);
-            redir_list = redir_list -> next; //did not free the t_redir struct assuming it is not allocated since it has a type value and two pointers.
+            redir_arr++; //did not free the t_redir struct assuming it is not allocated since it has a type value and two pointers.
         }
         ft_memset(cmd, 0, sizeof(t_cmd));
         cmd++;

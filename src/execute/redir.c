@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 16:53:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 22:59:50 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,14 +71,14 @@ void	close_all_hdocfd(int *hdocfd_l)
 void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 {
 	int dup_ret;
-	t_redir *redir;
+	t_redir **redir;
 	
 	dup_ret = 0;
 	redir = cmd -> redir;
 	while (redir) // check if redir -> fname exist. ex: <$NONEXIST_FILE. should give ambiguous redirection 
 	{
-		if (redir -> type != REDIR_HDOC)
-			fd = open_file(redir -> type, redir -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
+		if ((*redir) -> type != REDIR_HDOC)
+			fd = open_file((*redir) -> type, (*redir) -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
 		else
 		{
 			fd = *(msh ->  hdocfd_l + cmd -> hdoc_st_pos + i);
@@ -86,14 +86,14 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 			i++;
 		}
 		if (fd == -1)
-			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, redir -> fname_o_del));
-		else if (redir -> type == REDIR_INP || redir -> type == REDIR_HDOC)
+			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, (*redir) -> fname_o_del));
+		else if ((*redir) -> type == REDIR_INP || (*redir) -> type == REDIR_HDOC)
 				dup_ret = dup_io(fd, STDIN_FILENO);
 		else
 				dup_ret = dup_io(fd, STDOUT_FILENO);
 		if (dup_ret < 0)
 			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
-		//where's the increment?
+		redir++;
 		}
 	close_all_hdocfd(msh -> hdocfd_l);
 }
