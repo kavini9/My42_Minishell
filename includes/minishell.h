@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/06 22:19:15 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 19:33:56 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -277,6 +277,7 @@ void	sig_heredoc(void);
 void print_segments(char **seg); //in parse_utils
 void print_tokens(t_token **token);//in parse utils
 void  print_expand_arrays(t_token **token);
+void print_cmd_members(t_cmd **cmd);
 
 /* void msh_init(t_msh *msh, char **envp);
 void	msh_loop(t_msh *msh);

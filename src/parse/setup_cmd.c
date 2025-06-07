@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_setup_cmd.c                                   :+:      :+:    :+:   */
+/*   setup_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:17:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/06 23:47:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:00:10 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     
     msh -> cmd = ft_calloc(cmd_count + 1, sizeof(t_cmd *));
     if (!msh -> cmd)
-		  exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+		  exit(printf("# minishell: init_cmd_struct: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     tmp_cmd = msh -> cmd;
     while (cmd_count--)
     {
         *tmp_cmd = ft_calloc(1, sizeof(t_cmd));
         if (!*tmp_cmd)
-             exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+             exit(printf("# minishell: init_cmd_struct: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
         tmp_cmd++;
     }
 }
@@ -32,18 +32,18 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
 
 void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len)
 {
-  char q_arg;
-  char arg;
+  char *q_arg;
+  char *arg;
   
-  cmd -> redir = ft_realloc(token -> redir, (*len + 1) * sizeof(t_redir *), (*len + 2) * sizeof(t_redir *));
-  if (cmd -> redir)
-    exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+  cmd -> redir = ft_realloc(cmd -> redir, (*len + 1) * sizeof(t_redir *), (*len + 2) * sizeof(t_redir *));
+  if (!cmd -> redir)
+    exit(printf("# minishell: addto_redir_arr: Error:Malloc Fail.%i\n", msh -> exit_code));//TODO: ERROR MALLOC added exit code to avoidunused param error
   cmd -> redir[*len] = ft_calloc(1, sizeof(t_redir));
-  if (token -> redir[len])
-    exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+  if (!cmd -> redir[*len])
+    exit(printf("# minishell: addto_redir_arr: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
   cmd -> redir[*len] -> type = token -> redir;
-  if (token -> redir = REDIR_HDOC && 
-  (ft_strchr(token -token, '\'') || ft_strchr(token -token, '"')))
+  if (token -> redir == REDIR_HDOC 
+  && (ft_strchr(token -> token, '\'') || ft_strchr(token -> token, '"')))
     cmd -> redir[*len] -> ambi_o_hdexp = 1;
   if (token -> expn && !is_ambi_redir(token -> expn))
     q_arg = *(token -> expn);
@@ -54,8 +54,9 @@ void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len)
   }
   arg = ft_strdup(remove_quotes(q_arg));
   if (!arg)
-    exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC.
+    exit(printf("# minishell: addto_redir_arr: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC.
   cmd -> redir[*len] -> fname_o_del = arg;
+  (*len)++;
 }
 
 void  q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg)
@@ -66,16 +67,16 @@ void  q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg)
   remove_quotes(q_arg);
   arg = ft_strdup(q_arg);//the q_arg needs to be freed. but do it in a later stage at once with all exp_utils otherwise might loose some the reference to later elements.
   if (!arg)
-    exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC.
+    exit(printf("# minishell: q_unwrap_append:!arg: Error:Malloc Fail.%i\n", msh -> exit_code));//TODO: ERROR MALLOC added exit code to avoidunused param error
   if (cmd -> cmd)
     len = ft_arrlen((void *) cmd -> cmd);
   else
     len = 0;
   cmd -> cmd = ft_realloc(cmd -> cmd, (len + 1) * sizeof(char *), (len + 2) * sizeof(char *));//if pointer is NULL, then sizeprev is not used in ft_realloc
-  if (cmd -> cmd)
-    exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
-  cmd -> cmd[len + 1] = arg;
-  cmd -> cmd[len + 2] = NULL;
+  if (!cmd -> cmd)
+    exit(printf("# minishell: q_unwrap_append: cmd -> cmd: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+  cmd -> cmd[len] = arg;
+  cmd -> cmd[len + 1] = NULL;
 }
 //what happens when a token with redir flag is coming in a array. See if it is avoided in the expansion//HANDLED
 
@@ -98,7 +99,6 @@ void  addto_cmd_arr(t_msh *msh, t_token *token, t_cmd *cmd)
 
 void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
 {
-  char **exp_arr;
   t_token *token_iter;
   int redir_count;
 

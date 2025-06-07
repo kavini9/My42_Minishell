@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:37 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 15:45:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:28:53 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,32 @@ void print_expand_arrays(t_token **token)
             tok_arr++;
         }
         token++;
+    }
+}
+
+void print_cmd_members(t_cmd **cmd)
+{
+    char **cmd_arr;
+    t_redir **redir_arr;
+    int i;
+
+    while (*cmd)
+    {
+        printf("printing cmd_memebers for each cmd segment\n");
+        cmd_arr = (*cmd) -> cmd;
+        i = 0;
+        while (cmd_arr && *cmd_arr)
+        {
+            printf("cmd %i: [%s]\n", i++, *cmd_arr);
+            cmd_arr++;
+        }
+        redir_arr = (*cmd) -> redir;
+        i = 0;
+        while (redir_arr && *redir_arr)
+        {
+            printf("redir %i:   type: %i    flag: %i    [%s]\n", i++, (*redir_arr) -> type, (*redir_arr) -> ambi_o_hdexp, (*redir_arr) -> fname_o_del);
+            redir_arr++;
+        }
+        cmd++;
     }
 }

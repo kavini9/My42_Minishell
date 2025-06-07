@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/06 21:41:56 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:20:36 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,7 @@ void    concat_exp_edge(t_msh *msh, t_expan *exp, int spc, int index)
         tmp = ft_strjoin(exp -> tmp_arr[index], exp -> suffix);
     }
     if (!tmp)
-        exit(printf("#!tmp minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
-    printf("concat_exp_edge: tmp : %s\n", tmp);
+        exit(printf("# minishell: concat_exp_edge: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
     free((exp -> tmp_arr[index]));
     exp -> tmp_arr[index] = tmp;
 }
@@ -55,7 +54,7 @@ void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
         return;
     exp -> tmp_arr = ft_realloc(exp -> tmp_arr, (*len + 1) * sizeof(char *), (*len + 2) * sizeof(char *));
     if (!exp -> tmp_arr)
-        exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        exit(printf("# minishell: extend_exp_edge: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
     if (index == 0)
     {
         ft_memmove(exp -> tmp_arr + 1, exp -> tmp_arr, (*len) * sizeof(char *));
@@ -67,7 +66,7 @@ void    extend_exp_edge(t_msh *msh, t_expan *exp, int index, int *len)
         exp -> tmp_arr[index + 1] = NULL;
     }
     if (!exp -> tmp_arr[index])
-        exit(printf("#!exp -> tmp_arr[index] minishell: Error:Malloc Fail.\n"));
+        exit(printf("# minishell: extend_exp_edge: Error:Malloc Fail.\n"));
     (*len)++;
 }
 
@@ -124,6 +123,6 @@ void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
             free(exp_dup); //if array creation failed we will loose exp_dup because it is not in our struct
     }
     if (!exp -> tmp_arr)
-        exit(printf("#!exp -> tmp_arr minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        exit(printf("# minishell: get_tmp_arr: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
 }
 

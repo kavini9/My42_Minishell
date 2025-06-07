@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 23:30:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:27:00 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
         line = readline("> ");
         if (!line)
             break;
-        if (ft_strcmp(line, redir -> fname_o_del))
+        if (!ft_strcmp(line, redir -> fname_o_del))
             break;
         ft_putendl_fd(line, hd_pfd[1]);
         free(line);
@@ -40,20 +40,20 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
 
 void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i)
 {
-    t_redir *redir;
+    t_redir **redir;
 
-    while(*cmd)
+    while(*cmd)//is this correct?
     {
         redir = (*cmd) -> redir;
         (*cmd) -> hdoc_st_pos = i;
-        while(redir)
+        while(redir && *redir)//added redir because there can be instances where redir is NULL
         {
-            if (redir -> type == REDIR_HDOC)
+            if ((*redir) -> type == REDIR_HDOC)
             {
-                get_here_doc(msh, redir , hdocfd_l);
+                get_here_doc(msh, *redir , hdocfd_l + i);
                 i++;
             }
-            redir = redir -> next;
+            redir++;
         }
         cmd++;
     }

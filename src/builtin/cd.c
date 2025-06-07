@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 23:13:23 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:42:28 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void    cd_env_var(t_msh *msh, char *dir)
         return(msh_error(msh, (LOG|CLEAN) << 8 | 1, ERR_DIR_NOTSET, dir)); //"minishell: cd: %s not set.\n"
     if (chdir(path) == -1) //bash: cd: dir1: Permission denied
         return(msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_CHDIR, path));//"minishell: cd: %s: %s.\n"
-    if (ft_strcmp(dir, "OLDPWD"))
+    if (!ft_strcmp(dir, "OLDPWD"))
         printf("%s\n", path);
     return(msh_wd_update(msh));//TODO: write update pwd.
 }
@@ -83,11 +83,11 @@ void    builtin_cd(t_msh *msh, char **cmd)
 {
     if (cmd[2])
         return(msh_error(msh, LOG << 8 | 1, ERR_XTRA_ARG, "cd"));//TODO: should not exit minishell but prints error message.
-    else if (!cmd[1] || ft_strcmp(cmd[1], "~") || ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
+    else if (!cmd[1] || !ft_strcmp(cmd[1], "~") || !ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
         cd_env_var(msh, "HOME");
     else if (cmd[1][0] == '~')
         cd_tilde(msh, cmd[1]);
-    else if (ft_strcmp(cmd[1], "-"))
+    else if (!ft_strcmp(cmd[1], "-"))
         cd_env_var(msh, "OLDPWD");
     else
         cd_path(msh, cmd[1]);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:05:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 21:17:38 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 20:01:29 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,32 @@
 
 int is_builtin(char **cmd)
 {
-    if (cmd && *cmd && (ft_strcmp(*cmd, "cd")
-        || ft_strcmp(*cmd, "echo")
-        || ft_strcmp(*cmd, "env")
-        || ft_strcmp(*cmd, "exit")
-        || ft_strcmp(*cmd, "export")
-        || ft_strcmp(*cmd, "pwd")
-        || ft_strcmp(*cmd, "unset")))
+    if (cmd && *cmd && (!ft_strcmp(*cmd, "cd")
+        || !ft_strcmp(*cmd, "echo")
+        || !ft_strcmp(*cmd, "env")
+        || !ft_strcmp(*cmd, "exit")
+        || !ft_strcmp(*cmd, "export")
+        || !ft_strcmp(*cmd, "pwd")
+        || !ft_strcmp(*cmd, "unset")))
         return (1);
     return (0);
 }
 
 int exec_builtin(t_msh *msh, char **cmd)
 {        
-    if (ft_strcmp(*cmd, "cd"))
+    if (!ft_strcmp(*cmd, "cd"))
         builtin_cd(msh, cmd);
-    else if (ft_strcmp(*cmd, "echo"))
+    else if (!ft_strcmp(*cmd, "echo"))
         builtin_echo(msh, cmd);
-    else if (ft_strcmp(*cmd, "env"))
+    else if (!ft_strcmp(*cmd, "env"))
         builtin_env(msh);
-    else if (ft_strcmp(*cmd, "exit"))
+    else if (!ft_strcmp(*cmd, "exit"))
         builtin_exit(msh, cmd);
-    else if (ft_strcmp(*cmd, "export"))
+    else if (!ft_strcmp(*cmd, "export"))
         builtin_export(msh, cmd);     
-    else if (ft_strcmp(*cmd, "pwd"))
+    else if (!ft_strcmp(*cmd, "pwd"))
         builtin_pwd(msh);
-    else if (ft_strcmp(*cmd, "unset"))
+    else if (!ft_strcmp(*cmd, "unset"))
         builtin_unset(msh, cmd);
     else
         return(0);

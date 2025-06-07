@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 22:29:12 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 22:13:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:50:20 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
                 free(temp);
             }
             if (!seg)
-                exit(printf("# minishell: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
+                exit(printf("# minishell: line_split_bypipe: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
             *seg_arr = seg;
             seg_arr++;
             if (*(line + 1)) 
@@ -62,9 +62,9 @@ void init_parse_structs(t_msh *msh, char *line)
 	msh -> cmd_count = count_pipes(line) + 1;
 	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
 	if (!msh -> aux -> seg)
-		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+		exit(printf("# minishell: init_parse_structs: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
     msh -> aux -> token = ft_calloc(msh -> cmd_count + 1, sizeof(t_token *));
 	if (!msh -> aux -> token)
-		exit(printf("# minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
+		exit(printf("# minishell: init_parse_structs: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
 }
 

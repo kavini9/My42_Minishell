@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 20:57:47 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 22:21:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:52:10 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,19 +68,19 @@ void extract_token(t_msh *msh, t_token **token, char *seg)
     {
         *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
         if (!token)
-            exit(printf("Malloc Error token array: %i\n", msh -> exit_code));// added exit code to avoidunused param error
+            exit(printf("# minishell: extract_token: Error:Malloc Fail. %i\n", msh -> exit_code));// added exit code to avoidunused param error
         ft_memset(&(*token)[arr_len], 0, size);
         tok_len = get_token_len(seg, &(*token)[arr_len], 0);
         (*token)[arr_len].token = ft_substr(seg, redir_skip(seg), tok_len - redir_skip(seg));
         if (!(*token)[arr_len].token)
-            exit(printf("Malloc Error token %i\n", arr_len));
+            exit(printf("# minishell: extract_token: Error:Malloc Fail. %i\n", arr_len));
         seg += tok_len;
         skip_whitespaces(&seg);
         arr_len++;
     }
     *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
     if (!*token)
-        exit(printf("Malloc Error token array\n"));
+        exit(printf("# minishell: extract_token: Error:Malloc Fail\n"));
     ft_memset(&(*token)[arr_len], 0, sizeof(t_token));
 }
 

@@ -13,3 +13,4 @@ ambi_redir.c
 a.out
 src/objects/*/*.o
 src/objects/*/*.d
+minishell_tester

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 20:32:19 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 16:43:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 18:56:44 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void update_exp_state(t_msh *msh, t_token *token, t_expan *exp)
     exp -> suffix = exp -> tok + exp -> scan_offset;
     exp -> prefix = ft_calloc(ft_strlen(exp -> tok), sizeof(char));
     if (!exp -> prefix)
-        exit(printf("#!exp -> prefix minishell: Error:Malloc Fail%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        exit(printf("# minishell: update_exp_state: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
     ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
     exp -> exp = exp -> prefix + exp -> scan_offset;
     free(exp -> key);
@@ -45,7 +45,7 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
         new_exp_len = exp_len + tmp_len;
     token -> expn = ft_realloc(token -> expn, exp_len * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
-        exit(printf("#!exp -> exp_arr minishell: Error:Malloc Fail.\n"));
+        exit(printf("# minishell: revise_exp_arr: Error:Malloc Fail.\n"));
     if (exp_len > 0)
     {
         free(*((token -> expn) + exp_len - 1));//this was causing double free but now okay
@@ -64,6 +64,6 @@ void init_exp(t_msh *msh, t_token token, t_expan *exp)//should I pass t_token *
     exp -> suffix = token.token;
     exp -> prefix = ft_calloc(ft_strlen(token.token), sizeof(char));
     if (!exp -> prefix)
-        exit(printf("# minishell: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        exit(printf("# minishell: init_exp: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
     exp -> exp = exp -> prefix;
 }

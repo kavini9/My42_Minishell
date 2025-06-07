@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 20:14:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:04:30 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,14 @@ void	msh_parse(t_msh *msh, char *line)
 	msh -> aux = &aux;
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
-    print_segments(msh -> aux -> seg);//debugging purpose
+    //print_segments(msh -> aux -> seg);//debugging purpose
 	seg_tokenize(msh, msh -> aux);
-    print_tokens(msh -> aux -> token);//debugging purpose
+    //print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
-	print_expand_arrays(msh -> aux -> token);
-	//init_cmd_struct(msh, msh -> cmd_count);
-	//setup_cmd(*msh, msh -> aux -> token, msh -> cmd);
+	//print_expand_arrays(msh -> aux -> token);
+	init_cmd_struct(msh, msh -> cmd_count);
+	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
+	//print_cmd_members(msh -> cmd);
 }
 
 void	msh_loop(t_msh *msh)
@@ -69,13 +70,13 @@ void	msh_loop(t_msh *msh)
 		line = readline("minishell> ");
 		add_history(line);//brought this back to here since we are not handling unmatched quotes
 		if (*line)
-		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
-				printf("Syntax Error\n");//write a function or this
-			else 
+		{	if (!msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
+			// 	printf("Syntax Error\n");//write a function or this
+			// else 
 			{
-				printf("line OK: %s\n", line);
+				// printf("line OK: %s\n", line);
 				msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-				//msh_execute(msh);
+				msh_execute(msh);
 				if (!ft_strcmp(line, "exit"))
 					break;
 			}

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/06 21:28:24 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/07 22:02:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
     int q_context;
 
     q_context = check_quotes(exp -> tok, exp -> suffix);//there's somthing wrong in this. q_context is wrong.//before if was (exp -> exp, exp -> prefix)
-    printf("q_context in expand parameter: %i\n", q_context);
     exp_val = get_env(msh -> envl, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
     else
         exp_dup = ft_strdup("");
     if (!exp_dup)
-        exit(printf("#exp_dup minishell: Error:Malloc Fail.\n"));
+        exit(printf("# minishell: expand_parameter: Error:Malloc Fail.\n"));
     get_tmp_arr(msh, exp, exp_dup, q_context);//I hope sending argument like this will prevent it from spliting expand when token is redir type
     adjust_exp_edge(msh, exp, exp_val, q_context);
     revise_exp_arr(msh, token, exp);
@@ -64,12 +63,12 @@ void expscan_token(t_msh *msh, t_token *token)
     init_exp(msh, *token, &exp);
     while (*(exp.suffix))
     {
-        printf("check quotes: %i\n", check_quotes(exp.tok, exp.suffix));//runs in to a infinite loop when the expand is splitted.
+        //printf("check quotes: %i\n", check_quotes(exp.tok, exp.suffix));//runs in to a infinite loop when the expand is splitted.
         if (*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\'')//why quote condition doesnt work here
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
-                exit(printf("# exp.key minishell: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
+                exit(printf("# minishell: expscan_token: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
             // else
@@ -97,7 +96,6 @@ void expand_tokens(t_msh *msh, t_token **token)
         tok_tmp = *token;
         while ((*tok_tmp).token)//use 
         {
-            printf("printing tokens in expand: %s\n", (*tok_tmp).token);
             token_iter = ft_strchr((*tok_tmp).token, '$');
             while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
                 token_iter = ft_strchr((++token_iter), '$');//this part was added because I checked the availability of the tilde here as well may be we dont need it here just add the condition check quotes in if
