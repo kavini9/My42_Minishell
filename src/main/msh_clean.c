@@ -27,16 +27,16 @@ void free_arr(char **arr)
 
 void    free_cmd(t_cmd **cmd)
 {
-    t_redir *redir_arr;
+    t_redir **redir_arr;
     
     while (*cmd)
     {
         if ((*cmd) -> cmd)
             free_arr((*cmd) -> cmd);
         redir_arr = (*cmd) -> redir;
-        while (redir_arr)
+        while (*redir_arr)
         { 
-            free(redir_arr -> fname_o_del);
+            free((*redir_arr) -> fname_o_del);
             // if (redir_list -> expand)
             //     free(redir_list -> expand);
             redir_arr++; //did not free the t_redir struct assuming it is not allocated since it has a type value and two pointers.

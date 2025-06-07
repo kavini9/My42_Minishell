@@ -29,6 +29,41 @@ void init_cmd_struct(t_msh *msh, int cmd_count)
     }
 }
 
+int is_ambi_redir(char **expan)
+{
+  if (ft_arrlen(expan) > 1 || !**expan )
+    return (1);
+  return (0);
+}
+
+char *remove_quotes(char *q_arg)
+{
+  int single_q;
+  int double_q;
+  int len;
+  char *arg;
+
+  single_q = 0;
+  double_q = 0;
+  len = ft_strlen(q_arg);
+  arg = q_arg;
+  while(len--)
+  {
+    if (*q_arg == '\'' && !double_q)
+    {
+        single_q = !single_q;
+        ft_memmove(q_arg, q_arg + 1, len + 1);
+    }
+    else if (*q_arg == '"' && !single_q)
+    {
+        double_q = !double_q;
+        ft_memmove(q_arg, q_arg + 1, len + 1);
+    }
+    else
+        q_arg++;  
+  }
+  return(arg);
+}
 
 void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len)
 {
@@ -45,7 +80,7 @@ void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len)
   if (token -> redir = REDIR_HDOC && 
   (ft_strchr(token -token, '\'') || ft_strchr(token -token, '"')))
     cmd -> redir[*len] -> ambi_o_hdexp = 1;
-  if (token -> expn && !is_ambiguous(token -> expn))
+  if (token -> expn && !is_ambi_redir(token -> expn))
     q_arg = *(token -> expn);
   else
   {

@@ -14,9 +14,11 @@
 
 int	 check_quotes(char *start, char *end)
 {
-	int	single_quote = 0;
-	int	double_quote = 0;
+	int	single_quote;
+	int	double_quote;
 
+    single_quote = 0;
+	double_quote = 0;
     while (*start && start != end)
 	{
 		if (*start == '\'' && !double_quote)
@@ -51,6 +53,41 @@ int redir_skip(char *seg)
     return (skip);
 }
 
+int is_ambi_redir(char **expan)
+{
+  if (ft_arrlen((void **) expan) > 1 || !**expan )
+    return (1);
+  return (0);
+}
+
+char *remove_quotes(char *q_arg)
+{
+  int single_q;
+  int double_q;
+  int len;
+  char *arg;
+
+  single_q = 0;
+  double_q = 0;
+  len = ft_strlen(q_arg);
+  arg = q_arg;
+  while(len--)
+  {
+    if (*q_arg == '\'' && !double_q)
+    {
+        single_q = !single_q;
+        ft_memmove(q_arg, q_arg + 1, len + 1);
+    }
+    else if (*q_arg == '"' && !single_q)
+    {
+        double_q = !double_q;
+        ft_memmove(q_arg, q_arg + 1, len + 1);
+    }
+    else
+        q_arg++;  
+  }
+  return(arg);
+}
 //auxiliary. delete later
 
 void print_segments(char **seg)

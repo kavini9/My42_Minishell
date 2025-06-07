@@ -161,6 +161,8 @@ int set_redir_type(t_token *token, char *seg);
 int	 check_quotes(char *start, char *end);
 void skip_whitespaces(char **str);
 int redir_skip(char *seg);
+char *remove_quotes(char *q_arg);
+int is_ambi_redir(char **expan);
 
 //expand
 void expand_tokens(t_msh *msh, t_token **token);
@@ -178,6 +180,13 @@ size_t	ft_arrlen(void **arr);
 //expand_struct
 void init_exp(t_msh *msh, t_token token, t_expan *exp);
 void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp);
+
+//setup_cmd
+void init_cmd_struct(t_msh *msh, int cmd_count);
+void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len);
+void  q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg);
+void  addto_cmd_arr(t_msh *msh, t_token *token, t_cmd *cmd);
+void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd);
 
 //clean
 void msh_clean(t_msh *msh);

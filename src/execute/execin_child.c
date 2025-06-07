@@ -67,7 +67,7 @@ void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_da
     }  
 }
 
-//here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.
+//here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.//no time for this. be simple
 void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
 {
     int pipe_fd[2];
