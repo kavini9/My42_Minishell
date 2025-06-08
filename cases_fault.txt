@@ -33,3 +33,10 @@ token: $VAR1$VAR2
 [text5]
 [text6]
 []
+
+
+
+
+
+minishell> echo $$
+causes conditional jump when run just after starting minishell. when ran again it's already initialized or something.

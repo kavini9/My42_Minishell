@@ -19,6 +19,7 @@ SOURCES = main/main.c \
 	  parse/tokenize.c \
 	  parse/parse_utils.c \
 	  parse/expand.c \
+	  parse/variable_extract.c \
 	  parse/expand_array_utils.c \
 	  parse/exp_struct_manager.c \
 	  parse/setup_cmd.c \

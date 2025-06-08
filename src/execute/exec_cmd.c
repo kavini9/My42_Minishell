@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 21:28:03 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:48:13 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 		if (!*cmd_path)
 			msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "exec");//"minishell: fatal error: memory allocation failed in %s\n"
 		if (access_check(msh, cmd, *cmd_path) == 0)
-			return (free_arr(arr_path));
+			return (free_arr((void **) arr_path));
 		free(*cmd_path);
 		arr_path++;
 	}
@@ -71,7 +71,7 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 		msh -> exit_code = F_KO;
 	if (cmd -> err_note.strerr == NULL)
 	 	cmd -> err_note.strerr = CMD_NOT_FOUND;
-	free_arr(arr_path);//check if this needs to be null. this should be destroyed going out of this function.
+	free_arr((void **) arr_path);//check if this needs to be null. this should be destroyed going out of this function.
 	*cmd_path = ft_strdup(cmd_name);//this is protected in calling function
 }
 

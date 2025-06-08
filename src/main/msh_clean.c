@@ -6,15 +6,15 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/06 22:53:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/08 22:03:51 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void free_arr(char **arr)
+void free_arr(void **arr)
 {
-    char **tmp;
+    void **tmp;
 
     tmp = arr;
     while (*tmp)
@@ -29,19 +29,22 @@ void    free_cmd(t_cmd **cmd)
 {
     t_redir **redir_arr;
     
+    
     while (*cmd)
     {
         if ((*cmd) -> cmd)
-            free_arr((*cmd) -> cmd);
+            free_arr((void **) (*cmd) -> cmd);
         redir_arr = (*cmd) -> redir;
-        while (*redir_arr)
+        while (redir_arr && *redir_arr)
         { 
             free((*redir_arr) -> fname_o_del);
             // if (redir_list -> expand)
             //     free(redir_list -> expand);
             redir_arr++; //did not free the t_redir struct assuming it is not allocated since it has a type value and two pointers.
         }
-        ft_memset(cmd, 0, sizeof(t_cmd));
+        if ((*cmd) -> redir)
+            free_arr((void **) (*cmd) -> redir);
+        //ft_memset(cmd, 0, sizeof(t_cmd));
         cmd++;
     }
 }
@@ -53,7 +56,7 @@ void msh_clean(t_msh *msh)
     if (msh -> old_wd)
         free(msh -> old_wd);
     if (msh -> envl)
-        free_arr(msh -> envl);
+        free_arr((void **) msh -> envl);
     if (msh -> cmd)
         free_cmd(msh -> cmd);
     ft_memset(msh, 0, offsetof(t_msh, exit_code));

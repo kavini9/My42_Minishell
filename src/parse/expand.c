@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 22:02:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/08 23:40:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ char *extract_env_key(char **token)
             (*token)++;
         }
         if ((start == *token - 1 && ft_isdigit(*(*token - 1))) 
+        || (start == *token - 1 && *(*token - 1) == '?')
+        || (start == *token - 1 && *(*token - 1) == '$')
         || **token == '?' || **token == '$')
             break;
         // if ((start == *token - 1 && ft_isdigit(*(*token - 1))) 
@@ -44,16 +46,17 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
     int q_context;
 
     q_context = check_quotes(exp -> tok, exp -> suffix);//there's somthing wrong in this. q_context is wrong.//before if was (exp -> exp, exp -> prefix)
-    exp_val = extract_exp_value(msh -> envl, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
+    exp_val = extract_exp_value(msh, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
-    else
-        exp_dup = ft_strdup("");
-    if (!exp_dup)
+    // else
+    //     exp_dup = ft_strdup("");//removed this because we strdup("") if env not available in extract env.
+    if (!exp_val || !exp_dup)
         exit(printf("# minishell: expand_parameter: Error:Malloc Fail.\n"));
     get_tmp_arr(msh, exp, exp_dup, q_context);//I hope sending argument like this will prevent it from spliting expand when token is redir type
     adjust_exp_edge(msh, exp, exp_val, q_context);
     revise_exp_arr(msh, token, exp);
+    free(exp_val);// this should be done in all the error cases as well. how woyld you do it.Maybe add to the struct.
 }
 
 void expscan_token(t_msh *msh, t_token *token)
@@ -69,6 +72,7 @@ void expscan_token(t_msh *msh, t_token *token)
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
                 exit(printf("# minishell: expscan_token: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
+            // printf("print key in expscan: %s\n", exp.key);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
             // else

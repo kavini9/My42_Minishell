@@ -6,18 +6,18 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 19:33:56 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/08 21:45:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define  HEREDOC_MAX 16
-
+# define HEREDOC_MAX 16
+# define PID_MAX_LEN 8
 # define X_KO 126
 # define F_KO 127
-#define IS_DIRECTORY "Is a directory" 
+# define IS_DIRECTORY "Is a directory" 
 # define CMD_NOT_FOUND "command not found"
 
 # include <readline/readline.h> //for readline
@@ -39,8 +39,6 @@
 # include "define.h"
 
 extern volatile __sig_atomic_t g_sig;
- 
-
 
 typedef enum e_do_err 
 {
@@ -65,7 +63,6 @@ typedef struct s_redir
     t_redir_type    type;//ambiguous redir. If it comes from expansion and has space then it is ambiguous redirection. also if NULL(empty after the expansion)
     char    *fname_o_del;
 	int		ambi_o_hdexp;
-    // struct s_redir *next;//make this just a struct so our redirs are in an array
 }   t_redir;
 
 typedef struct s_errnote  // check this. As I remember I did not exliplitly set these sructs in minishell. mayybe inherited from pipex code
@@ -170,6 +167,10 @@ void expscan_token(t_msh *msh, t_token *token);
 void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
 char *extract_env_key(char **token);
 
+//variable_extract
+char *extract_exp_value(t_msh *msh, char *key);
+char *get_process_pid(char *buf);
+
 //expand_arr
 void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int quote_or_redir);
 void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context);
@@ -191,7 +192,7 @@ void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd);
 //clean
 void msh_clean(t_msh *msh);
 void    free_cmd(t_cmd **cmd);
-void free_arr(char **arr);
+void free_arr(void **arr);
 
 //error
 void msh_error(t_msh *msh, t_do_err opt_exc, char *err_msg, char *param);
