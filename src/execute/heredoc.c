@@ -58,3 +58,5 @@ void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i)
         cmd++;
     }
 }
+
+//where do I limit taking heredocs?

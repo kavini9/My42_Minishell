@@ -44,7 +44,7 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
     int q_context;
 
     q_context = check_quotes(exp -> tok, exp -> suffix);//there's somthing wrong in this. q_context is wrong.//before if was (exp -> exp, exp -> prefix)
-    exp_val = get_env(msh -> envl, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
+    exp_val = extract_exp_value(msh -> envl, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
     else
