@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:37 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/05 15:45:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 15:38:18 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,16 @@ int	 check_quotes(char *start, char *end)
     while (*start && start != end)
 	{
 		if (*start == '\'' && !double_quote)
-			single_quote = !single_quote * (int) *start ; 
+			single_quote = !single_quote * ((int) *start) ; 
 		else if (*start == '"' && !single_quote)
-			double_quote = !double_quote * (int) *start; 
+			double_quote = !double_quote * ((int) *start); 
 		start++;
 	}
-	return (single_quote || double_quote);
+	if (single_quote)
+	    return (single_quote);
+    if (double_quote)
+	    return (double_quote);
+    return (0);
 }
 
 void skip_whitespaces(char **str)

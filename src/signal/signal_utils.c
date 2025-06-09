@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 10:43:19 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/06/03 22:29:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:05:37 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,11 @@
  */
 void	sigint_handler(int sig)
 {
-	if (sig == SIGINT)
-	{
-		rl_replace_line("", 0);
-		printf("\n");
-		rl_on_new_line();
-		rl_redisplay();
-	}
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();             // Move to a new line
+	rl_replace_line("", 0);       // Clear the current input
+	rl_redisplay();               // Redisplay the prompt
 }
 
 /**

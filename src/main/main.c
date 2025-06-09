@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 20:14:53 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/06 17:10:38 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,36 @@ void	msh_parse(t_msh *msh, char *line)
 void	msh_loop(t_msh *msh)
 {
 	char	*line;
-	
+
 	(void) *msh;
-	while(1)
+	if (isatty(fileno(stdin)))
+		init_sig();
+
+	while (1)
 	{
-		if (isatty(fileno(stdin)))
-            init_sig();
 		line = readline("minishell> ");
-		add_history(line);//brought this back to here since we are not handling unmatched quotes
+		if (!line) // Handle Ctrl+D (EOF)
+			break;
+
+		add_history(line);
 		if (*line)
-		{	if (msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
-				printf("Syntax Error\n");//write a function or this
-			else 
+		{
+			if (!msh_validate_line(msh, &line))
 			{
-				printf("line OK: %s\n", line);
-				msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
-				//msh_execute(msh);
+				msh_parse(msh, line);
+				// msh_execute(msh);
 				if (!ft_strcmp(line, "exit"))
 					break;
 			}
+			// else: Syntax error - silently ignored or handled inside msh_validate_line
 		}
+		free(line);
 	}
 	rl_clear_history();
 }
+
+
+
 
 int	main(int ac, char **av, char **envp)
 {

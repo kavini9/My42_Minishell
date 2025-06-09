@@ -37,7 +37,8 @@ SOURCES = main/main.c \
 	  execute/heredoc.c \
 	  execute/redir.c \
 	  signal/signal_handler.c \
-	  signal/signal_utils.c
+	  signal/signal_utils.c \
+	  test_setup_cmd.c
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 DEPS    = $(OBJECTS:.o=.d) #what is  this?
