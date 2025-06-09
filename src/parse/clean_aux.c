@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:15:44 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 20:14:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 20:30:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,4 @@ void clean_aux(t_msh *msh, t_parse *aux)
         token++;
     }
     msh -> aux = NULL;
-    printf("\n");
 }

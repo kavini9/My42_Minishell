@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 21:35:37 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 20:28:58 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 	
 	dup_ret = 0;
 	redir = cmd -> redir;
-	while (redir) // check if redir -> fname exist. ex: <$NONEXIST_FILE. should give ambiguous redirection 
+	while (redir && *redir) // check if redir -> fname exist. ex: <$NONEXIST_FILE. should give ambiguous redirection 
 	{
 		if ((*redir) -> type != REDIR_HDOC)
 			fd = open_file((*redir) -> type, (*redir) -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
