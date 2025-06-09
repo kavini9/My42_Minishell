@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 21:48:13 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:05:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
         	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
     	sig_reseted();//SIGNAL: is this in correct place
 		execve(cmd_path, cmd_arr, msh -> envl);
-		cmd -> err_note.cmd_path = cmd_path;
+		cmd -> err_note.cmd_path = cmd_path;//do I have to alloc for err_note. Does defining t_cmd cmd itself create this? YES right? because it's not a pointer.
 		if (!cmd -> err_note.strerr)
 			cmd -> err_note.strerr = strerror(errno);
 		msh_error(msh, (EXTRARG|LOG) << 8 | 1, ERR_SYSFUNC, (char *)&(cmd -> err_note));

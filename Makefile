@@ -23,6 +23,7 @@ SOURCES = main/main.c \
 	  parse/expand_array_utils.c \
 	  parse/exp_struct_manager.c \
 	  parse/setup_cmd.c \
+	  parse/clean_aux.c \
 	  builtin/cd.c \
 	  builtin/cd_unlinked_dir.c \
 	  builtin/echo.c \

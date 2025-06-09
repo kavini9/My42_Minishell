@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 21:45:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 18:59:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,9 @@ void  addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len);
 void  q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg);
 void  addto_cmd_arr(t_msh *msh, t_token *token, t_cmd *cmd);
 void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd);
+
+//clean_parse
+void clean_aux(t_msh *msh, t_parse *aux);
 
 //clean
 void msh_clean(t_msh *msh);

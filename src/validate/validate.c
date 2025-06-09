@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:41:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/04 20:23:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 17:20:12 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	validate_pipe_position(t_msh *msh, char *line, int i)
 	j = skip_whitespace(line, i + 1);
 	if (line[j] == '|' && !check_quote(line, j))
 	{
-		ft_putstr_fd("syntax error near unexpected token '|'", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
 		msh->exit_code = 2;
 		return (1);
 	}
@@ -65,7 +65,7 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
 
 int	validate_pipe(t_msh *msh, char *line)
 {
-	int	i;
+	int	i; 
 	int	j;
 	int	len;
 
@@ -75,7 +75,7 @@ int	validate_pipe(t_msh *msh, char *line)
 		j = i;
 		while (line[j] == '|')
 			j++;
-		ft_putstr_fd("syntax error near unexpected token `", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		len = j - i;
 		if (len > 2)
 			len = 2;
@@ -97,7 +97,7 @@ int msh_validate_line(t_msh *msh, char **line)
 
     if (check_quote(*line, ft_strlen(*line)))  
     {
-        ft_putendl_fd("syntax error: unmatched quotes", 2);  
+        ft_putendl_fd("minishell: syntax error unmatched quotes", 2);  
         msh->exit_code = 2;  
         return (1);  
     }
@@ -108,7 +108,7 @@ int msh_validate_line(t_msh *msh, char **line)
     {  
         if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))  
         {
-            ft_putendl_fd("invalid syntax", 2);  
+            ft_putendl_fd("minishell: invalid syntax", 2);  
             msh->exit_code = 2;  
             return (1);  
         }  

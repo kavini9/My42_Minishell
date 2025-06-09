@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 23:40:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 19:20:54 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ void expscan_token(t_msh *msh, t_token *token)
             exp.exp++;
         }
     }
+    //free(exp.tok);//this might have a null terminator remaining here.
+    //free(exp.prefix);
 }
 
 //need to add another condition to avoid splitting token with redir flags. SECOND: added this inside because it still needs to be expanded
