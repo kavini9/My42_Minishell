@@ -46,12 +46,22 @@ char	**get_path_array(t_msh *msh, char **envl)
 	return (arr_path);
 }
 
+static void	set_errnote(t_msh *msh, t_cmd *cmd)
+{
+	if (msh -> exit_code != X_KO)//may be write a seperate function for this
+		msh -> exit_code = F_KO;
+	if (cmd -> err_note.strerr == NULL)
+	 	cmd -> err_note.strerr = CMD_NOT_FOUND;
+}
+
 void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 {
 	char	**arr_path;
+	char	**ptr_arr_path;
 	char	*tmp;
 
 	arr_path = get_path_array(msh, msh -> envl);
+	ptr_arr_path = arr_path; 
 	while (arr_path && *arr_path)
 	{
 		*cmd_path = ft_strjoin("/", cmd_name);
@@ -63,15 +73,12 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 		if (!*cmd_path)
 			msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "exec");//"minishell: fatal error: memory allocation failed in %s\n"
 		if (access_check(msh, cmd, *cmd_path) == 0)
-			return (free_arr((void **) arr_path));
+			return (free_arr((void **) ptr_arr_path));
 		free(*cmd_path);
 		arr_path++;
 	}
-	if (msh -> exit_code != X_KO)
-		msh -> exit_code = F_KO;
-	if (cmd -> err_note.strerr == NULL)
-	 	cmd -> err_note.strerr = CMD_NOT_FOUND;
-	free_arr((void **) arr_path);//check if this needs to be null. this should be destroyed going out of this function.
+	set_errnote(msh, cmd);
+	free_arr((void **) ptr_arr_path);//check if this needs to be null. this should be destroyed going out of this function.
 	*cmd_path = ft_strdup(cmd_name);//this is protected in calling function
 }
 

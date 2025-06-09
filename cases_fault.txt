@@ -40,3 +40,7 @@ token: $VAR1$VAR2
 
 minishell> echo $$
 causes conditional jump when run just after starting minishell. when ran again it's already initialized or something.
+
+
+export VAR='<' this does not export VAR, but export VAR='>' this will get saved to export list
+ 

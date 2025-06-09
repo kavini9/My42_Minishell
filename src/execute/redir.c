@@ -19,8 +19,9 @@ int	dup_io(int oldfd, int newfd)//we added a return type to here so when redirec
 		close (oldfd);
 		return  (-1);//
 	}
-	close(oldfd);
-	return (oldfd);
+	if (oldfd != newfd)//if oldfd == newfd, will this close new fd too gpt suggested.
+		close(oldfd);
+	return (oldfd);//returning old fd to write in error message incase of an error
 }
 
 int	open_file(t_redir_type type, char *fname)

@@ -77,8 +77,8 @@ void	msh_loop(t_msh *msh)
 				// printf("line OK: %s\n", line);
 				msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
 				msh_execute(msh);
-				if (!ft_strcmp(line, "exit"))
-					break;
+				// if (!ft_strcmp(line, "exit"))
+				// 	break;
 			}
 		}
 	}

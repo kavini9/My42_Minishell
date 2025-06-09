@@ -33,7 +33,7 @@ void    unset_env(char **envl, char *key)// msh is unused here. so removed. Alo 
     envl[env_len - 1]  = NULL;
 } // an allocated memory block id left unused after this, it's not nice 
 //that we allocate again if we have to set a variable after this, think about it. 
-//my initial solution was to make envl a vector
+//my initial solution was to make envl a vector//*uck this we are running out of time
 
 void    builtin_unset(t_msh *msh, char **cmd)
 {

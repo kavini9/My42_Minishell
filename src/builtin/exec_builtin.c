@@ -71,6 +71,6 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
     if (std_fd[1] != -1)
         close(std_fd[1]);
     if (msh -> exit_code == 1)
-        msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);
+        msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think.
 }
 //Exit codes are set in every end point of the builtins. When encountered an error msh_error may set the exit code and might exit if required.
