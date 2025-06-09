@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:31:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 21:55:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 22:53:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void error_log(char *err_msg, char *param, int err_no, int extrarg)
         err_note = (t_errnote *) param;
         printf_fd(STDERR_FILENO, err_msg, err_note -> cmd_path, err_note -> strerr);
     }
-    if (param && err_no)
+    else if (param && err_no)
         printf_fd(STDERR_FILENO, err_msg, param, strerror(err_no));
     else if (param && !err_no)
         printf_fd(STDERR_FILENO, err_msg, param);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 18:57:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 22:13:55 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ void	msh_parse(t_msh *msh, char *line)
 	seg_tokenize(msh, msh -> aux);
     //print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
-	//print_expand_arrays(msh -> aux -> token);
+	//print_expand_arrays(msh -> aux -> token);//debugging purpose
 	init_cmd_struct(msh, msh -> cmd_count);
 	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
-	//print_cmd_members(msh -> cmd);
+	//print_cmd_members(msh -> cmd);//debugging purpose
 	clean_aux(msh, msh -> aux);
 }
 
@@ -81,6 +81,7 @@ void	msh_loop(t_msh *msh)
 				// if (!ft_strcmp(line, "exit"))
 				// 	break;
 			}
+			//printf("exit_code: %i\n", msh -> exit_code);
 		}
 	}
 	rl_clear_history();

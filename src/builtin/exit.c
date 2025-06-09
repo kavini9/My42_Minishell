@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:24 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 22:59:19 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/09 23:14:48 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,17 @@ void    builtin_exit(t_msh *msh, char **cmd)
     if (msh -> cmd_count == 1)
         ft_putendl_fd("exit", STDOUT_FILENO);//what was the case huong said about this? i changes stderr to stdout to match withh the tester
     if(++cmd && *cmd)
+    {
         digi_count = is_numeric(*cmd);
-    if (digi_count)
-        num = ft_atol(*cmd);
-
-    if ((*cmd && !digi_count) || (digi_count >= 19 && (num == 0 || num == -1)))
-        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 2, ERR_EXIT_NONUMERIC, *cmd);
-    else if (*(cmd + 1))
-        return(msh_error(msh, (LOG) << 8 | 1, ERR_EXIT_XTRARG, NULL));//see if clean is required here
-    else
-        msh -> exit_code = (uint8_t) num;
+        if (digi_count)
+            num = ft_atol(*cmd);
+        if (!digi_count || (digi_count >= 19 && (num == 0 || num == -1)))//added a check tto see if cmd exist.
+            msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 2, ERR_EXIT_NONUMERIC, *cmd);
+        else if (*(cmd + 1))
+            return(msh_error(msh, (LOG) << 8 | 1, ERR_EXIT_XTRARG, NULL));//see if clean is required here
+        else
+            msh -> exit_code = (uint8_t) num;
+    }
     msh_clean(msh);
     exit(msh -> exit_code);
 }
