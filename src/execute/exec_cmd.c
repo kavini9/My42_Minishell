@@ -105,10 +105,10 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
 		cmd -> err_note.cmd_path = cmd_path;//do I have to alloc for err_note. Does defining t_cmd cmd itself create this? YES right? because it's not a pointer.
 		if (!cmd -> err_note.strerr)
 			cmd -> err_note.strerr = strerror(errno);
-		msh_error(msh, (EXTRARG|LOG) << 8 | 1, ERR_SYSFUNC, (char *)&(cmd -> err_note));
+		msh_error(msh, (EXTRARG|LOG) << 8 | msh -> exit_code , ERR_SYSFUNC, (char *)&(cmd -> err_note));
 		free(cmd_path);//see if this needs to be nulled
 	}
-	msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);
+	msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
 	//clean and exit with exit code set in msh received.
     //printf("execve failed. free cmd path and path arr\n");// clean all memeory and set exitcode for child proocess.
 }

@@ -30,7 +30,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
                 seg = ft_strtrim(temp, " \t\n\r\f\v");
                 free(temp);
             }
-            if (!seg)
+            if (!seg)//free line here if exit. it is now freed in main loop after evrything
                 exit(printf("# minishell: line_split_bypipe: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
             *seg_arr = seg;
             seg_arr++;

@@ -30,6 +30,7 @@ void msh_init(t_msh *msh, char **envp)
 		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1 , ERR_MALLOC, NULL);//"minishell: fatal error: memory allocation failed in %s.\n"
 	duplicate_env(msh, envp);
 	set_shlvl(msh, msh -> envl);
+	//msh -> exit_code = 0;this didnt change anything
 }
 
 void    msh_execute(t_msh *msh)
@@ -38,7 +39,10 @@ void    msh_execute(t_msh *msh)
     if (msh -> cmd_count == 1 && is_builtin((*msh->cmd) -> cmd))//TODO: see the dereference here. see if it needs too be chnged in struct.
         execin_shell(msh, *msh -> cmd);
     else
+	{
         execin_child(msh, msh -> cmd, -1, 0);
+	}
+	reset_cmd_attr(msh);
 }
 
 void	msh_parse(t_msh *msh, char *line)
@@ -63,28 +67,35 @@ void	msh_loop(t_msh *msh)
 {
 	char	*line;
 	
-	(void) *msh;
 	while(1)
 	{
+		printf("in the loop 11111111111111111111111111111\n");
 		if (isatty(fileno(stdin)))
             init_sig();
-		line = readline("minishell> ");
-		add_history(line);//brought this back to here since we are not handling unmatched quotes
+		printf("in the loop 2222222222222222222222222222222\n");
+		line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
+		printf("in the loop 33333333333333333333333333333333\n");
+		add_history(line);
+		printf("in the loop 4444444444444444444444444444444\n");
 		if (*line)
-		{	if (!msh_validate_line(msh, &line))//to add entire input to history in unclosed commands and trailing pipe case
-			// 	printf("Syntax Error\n");//write a function or this
-			// else 
+		{	
+			printf("in the loop 55555555555555555555555555\n");
+			if (!msh_validate_line(msh, &line)) 
 			{
-				// printf("line OK: %s\n", line);
-				msh_parse(msh, line);//DES: parse and tokenize and add the list of tokens to msh -> token.
+				printf("in the loop 666666666666666666666666666666666666\n");
+				msh_parse(msh, line);
+				msh -> exit_code = 0;//this is just a quick fix. 
+				printf("in the loop 7777777777777777777777777777777777777777\n");
 				msh_execute(msh);
-				// if (!ft_strcmp(line, "exit"))
-				// 	break;
+				printf("in the loop 888888888888888888888888888888888888\n");
 			}
-			//printf("exit_code: %i\n", msh -> exit_code);
+			printf("exit_code: %i\n", msh -> exit_code);
 		}
+		free(line);//probably I am freeing this somewhere inside msh_parse as well. Double check it.
 	}
+	printf("in the loop 99999999999999999999999999999999\n");
 	rl_clear_history();
+	printf("in the loop 0000000000000000000000000000000000\n");
 }
 
 int	main(int ac, char **av, char **envp)

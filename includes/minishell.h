@@ -113,7 +113,7 @@ typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
-	char	*prompt;
+	//char	*prompt;
 	char	**envl;
 	t_parse *aux;
 	t_cmd	**cmd;
@@ -196,6 +196,9 @@ void clean_aux(t_msh *msh, t_parse *aux);
 void msh_clean(t_msh *msh);
 void    free_cmd(t_cmd **cmd);
 void free_arr(void **arr);
+
+//reset_cmd
+void reset_cmd_attr(t_msh *msh);
 
 //error
 void msh_error(t_msh *msh, t_do_err opt_exc, char *err_msg, char *param);

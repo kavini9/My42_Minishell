@@ -39,6 +39,7 @@ SOURCES = main/main.c \
 	  execute/execin_child.c \
 	  execute/heredoc.c \
 	  execute/redir.c \
+	  execute/reset_cmd_attr.c \
 	  signal/signal_handler.c \
 	  signal/signal_utils.c
 

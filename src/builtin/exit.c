@@ -32,7 +32,7 @@ int is_numeric(char *str)
         digi_count = 0;
     return(digi_count);
 }
-
+//see if it should exit or not for too many arguments or non numeric arguments.
 void    builtin_exit(t_msh *msh, char **cmd)
 {
     int digi_count;

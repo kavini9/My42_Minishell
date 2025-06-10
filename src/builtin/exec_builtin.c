@@ -61,9 +61,9 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
             close(std_fd[1]);
         msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "dup");
     }
-    printf("exitt code before redir: %d\n", msh->exit_code);
+    //printf("exitt code before redir: %d\n", msh->exit_code);
     redirect_io(msh, cmd, -1, 0);//if this fails we might also loose std_fds. we changed some error exits tp return
-    printf("exitt code after redir: %d\n", msh->exit_code);
+    //printf("exitt code after redir: %d\n", msh->exit_code);
     if (msh -> exit_code == 0)
         exec_builtin(msh, cmd -> cmd);
     if(dup2(std_fd[0], STDIN_FILENO) == -1 || dup2(std_fd[1], STDOUT_FILENO) == -1)
@@ -73,9 +73,6 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
     if (std_fd[1] != -1)
         close(std_fd[1]);
     if (msh -> exit_code == 1)
-    {
-        //printf("herehereherehereherehereherehereherehere\n");
         msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think.
-    }
 }
 //Exit codes are set in every end point of the builtins. When encountered an error msh_error may set the exit code and might exit if required.

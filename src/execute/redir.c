@@ -82,11 +82,9 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 			fd = open_file((*redir) -> type, (*redir) -> fname_o_del);// if fname is null as a result of expnsion, it should give ambiguous redirection
 		else
 		{
-			printf("1111111111111111111111111111111111111/n");
 			fd = *(msh ->  hdocfd_l + cmd -> hdoc_st_pos + i);
 			*(msh -> hdocfd_l + cmd -> hdoc_st_pos + i) = -1;// this is just to make other heredocs to be closed in this child
 			i++;
-			printf("2222222222222222222222222222222222222/n");
 		}
 		if (fd == -1)
 			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, (*redir) -> fname_o_del));
