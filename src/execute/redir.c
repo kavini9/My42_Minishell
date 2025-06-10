@@ -87,16 +87,17 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 			i++;
 		}
 		if (fd == -1)
-			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, (*redir) -> fname_o_del));
+			return(msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC, (*redir) -> fname_o_del));
 		else if ((*redir) -> type == REDIR_INP || (*redir) -> type == REDIR_HDOC)
 				dup_ret = dup_io(fd, STDIN_FILENO);
 		else
 				dup_ret = dup_io(fd, STDOUT_FILENO);
 		if (dup_ret < 0)
-			return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
+			return(msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
 		redir++;
 		}
 	close_all_hdocfd(msh -> hdocfd_l);
+	msh -> exit_code = 0;
 }
 
 //to change the increasing pointer exceed the array limit, insted of setting a int pointr

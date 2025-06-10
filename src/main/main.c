@@ -30,7 +30,9 @@ void msh_init(t_msh *msh, char **envp)
 		msh_error(msh, LOG|CLEAN|EXIT << 8 | 1 , ERR_MALLOC, NULL);//"minishell: fatal error: memory allocation failed in %s.\n"
 	duplicate_env(msh, envp);
 	set_shlvl(msh, msh -> envl);
-	//msh -> exit_code = 0;this didnt change anything
+	ft_memset(msh -> hdocfd_l, -1, sizeof(int) * 16);
+	
+
 }
 
 void    msh_execute(t_msh *msh)
@@ -69,36 +71,25 @@ void	msh_loop(t_msh *msh)
 	
 	while(1)
 	{
-		printf("in the loop 11111111111111111111111111111\n");
-		// if (isatty(fileno(stdin)))
-        //     init_sig();
-		printf("in the loop 2222222222222222222222222222222\n");
+		if (isatty(fileno(stdin)))
+            init_sig();
+
 		line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
-		printf("in the loop 33333333333333333333333333333333\n");
 		add_history(line);
-		printf("in the loop 4444444444444444444444444444444\n");
 		if (line)
 		{	
-			printf("in the loop 55555555555555555555555555\n");
-			if (!msh_validate_line(msh, &line)) 
+			if (!msh_validate_line(msh, &line)) // ad checks to return 1 if the line is just whitespace without quotes
 			{
-				printf("in the loop 666666666666666666666666666666666666\n");
 				msh_parse(msh, line);
 				msh -> exit_code = 0;//this is just a quick fix. 
-				printf("in the loop 7777777777777777777777777777777777777777\n");
 				msh_execute(msh);
-				printf("in the loop 888888888888888888888888888888888888\n");
 			}
-			printf("exit_code: %i\n", msh -> exit_code);
+			//printf("exit_code: %i\n", msh -> exit_code);
 		}
-		else
-			break;//added to avoid infinite loop. 
 		free(line);//probably I am freeing this somewhere inside msh_parse as well. Double check it.
-		line = NULL;
+		//line = NULL;
 	}
-	printf("in the loop 99999999999999999999999999999999\n");
 	rl_clear_history();
-	printf("in the loop 0000000000000000000000000000000000\n");
 }
 
 int	main(int ac, char **av, char **envp)

@@ -95,6 +95,8 @@ int msh_validate_line(t_msh *msh, char **line)
 {  
     int i = 0;
 
+	if (!**line  || !(*line)[skip_whitespace(*line, i)])
+		return (1);
     if (check_quote(*line, ft_strlen(*line)))  
     {
         ft_putendl_fd("minishell: syntax error unmatched quotes", 2);  

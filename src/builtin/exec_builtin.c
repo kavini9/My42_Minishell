@@ -26,7 +26,9 @@ int is_builtin(char **cmd)
 }
 
 int exec_builtin(t_msh *msh, char **cmd)
-{        
+{
+    if (!cmd)
+        return (0);
     if (!ft_strcmp(*cmd, "cd"))
         builtin_cd(msh, cmd);
     else if (!ft_strcmp(*cmd, "echo"))
@@ -63,7 +65,7 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
     }
     //printf("exitt code before redir: %d\n", msh->exit_code);
     redirect_io(msh, cmd, -1, 0);//if this fails we might also loose std_fds. we changed some error exits tp return
-    //printf("exitt code after redir: %d\n", msh->exit_code);
+    //printf("exit code after redir: %d\n", msh->exit_code);
     if (msh -> exit_code == 0)
         exec_builtin(msh, cmd -> cmd);
     if(dup2(std_fd[0], STDIN_FILENO) == -1 || dup2(std_fd[1], STDOUT_FILENO) == -1)
@@ -73,6 +75,6 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
     if (std_fd[1] != -1)
         close(std_fd[1]);
     if (msh -> exit_code == 1)
-        msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think.
+        msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think. removed exit flag.
 }
 //Exit codes are set in every end point of the builtins. When encountered an error msh_error may set the exit code and might exit if required.

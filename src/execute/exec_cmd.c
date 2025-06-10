@@ -88,7 +88,7 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     char *cmd_path;
 
 	cmd_path = NULL;
-	if (!exec_builtin(msh, cmd -> cmd))
+	if (cmd -> cmd && !exec_builtin(msh, cmd -> cmd))
 	{
     	cmd_arr = cmd -> cmd;
     	if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))
