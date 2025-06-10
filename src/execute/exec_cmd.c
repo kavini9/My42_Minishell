@@ -100,7 +100,7 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
     	}
     	if (!cmd_path)
         	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
-    	sig_reseted();//SIGNAL: is this in correct place
+    	// sig_reseted();//SIGNAL: is this in correct place
 		execve(cmd_path, cmd_arr, msh -> envl);
 		cmd -> err_note.cmd_path = cmd_path;//do I have to alloc for err_note. Does defining t_cmd cmd itself create this? YES right? because it's not a pointer.
 		if (!cmd -> err_note.strerr)

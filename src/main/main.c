@@ -70,14 +70,14 @@ void	msh_loop(t_msh *msh)
 	while(1)
 	{
 		printf("in the loop 11111111111111111111111111111\n");
-		if (isatty(fileno(stdin)))
-            init_sig();
+		// if (isatty(fileno(stdin)))
+        //     init_sig();
 		printf("in the loop 2222222222222222222222222222222\n");
 		line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
 		printf("in the loop 33333333333333333333333333333333\n");
 		add_history(line);
 		printf("in the loop 4444444444444444444444444444444\n");
-		if (*line)
+		if (line)
 		{	
 			printf("in the loop 55555555555555555555555555\n");
 			if (!msh_validate_line(msh, &line)) 
@@ -91,7 +91,10 @@ void	msh_loop(t_msh *msh)
 			}
 			printf("exit_code: %i\n", msh -> exit_code);
 		}
+		else
+			break;//added to avoid infinite loop. 
 		free(line);//probably I am freeing this somewhere inside msh_parse as well. Double check it.
+		line = NULL;
 	}
 	printf("in the loop 99999999999999999999999999999999\n");
 	rl_clear_history();
