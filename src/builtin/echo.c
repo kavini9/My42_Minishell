@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 17:33:32 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 22:24:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 22:20:40 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void    builtin_echo(t_msh *msh, char **cmd)
     opt_n = 0;
     while (++cmd && *cmd)//added *cmd incase of echo ""
     {
-        if (is_option(*cmd))
+        if (**cmd && is_option(*cmd))
             opt_n = 1;
         else
             break;

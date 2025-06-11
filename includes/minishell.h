@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 19:56:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 21:29:25 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ void clean_aux(t_msh *msh, t_parse *aux);
 void msh_clean(t_msh *msh);
 void    free_cmd(t_cmd **cmd);
 void free_arr(void **arr);
-void restore_stdfd(t_msh *msh, int *std_fd);
+
 
 //reset_cmd
 void reset_cmd_attr(t_msh *msh);
@@ -239,6 +239,7 @@ void    unset_env(char **envl, char *key);
 void execin_shell(t_msh *msh, t_cmd *cmd);
 int	exec_builtin(t_msh *msh, char **cmd);
 int is_builtin(char **cmd);
+void restore_stdfd(t_msh *msh, int *fd_0, int *fd_1);
 
 //execute
 void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i);

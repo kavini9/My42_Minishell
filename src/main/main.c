@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 16:33:30 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 22:59:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,18 @@ void	msh_loop(t_msh *msh)
 	{
 		if (isatty(fileno(stdin)))
             init_sig();
-		line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
-	
+		//line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
+		if (isatty(fileno(stdin)))
+			line = readline("minishell> "); // use custom prompt string
+		else
+		{
+			line = get_next_line(fileno(stdin)); // tester gives input
+			if (!line)
+				break; // avoid ft_strtrim(NULL) segfault
+			char *trimmed = ft_strtrim(line, "\n"); // remove newline
+			free(line);
+			line = trimmed;
+		}
 		if (!line) // Handle Ctrl+D (EOF)
 		{
 			printf("exit\n");

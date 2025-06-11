@@ -23,8 +23,7 @@ token: $VAR2""'$USER'
 [text6]
 [""'$USER']
 What is this empty one in the begining. should be in the extend_tmp_arr 
-
-
+-----------------------------------------------------------------------------------------------------------------
 token: $VAR1$VAR2
 [text1]
 [text2]
@@ -36,11 +35,53 @@ token: $VAR1$VAR2
 
 
 
-
+--------------------------------------------------------------------------------------------------------------------
 
 minishell> echo $$
 causes conditional jump when run just after starting minishell. when ran again it's already initialized or something.
-
+-----------------------------------------------------------------------------------------------------------------------------
 
 export VAR='<' this does not export VAR, but export VAR='>' this will get saved to export list
- 
+
+-------------------------------------------------------------------------------------------------------------------------
+echo $EMPTY  does not print a newline.
+minishell> echo $ghcg
+minishell> export EMPTY
+minishell> echo $EMPTY
+minishell>
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo $ghcg
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ export EMPTY
+wweerasi@c1r5p1:~/My42/minishell/Repo$ echo $EMPTY
+
+wweerasi@c1r5p1:~/My42/minishell/Repo$ 
+
+--------------------------------------------------------------------------------------------------------------------
+
+minishell> echo $"HOME"
+$HOME
+should be
+>echo $"HOME"
+HOME
+
+-------------------------------------------------------------------------------------------------------
+
+wweerasi@c1r5p1:~$ echo \$USER
+$USER
+wweerasi@c1r5p1:~$ echo \\$USER
+\wweerasi
+wweerasi@c1r5p1:~$ echo \\\$USER
+\$USER
+wweerasi@c1r5p1:~$ echo \\\\$USER
+\\wweerasi
+wweerasi@c1r5p1:~$ echo \\\\\$USER
+\\$USER
+wweerasi@c1r5p1:~$ echo \\\\\\\\\$USER
+\\\\$USER
+wweerasi@c1r5p1:~$ echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+\\\\\\\\\\\\\\\\$USER $PATH \/home/wweerasi
+
+ours give syntax error
+
+-----------------------------------------------------------------------------------------------------------

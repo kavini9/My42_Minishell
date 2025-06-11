@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:05:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 20:51:40 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 21:31:05 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,20 @@ int exec_builtin(t_msh *msh, char **cmd)
     return (1);
 }
 
+void restore_stdfd(t_msh *msh, int *fd_0, int *fd_1)
+{
+    if(dup2(*fd_0, STDIN_FILENO) == -1)
+        msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_DUP, ft_itoa(*fd_0));// is this necessary here
+    if (*fd_0 != -1)
+        close(*fd_0);
+    *fd_0 = -1;
+    if(dup2(*fd_1, STDOUT_FILENO) == -1)
+        msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_DUP, ft_itoa(*fd_1));
+    if (*fd_1 != -1)
+        close(*fd_1);
+    *fd_1 = -1;
+}
+
 void execin_shell(t_msh *msh, t_cmd *cmd)
 {
     int std_fd[2];
@@ -64,20 +78,13 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
         msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "dup");
     }
     msh -> std_fd = std_fd;
-    //printf("exitt code before redir: %d\n", msh->exit_code);
     redirect_io(msh, cmd, -1, 0);//if this fails we might also loose std_fds. we changed some error exits tp return
-    //printf("exit code after redir: %d\n", msh->exit_code);
     if (msh -> exit_code == 0)
         exec_builtin(msh, cmd -> cmd);
     msh -> std_fd = NULL;
-    //restore_stdfd(msh, std_fd); I can use this insteead of the following code segment.
-    if(dup2(std_fd[0], STDIN_FILENO) == -1 || dup2(std_fd[1], STDOUT_FILENO) == -1)
-        msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC, "dup");
-    if (std_fd[0] != -1)
-        close(std_fd[0]);
-    if (std_fd[1] != -1)
-        close(std_fd[1]);
-    if (msh -> exit_code == 1)
-        msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think. removed exit flag.
+    restore_stdfd(msh, &std_fd[0], &std_fd[1]); //I can use this insteead of the following code segment.
+
+    // if (msh -> exit_code == 1)
+    //     msh_error(msh, (CLEAN|EXIT) << 8 | 1, NULL, NULL);//why two errors. fishy! Think again when you can think. removed exit flag.
 }
 //Exit codes are set in every end point of the builtins. When encountered an error msh_error may set the exit code and might exit if required.

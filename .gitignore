@@ -14,3 +14,4 @@ a.out
 src/objects/*/*.o
 src/objects/*/*.d
 minishell_tester
+42_minishell_tester

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 20:28:58 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 21:34:46 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	close_all_hdocfd(int *hdocfd_l)
 	}	
 }
 
-void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
+void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)//this needs refining
 {
 	int dup_ret;
 	t_redir **redir;
@@ -93,7 +93,7 @@ void    redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 		else
 				dup_ret = dup_io(fd, STDOUT_FILENO);
 		if (dup_ret < 0)
-			return(msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
+			return(msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_DUP, ft_itoa(fd)));	//if line count > 25 remove dup_ret and use fd to save it. print error message with dup as parametr.
 		redir++;
 		}
 	close_all_hdocfd(msh -> hdocfd_l);
