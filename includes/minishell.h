@@ -156,7 +156,7 @@ int set_redir_type(t_token *token, char *seg);
 
 //parse_utils
 int	 check_quotes(char *start, char *end);
-void skip_whitespaces(char **str);
+char *skip_whitespaces(char **str);
 int redir_skip(char *seg);
 char *remove_quotes(char *q_arg);
 int is_ambi_redir(char **expan);

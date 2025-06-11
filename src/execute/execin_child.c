@@ -33,8 +33,12 @@ void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
     sig_handler_changer();//SIGNAL: signal added
     if (msh -> cmd_count > 1)
         redirect_pipe(msh, rd_fd, wr_fd);
+    if (msh -> exit_code)
+        msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
     //printf("exit_code after redir pipe: %i\n", msh -> exit_code);
     redirect_io(msh, cmd, -1, 0);//might have to add a return value for this
+    if (msh -> exit_code)
+        msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
     //printf("exit_code after redir io: %i\n", msh -> exit_code);
     execute_cmd(msh, cmd);//what happens if cmd is null. can we add a  if condition if (cmd) ==> execute, else set exit code.
 }

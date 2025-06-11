@@ -101,8 +101,9 @@ void    adjust_exp_edge(t_msh *msh, t_expan *exp, char *exp_val, int q_context)
 void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int q_context)
 {
     char *tmp_exp_dup;
-    
-    if (*exp_dup && !q_context)
+
+    tmp_exp_dup = exp_dup;
+    if (*exp_dup && skip_whitespaces(&tmp_exp_dup) && !q_context)//addedskip whitespaces here.
     {
         tmp_exp_dup = exp_dup;
         while (*tmp_exp_dup)

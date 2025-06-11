@@ -34,10 +34,11 @@ int	 check_quotes(char *start, char *end)
     return (0);
 }
 
-void skip_whitespaces(char **str)
+char *skip_whitespaces(char **str)
 {
     while (**str && ft_strchr(" \t\n\r\f\v", **str))
         (*str)++;
+    return (*str);
 }
 
 int redir_skip(char *seg)

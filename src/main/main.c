@@ -54,14 +54,14 @@ void	msh_parse(t_msh *msh, char *line)
 	msh -> aux = &aux;
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
-    //print_segments(msh -> aux -> seg);//debugging purpose
+    print_segments(msh -> aux -> seg);//debugging purpose
 	seg_tokenize(msh, msh -> aux);
-    //print_tokens(msh -> aux -> token);//debugging purpose
+    print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
-	//print_expand_arrays(msh -> aux -> token);//debugging purpose
+	print_expand_arrays(msh -> aux -> token);//debugging purpose
 	init_cmd_struct(msh, msh -> cmd_count);
 	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
-	//print_cmd_members(msh -> cmd);//debugging purpose
+	print_cmd_members(msh -> cmd);//debugging purpose
 	clean_aux(msh, msh -> aux);
 }
 
@@ -73,21 +73,24 @@ void	msh_loop(t_msh *msh)
 	{
 		if (isatty(fileno(stdin)))
             init_sig();
-
 		line = readline("minishell> ");//looks like it reads from somewhere else sometimes? I didn't press enter?
-		add_history(line);
-		if (line)
-		{	
-			if (!msh_validate_line(msh, &line)) // ad checks to return 1 if the line is just whitespace without quotes
-			{
-				msh_parse(msh, line);
-				msh -> exit_code = 0;//this is just a quick fix. 
-				msh_execute(msh);
-			}
-			//printf("exit_code: %i\n", msh -> exit_code);
+	
+		if (!line) // Handle Ctrl+D (EOF)
+		{
+			printf("exit\n");
+			msh_clean(msh);
+			exit(msh->exit_code);
 		}
-		free(line);//probably I am freeing this somewhere inside msh_parse as well. Double check it.
-		//line = NULL;
+		add_history(line);
+		if (*line && !msh_validate_line(msh, &line))
+		{
+			msh_parse(msh, line);
+			msh->exit_code = 0; // Placeholder — replace later
+			msh_execute(msh);
+		}
+		free(line);
+
+		//probably I am freeing this somewhere inside msh_parse as well. Double check it.
 	}
 	rl_clear_history();
 }

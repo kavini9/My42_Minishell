@@ -83,13 +83,17 @@ void  q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg)
 void  addto_cmd_arr(t_msh *msh, t_token *token, t_cmd *cmd)
 {
   char **exp_arr;
+  char *cur_exp;
   
   if ((token -> expn))
   {
     exp_arr = token -> expn;
     while (*exp_arr)
     {
-      q_unwrap_append(msh, cmd, *exp_arr);//inside this check if redir flag exist and add to two arrays accordingly.
+      cur_exp = *exp_arr;
+      skip_whitespaces(&cur_exp);
+      if ((**exp_arr &&  *cur_exp) || cmd -> cmd)
+        q_unwrap_append(msh, cmd, *exp_arr);//inside this check if redir flag exist and add to two arrays accordingly.
       exp_arr++;
     }
   }
