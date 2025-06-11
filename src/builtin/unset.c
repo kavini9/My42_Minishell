@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 17:54:48 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 20:59:23 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void    unset_env(char **envl, char *key)// msh is unused here. so removed. Alo 
         return;
     free(*env_iter);
     ft_memmove(env_iter, env_iter + 1, (env_len - (env_iter + 1 - envl)) * sizeof(char *));//
-    envl[env_len]  = NULL;
+    envl[env_len - 1]  = NULL;
 } // an allocated memory block id left unused after this, it's not nice 
 //that we allocate again if we have to set a variable after this, think about it. 
 //my initial solution was to make envl a vector//*uck this we are running out of time
