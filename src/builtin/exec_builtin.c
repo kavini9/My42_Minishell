@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:05:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 23:17:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:10:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,16 @@ void execin_shell(t_msh *msh, t_cmd *cmd)
             close(std_fd[1]);
         msh_error(msh, (ERRNO|LOG|CLEAN|EXIT) << 8 | 1, ERR_SYSFUNC, "dup");
     }
+    msh -> std_fd = std_fd;
     //printf("exitt code before redir: %d\n", msh->exit_code);
     redirect_io(msh, cmd, -1, 0);//if this fails we might also loose std_fds. we changed some error exits tp return
     //printf("exit code after redir: %d\n", msh->exit_code);
     if (msh -> exit_code == 0)
         exec_builtin(msh, cmd -> cmd);
+    msh -> std_fd = NULL;
+    //restore_stdfd(msh, std_fd); I can use this insteead of the following code segment.
     if(dup2(std_fd[0], STDIN_FILENO) == -1 || dup2(std_fd[1], STDOUT_FILENO) == -1)
-        msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, "dup");
+        msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC, "dup");
     if (std_fd[0] != -1)
         close(std_fd[0]);
     if (std_fd[1] != -1)

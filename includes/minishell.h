@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 18:59:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:56:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ typedef struct s_msh
 	t_cmd	**cmd;
 	int		cmd_count; //  for command.c
 	int		hdocfd_l[HEREDOC_MAX];
+	int	*std_fd;
 	int		exit_code;
 } t_msh;
 
@@ -196,6 +197,7 @@ void clean_aux(t_msh *msh, t_parse *aux);
 void msh_clean(t_msh *msh);
 void    free_cmd(t_cmd **cmd);
 void free_arr(void **arr);
+void restore_stdfd(t_msh *msh, int *std_fd);
 
 //reset_cmd
 void reset_cmd_attr(t_msh *msh);
@@ -242,7 +244,7 @@ int is_builtin(char **cmd);
 void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i);
 void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_data_pack);
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i);
-void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd);
+void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe);
 void	wait_child(t_msh *msh, int i, pid_t pid);
 
 void    execute_cmd(t_msh *msh, t_cmd *cmd);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 22:13:55 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 16:33:30 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,14 @@ void	msh_parse(t_msh *msh, char *line)
 	msh -> aux = &aux;
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, msh -> aux -> seg);
-    print_segments(msh -> aux -> seg);//debugging purpose
+    //print_segments(msh -> aux -> seg);//debugging purpose
 	seg_tokenize(msh, msh -> aux);
-    print_tokens(msh -> aux -> token);//debugging purpose
+    //print_tokens(msh -> aux -> token);//debugging purpose
     expand_tokens(msh, msh -> aux -> token);
-	print_expand_arrays(msh -> aux -> token);//debugging purpose
+	//print_expand_arrays(msh -> aux -> token);//debugging purpose
 	init_cmd_struct(msh, msh -> cmd_count);
 	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
-	print_cmd_members(msh -> cmd);//debugging purpose
+	//print_cmd_members(msh -> cmd);//debugging purpose
 	clean_aux(msh, msh -> aux);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 18:10:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:07:12 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,16 @@ void    free_cmd(t_cmd **cmd)
     }
 }
 
+void restore_stdfd(t_msh *msh, int *std_fd)
+{
+    if(dup2(std_fd[0], STDIN_FILENO) == -1 || dup2(std_fd[1], STDOUT_FILENO) == -1)
+        msh_error(msh, (ERRNO|LOG) << 8 | 1, ERR_SYSFUNC, "dup");// is this necessary here
+    if (std_fd[0] != -1)
+        close(std_fd[0]);
+    if (std_fd[1] != -1)
+        close(std_fd[1]);
+}
+
 void msh_clean(t_msh *msh)
 {
     if (msh -> cwd)
@@ -58,5 +68,7 @@ void msh_clean(t_msh *msh)
         free_arr((void **) msh -> envl);
     if (msh -> cmd)
         free_cmd(msh -> cmd);
+    if (msh -> std_fd)
+        restore_stdfd(msh, msh -> std_fd);
     ft_memset(msh, 0, offsetof(t_msh, exit_code));
 }

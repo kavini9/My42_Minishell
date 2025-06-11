@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 21:41:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/11 19:54:30 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,13 @@ void	wait_child(t_msh *msh, int i, pid_t pid)
 	}
 }
 
-void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
+void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe)
 {
+    if (pipe[0] != -1)
+        close (pipe[0]);
     sig_handler_changer();//SIGNAL: signal added
     if (msh -> cmd_count > 1)
-        redirect_pipe(msh, rd_fd, wr_fd);
+        redirect_pipe(msh, rd_fd, pipe[1]);
     if (msh -> exit_code)
         msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
     //printf("exit_code after redir pipe: %i\n", msh -> exit_code);
@@ -46,11 +48,15 @@ void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int wr_fd)
 void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
 {
     if (*prev_rd_fd != -1)
+    {
         close(*prev_rd_fd);
+        *prev_rd_fd = -1;
+    }
     if (i < cmd_count - 1)
     {
         *prev_rd_fd = pipe_fd[0];//This is why we need prev_rd_fd to be a pointer. this assigned value shouls be updated in calling function
         close(pipe_fd[1]);
+        pipe_fd[1] = -1;
     }   
 }
 
@@ -90,7 +96,7 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
         if (pid < 0)
             break;
         if (pid == 0)
-            run_child_proc(msh, *cmd, prev_rd_fd, pipe_fd[1]);
+            run_child_proc(msh, *cmd, prev_rd_fd, pipe_fd);
         else if (msh -> cmd_count > 1)// it won't go in here if the command count is 1.
             set_pipe_chain(&prev_rd_fd, pipe_fd , msh  -> cmd_count, i);
         cmd++;
