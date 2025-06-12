@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 22:59:01 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:21:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	main(int ac, char **av, char **envp)
 	t_msh	msh;
 	(void) av;
 	
+	// printf("sizeof **redir: %zu\n", sizeof(t_redir **));
 	if (ac != 1)
 		exit(printf("# minishell: Error: Invalid number of arguments."
 		"\n# Usage: ./minishell"));

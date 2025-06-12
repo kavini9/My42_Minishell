@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 22:53:48 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/22 02:31:07 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:45:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	set_shlvl(t_msh *msh, char **envl)
 	nxt_lvl = ft_itoa(lvl_val);
 	if (!nxt_lvl)
 		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "set_shlvl");
-	update_env(msh, "SHLVL=", nxt_lvl);
+	//update_env(msh, "SHLVL=", nxt_lvl);
 	free(nxt_lvl);
 }
 

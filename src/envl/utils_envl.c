@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/03 23:03:02 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/12 18:45:37 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ void    update_env(t_msh *msh, char *key, char *value)
     char *entry;
 
     entry = ft_strjoin(key, value);
+    free(value);
     if(!entry)
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "update_env");//who cleans key coming from shlvl
     set_env(msh, msh -> envl, entry);

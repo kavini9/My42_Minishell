@@ -1,6 +1,5 @@
 42_minishell_tester
 ambi_redir.c
-big_tester_results
 big_tester_results.txt
 cases_ambiguous_redir.txt
 cases_exit_builtin.c
@@ -43,7 +42,6 @@ tmp_out_minishell
 validate_test
 42_minishell_tester
 ambi_redir.c
-big_tester_results
 big_tester_results.txt
 cases_ambiguous_redir.txt
 cases_exit_builtin.c

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 21:28:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/12 23:46:12 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,16 @@ void free_arr(void **arr)
 
 void    free_cmd(t_cmd **cmd)
 {
+    t_cmd **cmd_ptr;
     t_redir **redir_arr;
     
-    
+    cmd_ptr = cmd;
     while (*cmd)
     {
         if ((*cmd) -> cmd)
             free_arr((void **) (*cmd) -> cmd);
+        // if ((*cmd)->err_note.cmd_path)
+        //     free((*cmd)->err_note.cmd_path);
         redir_arr = (*cmd) -> redir;
         while (redir_arr && *redir_arr)
         { 
@@ -46,6 +49,7 @@ void    free_cmd(t_cmd **cmd)
         //ft_memset(cmd, 0, sizeof(t_cmd));
         cmd++;
     }
+    free(cmd_ptr);
 }
 
 void msh_clean(t_msh *msh)
