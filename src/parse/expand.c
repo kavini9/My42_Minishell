@@ -87,8 +87,10 @@ void expscan_token(t_msh *msh, t_token *token)
             exp.exp++;
         }
     }
-    //free(exp.tok);//this might have a null terminator remaining here.
-    //free(exp.prefix);
+    // if (exp.tok)
+    //     free(exp.tok);//this might have a null terminator remaining here.
+    if (exp.prefix)
+        free(exp.prefix);
 }
 
 //need to add another condition to avoid splitting token with redir flags. SECOND: added this inside because it still needs to be expanded
@@ -122,7 +124,7 @@ void expand_tokens(t_msh *msh, t_token **token)
 //when found $ sign pass it to find key 
 //when the key is found pass it to expand with quoted or unquoted flag.
 //create a array with the
-//tilde expansion should be done after variable expansion because variables can include tilde.
+//tilde expansion should be done after variable expansion because variables can include tilde. what bullshit is this? were you high?
 
 
 
