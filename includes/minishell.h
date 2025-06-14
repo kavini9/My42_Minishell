@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/12 22:48:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 23:50:43 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,11 +113,10 @@ typedef struct s_msh
 {
 	char	*cwd;
 	char	*old_wd;
-	//char	*prompt;
 	char	**envl;
 	t_parse *aux;
 	t_cmd	**cmd;
-	int		cmd_count; //  for command.c
+	int		cmd_count;
 	int		hdocfd_l[HEREDOC_MAX];
 	int	*std_fd;
 	int		exit_code;

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/11 19:54:30 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 23:47:34 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,16 +108,6 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
         wait_child(msh, i, pid);//see where i am cleaning cmd shit
 }
 
-// void    execin_child(t_msh *msh)
-// {
-//     here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0); 
-//     // if (msh -> cmd_count == 1)
-//     //     exec_single(msh);
-//     // else
-//     exec_pipex(msh, msh -> cmd, -1,  0);
-// }
-//ls | sort | grep src remember to understand what happens here. does this break the
-//pipeline. 
 
 
 /*

@@ -6,18 +6,12 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 18:48:52 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 23:50:26 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// char	*prompt_gen(t_msh *msh)
-// {
-// 	if(ft_strcmp(msh -> cwd, msh -> old_wd)
-// 		msh -> prompt = prompt_update(msh -> cwd);
-// 	return(msh -> prompt)
-// }
 
 void msh_init(t_msh *msh, char **envp)
 {
@@ -31,8 +25,6 @@ void msh_init(t_msh *msh, char **envp)
 	duplicate_env(msh, envp);
 	set_shlvl(msh, msh -> envl);
 	ft_memset(msh -> hdocfd_l, -1, sizeof(int) * 16);
-	
-
 }
 
 void    msh_execute(t_msh *msh)

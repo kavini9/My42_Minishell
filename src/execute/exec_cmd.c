@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/12 23:46:15 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 23:49:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,12 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
 	if (msh -> exit_code == 0 && cmd -> cmd && !exec_builtin(msh, cmd -> cmd))
 	{
     	cmd_arr = cmd -> cmd;
-    	if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))
+    	if (*cmd_arr && **cmd_arr && !ft_strchr(*cmd_arr, '/'))
         	get_cmd_path(msh, cmd, *cmd_arr, &cmd_path);
     	else if (*cmd_arr)
     	{
         	access_check(msh, cmd, *cmd_arr);
-        	cmd_path = ft_strdup(*cmd_arr);
+        	cmd_path = ft_strdup(*cmd_arr);//think about calling set_errnote here
     	}
     	if (!cmd_path)
         	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
@@ -112,3 +112,4 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
 	//clean and exit with exit code set in msh received.
     //printf("execve failed. free cmd path and path arr\n");// clean all memeory and set exitcode for child proocess.
 }
+//think about set_errnote

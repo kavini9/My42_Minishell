@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 21:27:00 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 22:28:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
 {
     int hd_pfd[2];
     char *line;
+    int i;
 
+    i = 1;
     if (pipe(hd_pfd) == -1)
         return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_SYSFUNC, "pipe"));//TODO: ERROR. See what is need to be freed.
     while (1)
@@ -28,9 +30,10 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
             break;
         ft_putendl_fd(line, hd_pfd[1]);
         free(line);
+        i++;
     }
     if (!line)
-        exit(printf("heredoc error"));// TODO: ERROR 
+        printf_fd(2, WAR_HDEOF, i, redir -> fname_o_del);
     free(line);
     close(hd_pfd[1]);
     *hdoc_fd = hd_pfd[0];
