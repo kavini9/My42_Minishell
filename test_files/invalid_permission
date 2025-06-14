@@ -36,7 +36,6 @@ tmp_out_bash
 tmp_out_minishell
 tmp_valgrind-out.txt
 validate_test
-wow
 ambi_redir.c
 big_tester_results.txt
 cases_ambiguous_redir.txt
@@ -75,7 +74,6 @@ tmp_out_bash
 tmp_out_minishell
 tmp_valgrind-out.txt
 validate_test
-wow
 ambi_redir.c
 big_tester_results.txt
 cases_ambiguous_redir.txt
@@ -114,7 +112,6 @@ tmp_out_bash
 tmp_out_minishell
 tmp_valgrind-out.txt
 validate_test
-wow
 hi
 hi
 hi

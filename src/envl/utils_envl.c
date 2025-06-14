@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 19:48:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 01:35:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void    add_env_var(t_msh *msh, char **envl, char *entry)
         free(env_new);
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "setenv");//"minishell: fatal error: memory allocation failed in %s\n"
     }
+    free(entry);//added lately
     env_new[env_len] = tmp;
     env_new[++env_len] = NULL;
     free(envl);
@@ -61,6 +62,7 @@ void    overwrite_env_var(t_msh *msh, char **env_var, char *entry)
     *env_var = ft_strdup(entry);// this will only replace the existing 
     if (!*env_var)
         msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "setenv");//"minishell: fatal error: memory allocation failed in %s\n"
+    free(entry);
     msh -> exit_code = EXIT_SUCCESS;
 }
 
@@ -71,6 +73,8 @@ void    set_env(t_msh *msh, char **envl, char *entry)
     char    *key;
     int     k_len;
 
+    if (!entry)
+		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "setenv");
     eq = ft_strchr(entry, '=');
 	if (eq)
 		key = ft_substr(entry, 0, eq - entry);
@@ -99,8 +103,8 @@ void    update_env(t_msh *msh, char *key, char *value)
         entry = ft_strjoin(key, value);
     if (value)
         free(value);
-    if(!entry)
-        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "update_env");//who cleans key coming from shlvl
+    // if(!entry)//added this to set env itself. so it takes care of the export entry as well
+    //     msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "update_env");//who cleans key coming from shlvl
     set_env(msh, msh -> envl, entry);
 }    
     

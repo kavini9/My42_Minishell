@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 22:28:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 00:43:20 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,37 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
 }
 
 //TODO: expansion for heredoc
+static void heredoc_limiter(t_msh *msh, t_cmd **cmd)
+{
+    int i;
+    t_redir **redir;
+    
+    i = 0;
+    while (*cmd)
+    {
+        redir = (*cmd) -> redir;
+        while(redir && *redir)
+        {
+            if ((*redir) -> type == REDIR_HDOC)
+                i++;
+            redir++;
+        }
+        cmd++;
+    }
+    if (i > HEREDOC_MAX)
+        msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 2, ERR_HDLIM, NULL);
+}
 
 void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i)
 {
     t_redir **redir;
 
-    while(*cmd)//is this correct?
+    heredoc_limiter(msh, cmd);
+    while(*cmd)
     {
         redir = (*cmd) -> redir;
         (*cmd) -> hdoc_st_pos = i;
-        while(redir && *redir)//added redir because there can be instances where redir is NULL
+        while(redir && *redir)
         {
             if ((*redir) -> type == REDIR_HDOC)
             {
@@ -61,5 +82,3 @@ void    here_doc(t_msh *msh, t_cmd **cmd, int *hdocfd_l, int i)
         cmd++;
     }
 }
-
-//where do I limit taking heredocs?

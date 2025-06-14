@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:26:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/27 23:41:22 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 01:32:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void    builtin_export(t_msh *msh, char **cmd)
     {
         if(!is_valid_id(*cmd))
             return(msh_error(msh, LOG << 8 | 1, ERR_XPORTID,*cmd));// "minishell: export: `%s': not a valid identifier\n"
-        set_env(msh, msh -> envl, *cmd);
+        set_env(msh, msh -> envl, ft_strdup(*cmd));
         cmd++;
     }
 }
