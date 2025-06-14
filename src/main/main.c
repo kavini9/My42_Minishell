@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/12 23:21:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:48:52 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ int	main(int ac, char **av, char **envp)
 	msh_init(&msh, envp);
 //	print_envl(&msh);
 	msh_loop(&msh);
-//	msh_clean(&msh, 1);
-//	exit(msh.exit_code);
+	msh_clean(&msh);
+	exit(msh.exit_code);
 }
  

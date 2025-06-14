@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/07 20:42:28 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:49:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void    msh_wd_update(t_msh *msh)
     msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
         return(msh_error(msh, (ERRNO|LOG|CLEAN) << 8 | 1, ERR_GETCWD, "cd"));//"minishell: cd: error retrieving current directory: getcwd: %s\n"
-    update_env(msh, "OLDPWD=", msh -> old_wd);
-    update_env(msh, "PWD=", msh -> cwd);
+    update_env(msh, "OLDPWD=", ft_strdup(msh -> old_wd));
+    update_env(msh, "PWD=", ft_strdup(msh -> cwd));
     msh -> exit_code = EXIT_SUCCESS;// EXIT_CODE: this is where it sets exit code for cd except for unlinked parent directory case.
 }
 
@@ -81,7 +81,7 @@ void    cd_path(t_msh *msh, char *path)
 
 void    builtin_cd(t_msh *msh, char **cmd)
 {
-    if (cmd[2])
+    if (cmd[1] && cmd[2])
         return(msh_error(msh, LOG << 8 | 1, ERR_XTRA_ARG, "cd"));//TODO: should not exit minishell but prints error message.
     else if (!cmd[1] || !ft_strcmp(cmd[1], "~") || !ft_strcmp(cmd[1], "--"))//DES: -- used with -filename to indicate end of options.
         cd_env_var(msh, "HOME");

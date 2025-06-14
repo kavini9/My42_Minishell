@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/12 23:46:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/14 19:38:54 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ void    free_cmd(t_cmd **cmd)
     {
         if ((*cmd) -> cmd)
             free_arr((void **) (*cmd) -> cmd);
-        // if ((*cmd)->err_note.cmd_path)
-        //     free((*cmd)->err_note.cmd_path);
         redir_arr = (*cmd) -> redir;
         while (redir_arr && *redir_arr)
         { 
@@ -55,7 +53,7 @@ void    free_cmd(t_cmd **cmd)
 void msh_clean(t_msh *msh)
 {
     if (msh -> cwd)
-        free(msh -> cwd);
+		free(msh -> cwd);
     if (msh -> old_wd)
         free(msh -> old_wd);
     if (msh -> envl)
