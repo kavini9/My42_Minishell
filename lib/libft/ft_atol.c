@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 19:27:48 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/04/21 23:24:26 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 04:13:12 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ long int	ft_atol(const char *str)
 		atoi = atoi * 10 + *str - '0';
 		if (sign * atoi / 10 != buf && sign == -1)
 			return (0);
-		else if (atoi / 10 != buf && sign == 1)
+		else if (sign * atoi / 10 != buf && sign == 1)
 			return (-1);
 		str++;
 	}

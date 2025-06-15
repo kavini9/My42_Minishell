@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/15 03:01:06 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 05:15:06 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 
 	arr_path = get_path_array(msh, msh -> envl);
 	ptr_arr_path = arr_path; 
-	while (arr_path && *arr_path)
+	while (*cmd_name && arr_path && *arr_path)
 	{
 		*cmd_path = ft_strjoin("/", cmd_name);
 		tmp = *cmd_path;
@@ -91,7 +91,7 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
 	if (msh -> exit_code == 0 && cmd -> cmd && !exec_builtin(msh, cmd -> cmd))
 	{
     	cmd_arr = cmd -> cmd;
-    	if (*cmd_arr && **cmd_arr && !ft_strchr(*cmd_arr, '/'))
+    	if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))
         	get_cmd_path(msh, cmd, *cmd_arr, &cmd_path);
     	else if (*cmd_arr)
     	{
@@ -99,14 +99,14 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
         	cmd_path = ft_strdup(*cmd_arr);//think about calling set_errnote here
     	}
     	if (!cmd_path)
-        	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");//"minishell: fatal error: memory allocation failed in %s\n"
+        	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");
     	sig_reseted();//SIGNAL: is this in correct place
 		execve(cmd_path, cmd_arr, msh -> envl);
-		cmd -> err_note.cmd_path = cmd_path;//do I have to alloc for err_note. Does defining t_cmd cmd itself create this? YES right? because it's not a pointer.
+		cmd -> err_note.cmd_path = cmd_path;
 		if (!cmd -> err_note.strerr)
 			cmd -> err_note.strerr = strerror(errno);
 		msh_error(msh, (EXTRARG|LOG) << 8 | msh -> exit_code , ERR_SYSFUNC, (char *)&(cmd -> err_note));
-		free(cmd_path);//see if this needs to be nulled
+		free(cmd_path);
 	}
 	msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
 }
