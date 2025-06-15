@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 19:13:14 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 21:08:09 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 22:31:58 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_lstsize(t_list *lst);
 int		ft_atoi(const char *str);
-int		ft_atol(const char *str);
+long int		ft_atol(const char *str);
 
 double	ft_atof(const char *str);
 

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 23:47:34 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 22:51:08 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	wait_child(t_msh *msh, int i, pid_t pid)
 
 void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe)
 {
+    sig_handler_changer();//SIGNAL: signal added
     if (pipe[0] != -1)
         close (pipe[0]);
-    sig_handler_changer();//SIGNAL: signal added
     if (msh -> cmd_count > 1)
         redirect_pipe(msh, rd_fd, pipe[1]);
     if (msh -> exit_code)
@@ -86,13 +86,14 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
     int pipe_fd[2];
     pid_t pid;
     
+    //TODO: SIGNAL: set signals to be ignored by the parent
     while (i < msh -> cmd_count)
     {
         pid  = 1;
         memset(pipe_fd, -1, 2 * sizeof(int));//to avoid trying to redirect the pfd[1] in last command.
         if (i < msh -> cmd_count - 1 && pipe(pipe_fd) < 0)
             break;
-        pid = fork();
+        pid = fork();//
         if (pid < 0)
             break;
         if (pid == 0)
@@ -106,6 +107,7 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
         safe_pipefork_fail(msh, prev_rd_fd, pipe_fd , (i << 8) | (pid & 0xFF));
     if (i > 0)
         wait_child(msh, i, pid);//see where i am cleaning cmd shit
+    //TODO: SIGNAL: restore the basic minishell signal behaviour
 }
 
 
