@@ -6,16 +6,15 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 20:10:53 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/08 23:19:59 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:23:05 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char *get_process_pid(char *buf)
+char *get_process_pid(char *buf, int fd)
 {
     char *tmp;
-    int fd;
     int bytes_read;
 
     if(!buf)
@@ -32,6 +31,8 @@ char *get_process_pid(char *buf)
         free(buf);
         return (NULL);//TODO: ERROR
     }
+    if (fd != -1)
+        close(fd);
     tmp = buf;
     while (bytes_read-- && !ft_strchr(" \t\n\r\f\v", *tmp))
         tmp++;
@@ -46,7 +47,7 @@ char *extract_exp_value(t_msh *msh, char *key)
     if (!ft_strcmp(key, "?"))
         return(ft_itoa(msh -> exit_code));
     else if (!ft_strcmp(key, "$"))
-        return(get_process_pid(malloc(PID_MAX_LEN)));
+        return(get_process_pid(malloc(PID_MAX_LEN), -1));
     else if (!ft_strcmp(key, "0"))
         return(ft_strdup("minishell"));
     else

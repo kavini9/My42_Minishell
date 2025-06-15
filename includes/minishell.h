@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 23:50:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:24:22 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ char *extract_env_key(char **token);
 
 //variable_extract
 char *extract_exp_value(t_msh *msh, char *key);
-char *get_process_pid(char *buf);
+char *get_process_pid(char *buf, int fd);
 
 //expand_arr
 void    get_tmp_arr(t_msh *msh, t_expan *exp, char *exp_dup, int quote_or_redir);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 19:20:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 19:33:31 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ void expscan_token(t_msh *msh, t_token *token)
             // printf("print key in expscan: %s\n", exp.key);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);
+            else
+                free(exp.key);
             // else
             //     exp.suffix--;//to copy the $ to the string. $ will be incremented after the if condition.
         }
@@ -105,7 +107,7 @@ void expand_tokens(t_msh *msh, t_token **token)
         while ((*tok_tmp).token)//use 
         {
             token_iter = ft_strchr((*tok_tmp).token, '$');
-            while (token_iter && *token_iter && check_quotes((**token).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.
+            while (token_iter && *token_iter && check_quotes((*tok_tmp).token, token_iter) == '\'')//we removed token_iter + 1 in check quotes.//shouldn't this be check_quotes((*tok_tmp).token, token_iter)
                 token_iter = ft_strchr((++token_iter), '$');//this part was added because I checked the availability of the tilde here as well may be we dont need it here just add the condition check quotes in if
             if ((*tok_tmp).redir != REDIR_HDOC && token_iter 
             && check_quotes((*tok_tmp).token, token_iter) != '\'')
