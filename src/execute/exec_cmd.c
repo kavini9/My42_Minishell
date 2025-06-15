@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 23:49:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/15 03:01:06 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	**get_path_array(t_msh *msh, char **envl)
     char **arr_path;
 
     env_path = get_env(envl, "PATH");
-	if (*env_path)
+	if (env_path)//if (*env_path)
         arr_path = ft_split(env_path, ':');
 	else //can this go wrong when env is NULL i.e. env -i
 		arr_path = ft_split(".", ' ');// will create {"./", NULL} so I can search current folder if the env path is unset.
@@ -109,7 +109,5 @@ void    execute_cmd(t_msh *msh, t_cmd *cmd)
 		free(cmd_path);//see if this needs to be nulled
 	}
 	msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
-	//clean and exit with exit code set in msh received.
-    //printf("execve failed. free cmd path and path arr\n");// clean all memeory and set exitcode for child proocess.
 }
 //think about set_errnote
