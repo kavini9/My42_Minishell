@@ -86,7 +86,8 @@ void	msh_loop(t_msh *msh)
 			msh->exit_code = 0; //Placeholder — replace later
 			msh_execute(msh);
 		}
-		free(line);
+		if (line)
+			free(line);
 	}
 	rl_clear_history();
 }

@@ -45,14 +45,17 @@ void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
     char    *exp_dup;
     int q_context;
 
+    exp_dup = NULL;
     q_context = check_quotes(exp -> tok, exp -> suffix);//there's somthing wrong in this. q_context is wrong.//before if was (exp -> exp, exp -> prefix)
     exp_val = extract_exp_value(msh, exp -> key);//get_env(msh -> envl, exp -> key);//this needs to be replaced to get $? $$
     if (exp_val)
         exp_dup = ft_strdup(exp_val);
     // else
     //     exp_dup = ft_strdup("");//removed this because we strdup("") if env not available in extract env.
-    if (!exp_val || !exp_dup)
-        exit(printf("# minishell: expand_parameter: Error:Malloc Fail.\n"));
+    if (exp_val && !exp_dup)//newly added
+        free(exp_val);//newly added
+    if (!exp_dup) //previosly if (!exp_val || !exp_dup)
+        parse_error(msh, msh -> aux, exp, "parameter expansion");
     get_tmp_arr(msh, exp, exp_dup, q_context);//I hope sending argument like this will prevent it from spliting expand when token is redir type
     adjust_exp_edge(msh, exp, exp_val, q_context);
     revise_exp_arr(msh, token, exp);
@@ -71,7 +74,7 @@ void expscan_token(t_msh *msh, t_token *token)
         {//do we need suffix + 1. why do I do that in test_parse
             exp.key = extract_env_key(&(exp.suffix));
             if (!exp.key)
-                exit(printf("# minishell: expscan_token: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC //  have to free exp.prefix.
+                parse_error(msh, msh -> aux, &exp, "expansion token scan");//TODO: ERROR MALLOC //  have to free exp.prefix.
             // printf("print key in expscan: %s\n", exp.key);
             if (*exp.key)//this is for when we have something like $%
                 expand_parameter(msh, token, &exp);

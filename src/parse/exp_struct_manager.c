@@ -28,7 +28,7 @@ void update_exp_state(t_msh *msh, t_token *token, t_expan *exp)
     //printf("44444444444444444444444444444444: prefix: %s - %p\n", exp -> suffix, exp -> suffix);
     exp -> prefix = ft_calloc(ft_strlen(exp -> tok), sizeof(char));
     if (!exp -> prefix)
-        exit(printf("# minishell: update_exp_state: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        parse_error(msh, msh -> aux, exp, "expansion util struct update");// added exit code to avoidunused param error
     ft_memcpy(exp -> prefix, exp -> tok, exp -> scan_offset * sizeof(char));//we didn't do this before. thats wht the next element set did niot include the previous
     //printf("55555555555555555555555555555555: prefix after revise: %s\n", exp -> prefix);
     exp -> exp = exp -> prefix + exp -> scan_offset;
@@ -67,7 +67,7 @@ void revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
         new_exp_len = exp_len + tmp_len;
     token -> expn = ft_realloc(token -> expn, exp_len * size , new_exp_len * size);// this needs refining
     if (!token -> expn)
-        exit(printf("# minishell: revise_exp_arr: Error:Malloc Fail.\n"));
+        parse_error(msh, msh -> aux, exp, "expansion util struct revise");
     if (exp_len > 0)
     {
         free(*((token -> expn) + exp_len - 1));//this was causing double free but now okay
@@ -88,6 +88,6 @@ void init_exp(t_msh *msh, t_token token, t_expan *exp)//should I pass t_token *
     exp -> suffix = token.token;
     exp -> prefix = ft_calloc(ft_strlen(token.token), sizeof(char));
     if (!exp -> prefix)
-        exit(printf("# minishell: init_exp: Error:Malloc Fail.%i\n", msh -> exit_code));// added exit code to avoidunused param error
+        parse_error(msh, msh -> aux, exp, "expansion util struct init");
     exp -> exp = exp -> prefix;
 }

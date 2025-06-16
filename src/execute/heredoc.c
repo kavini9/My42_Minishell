@@ -39,7 +39,6 @@ void    get_here_doc(t_msh *msh, t_redir *redir, int *hdoc_fd)
     *hdoc_fd = hd_pfd[0];
 }
 
-//TODO: expansion for heredoc
 static void heredoc_limiter(t_msh *msh, t_cmd **cmd)
 {
     int i;

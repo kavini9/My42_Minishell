@@ -105,6 +105,7 @@ typedef struct s_token
 
 typedef struct s_parse
 {
+	char		**line;
     char        **seg;
     t_token     **token;
 }   t_parse;
@@ -133,7 +134,6 @@ void	msh_loop(t_msh *msh);
 //validate
 int	msh_validate_line(t_msh *msh, char **line);
 int	validate_pipe(t_msh *msh, char *line);
-//char *get_trailing_input(t_msh *msh, char *line);
 
 int check_redirects(t_msh *msh, char *line);
 int validate_redirect(t_msh *msh, char *line, int *i, char *type);
@@ -191,6 +191,8 @@ void  setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd);
 
 //clean_parse
 void clean_aux(t_msh *msh, t_parse *aux);
+void clean_exp(t_expan *exp);
+void parse_error(t_msh *msh, t_parse *aux, t_expan *exp, char *func_name);
 
 //clean
 void msh_clean(t_msh *msh);

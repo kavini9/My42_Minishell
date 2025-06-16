@@ -68,19 +68,19 @@ void extract_token(t_msh *msh, t_token **token, char *seg)
     {
         *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
         if (!token)
-            exit(printf("# minishell: extract_token: Error:Malloc Fail. %i\n", msh -> exit_code));// added exit code to avoidunused param error
+            parse_error(msh, msh -> aux, NULL, "tokenization");
         ft_memset(&(*token)[arr_len], 0, size);
         tok_len = get_token_len(seg, &(*token)[arr_len], 0);
         (*token)[arr_len].token = ft_substr(seg, redir_skip(seg), tok_len - redir_skip(seg));
         if (!(*token)[arr_len].token)
-            exit(printf("# minishell: extract_token: Error:Malloc Fail. %i\n", arr_len));
+            parse_error(msh, msh -> aux, NULL, "tokenization");
         seg += tok_len;
         skip_whitespaces(&seg);
         arr_len++;
     }
     *token = ft_realloc(*token, arr_len * size, (arr_len + 1) * size);
     if (!*token)
-        exit(printf("# minishell: extract_token: Error:Malloc Fail\n"));
+        parse_error(msh, msh -> aux, NULL, "tokenization");
     ft_memset(&(*token)[arr_len], 0, sizeof(t_token));
 }
 

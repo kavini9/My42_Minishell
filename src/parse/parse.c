@@ -21,7 +21,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
     start = line;
     while (*line)
     {
-        if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line + 1))//change the check quotes function
+        if ((*(line + 1) == '|' || !*(line + 1)) && !check_quotes(start, line + 1))
         {
             seg = ft_substr(start, 0, line - start + 1);
             temp = seg;
@@ -31,7 +31,7 @@ void line_split_bypipe(t_msh *msh, char *line, char **seg_arr)
                 free(temp);
             }
             if (!seg)//free line here if exit. it is now freed in main loop after evrything
-                exit(printf("# minishell: line_split_bypipe: Error:Malloc Fail. %s\n", msh -> cwd ));//TODO: ERROR MALLOC.
+                parse_error(msh, msh -> aux, NULL, "line_split");
             *seg_arr = seg;
             seg_arr++;
             if (*(line + 1)) 
@@ -60,11 +60,12 @@ int	count_pipes(char *line)
 void init_parse_structs(t_msh *msh, char *line) 
 {
 	msh -> cmd_count = count_pipes(line) + 1;
+    msh -> aux -> line = &line;
 	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
 	if (!msh -> aux -> seg)
-		exit(printf("# minishell: init_parse_structs: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC
+		parse_error(msh, msh -> aux, NULL, "init_parse");
     msh -> aux -> token = ft_calloc(msh -> cmd_count + 1, sizeof(t_token *));
 	if (!msh -> aux -> token)
-		exit(printf("# minishell: init_parse_structs: Error:Malloc Fail.\n"));//TODO: ERROR MALLOC. Free aux -> seg.
+		parse_error(msh, msh -> aux, NULL, "init_parse");
 }
 
