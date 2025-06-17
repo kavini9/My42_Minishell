@@ -6,24 +6,22 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 21:08:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/05/31 20:14:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 07:30:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-void    builtin_env(t_msh *msh)// char **cmd)
+void	builtin_env(t_msh *msh)// char **cmd)
 {
-    char **envl;
+	char	**envl;
 
-    envl = msh -> envl;
-    // if (*(++cmd)) //removed this becase pwd still printf current directory even when "pwd asd asd"
-    //     return(printf("minishell: env: %s: too many arguments\n", *cmd));//TODO
-    while (*envl)
-    {
-        if (ft_strchr(*envl, '='))
-            printf("%s\n", *envl);
-        envl++;
-    }
-    msh -> exit_code = EXIT_SUCCESS;
+	envl = msh -> envl;
+	while (*envl)
+	{
+		if (ft_strchr(*envl, '='))
+			printf("%s\n", *envl);
+		envl++;
+	}
+	msh -> exit_code = EXIT_SUCCESS;
 }

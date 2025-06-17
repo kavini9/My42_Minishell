@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/14 19:38:54 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/16 22:03:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,34 @@ void free_arr(void **arr)
     free(arr);
 }
 
+void    free_redir(t_redir **redir)
+{
+    t_redir **ptr_redir;
+    
+    ptr_redir = redir;
+    if (!redir)
+        return ;
+    while (redir && *redir)
+    { 
+        free((*redir) -> fname_o_del);//should we checkk if this exist.
+        free(*redir);
+        redir++;
+    }
+    free(ptr_redir);
+}
+
 void    free_cmd(t_cmd **cmd)
 {
     t_cmd **cmd_ptr;
-    t_redir **redir_arr;
     
     cmd_ptr = cmd;
     while (*cmd)
     {
         if ((*cmd) -> cmd)
             free_arr((void **) (*cmd) -> cmd);
-        redir_arr = (*cmd) -> redir;
-        while (redir_arr && *redir_arr)
-        { 
-            free((*redir_arr) -> fname_o_del);
-            redir_arr++;
-        }
         if ((*cmd) -> redir)
-            free_arr((void **) (*cmd) -> redir);
+            free_redir((*cmd) -> redir);
         free(*cmd);
-        //ft_memset(cmd, 0, sizeof(t_cmd));
         cmd++;
     }
     free(cmd_ptr);
