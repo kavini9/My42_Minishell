@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/15 22:51:08 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 01:32:45 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 void	wait_child(t_msh *msh, int i, pid_t pid)
 {
 	int	status;
+	int	sig;
 
+	sig = 0;
 	while (i--)
 	{
 		if (wait(&status) == pid)
@@ -25,6 +27,16 @@ void	wait_child(t_msh *msh, int i, pid_t pid)
 			else if (WIFSIGNALED(status) && WTERMSIG(status))
 				msh -> exit_code = 128 + WTERMSIG(status);
 		}
+		if (WIFSIGNALED(status) && !sig)
+			sig = WTERMSIG(status);
+	}
+	//printf("sig: %d\n", sig);
+	if (sig == SIGQUIT)
+		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+	else if (sig == SIGINT)
+	{
+		//printf("asdasdsad\n");
+		write(STDERR_FILENO, "\n", 1);
 	}
 }
 
@@ -43,21 +55,6 @@ void run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe)
         msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
     //printf("exit_code after redir io: %i\n", msh -> exit_code);
     execute_cmd(msh, cmd);//what happens if cmd is null. can we add a  if condition if (cmd) ==> execute, else set exit code.
-}
-
-void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
-{
-    if (*prev_rd_fd != -1)
-    {
-        close(*prev_rd_fd);
-        *prev_rd_fd = -1;
-    }
-    if (i < cmd_count - 1)
-    {
-        *prev_rd_fd = pipe_fd[0];//This is why we need prev_rd_fd to be a pointer. this assigned value shouls be updated in calling function
-        close(pipe_fd[1]);
-        pipe_fd[1] = -1;
-    }   
 }
 
 void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_data_pack)
@@ -79,6 +76,20 @@ void    safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd , int err_da
         close(pipe_fd[1]);
     }  
 }
+void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
+{
+    if (*prev_rd_fd != -1)
+    {
+        close(*prev_rd_fd);
+        *prev_rd_fd = -1;
+    }
+    if (i < cmd_count - 1)
+    {
+        *prev_rd_fd = pipe_fd[0];//This is why we need prev_rd_fd to be a pointer. this assigned value shouls be updated in calling function
+        close(pipe_fd[1]);
+        pipe_fd[1] = -1;
+    }   
+}
 
 //here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);// this shouldnt be here but in syntax error determining part.//no time for this. be simple
 void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
@@ -86,7 +97,7 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
     int pipe_fd[2];
     pid_t pid;
     
-    //TODO: SIGNAL: set signals to be ignored by the parent
+	signal(SIGINT, SIG_IGN);//TODO: SIGNAL: set signals to be ignored by the parent
     while (i < msh -> cmd_count)
     {
         pid  = 1;
@@ -103,11 +114,12 @@ void    execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
         cmd++;
         i++;//maybe this is not needed for me except to decide when not to create pipe 
     }
+	if (i > 0)
+        wait_child(msh, i, pid);//see where i am cleaning cmd shit
     if (i < msh -> cmd_count)
         safe_pipefork_fail(msh, prev_rd_fd, pipe_fd , (i << 8) | (pid & 0xFF));
-    if (i > 0)
-        wait_child(msh, i, pid);//see where i am cleaning cmd shit
-    //TODO: SIGNAL: restore the basic minishell signal behaviour
+
+init_sig();//TODO: SIGNAL: restore the basic minishell signal behaviour
 }
 
 

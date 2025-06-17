@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:17:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 04:26:50 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 20:00:10 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,10 @@ void	q_unwrap_append(t_msh *msh, t_cmd *cmd, char *q_arg)
 		len = 0;
 	cmd -> cmd = msh_realloc(cmd -> cmd, (len + 1), (len + 2), ARR);
 	if (!cmd -> cmd)
+	{
+		free(arg);
 		parse_error(msh, msh -> aux, NULL, "cmd array append");
+	}
 	cmd -> cmd[len] = arg;
 	cmd -> cmd[len + 1] = NULL;
 }
@@ -120,3 +123,4 @@ void	setup_cmd(t_msh *msh, t_token **token, t_cmd **cmd)
 		token++;
 	}
 }
+//MALLOC FAIL PROTECTION: CHECKED: line 67, 74,

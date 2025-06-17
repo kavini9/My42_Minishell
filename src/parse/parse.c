@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 22:29:12 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 04:38:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:42:20 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	count_pipes(char *line)
 void	init_parse_structs(t_msh *msh, char *line)
 {
 	msh -> cmd_count = count_pipes(line) + 1;
-	msh -> aux -> line = &line;
+	msh -> aux -> line = line;
 	msh -> aux -> seg = ft_calloc(msh -> cmd_count + 1, sizeof(char *));
 	if (!msh -> aux -> seg)
 		parse_error(msh, msh -> aux, NULL, "init_parse");

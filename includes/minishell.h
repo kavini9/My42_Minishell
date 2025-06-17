@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 05:14:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:43:33 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ typedef struct s_token
 
 typedef struct s_parse
 {
-	char		**line;
+	char		*line;
     char        **seg;
     t_token     **token;
 }   t_parse;

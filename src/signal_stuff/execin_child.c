@@ -1,0 +1,164 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execin_child.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
+/*   Updated: 2025/06/18 00:07:19 by wweerasi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+# include "../../includes/minishell.h"
+
+// void	wait_child(t_msh *msh, int i, pid_t pid)
+// {
+// 	int	status;
+// 	int	sig;
+
+// 	(void)pid;
+// 	while (i--)
+// 	{
+// 		if (wait(&status) != -1)
+// 		{
+// 			if (WIFEXITED(status))
+// 				msh->exit_code = WEXITSTATUS(status);
+// 			else if (WIFSIGNALED(status))
+// 			{
+// 				sig = WTERMSIG(status);
+// 				msh->exit_code = 128 + sig;
+// 				if (sig == SIGQUIT)
+// 					write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+// 				else if (sig == SIGINT)
+// 					write(STDOUT_FILENO, "\n", 1);
+// 			}
+// 		}
+// 	}
+// }
+
+void	wait_child(t_msh *msh, int i, pid_t pid)
+{
+	int	status;
+	int	sig;
+
+	sig = 0;
+	while (i--)
+	{
+		if (wait(&status) == pid)
+		{
+			if (WIFEXITED(status))
+				msh -> exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status) && WTERMSIG(status))
+				msh -> exit_code = 128 + WTERMSIG(status);
+		}
+		else if (WIFSIGNALED(status) && !sig)
+			sig = WTERMSIG(status);
+	}
+	if (sig == SIGQUIT)
+		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
+	else if (sig == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
+}
+
+void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe)
+{
+	if (pipe[0] != -1)
+		close(pipe[0]);
+	sig_handler_changer(); // set child-specific signal handlers
+	if (msh->cmd_count > 1)
+		redirect_pipe(msh, rd_fd, pipe[1]);
+	if (msh->exit_code)
+		msh_error(msh, (CLEAN | EXIT) << 8 | msh->exit_code, NULL, NULL);
+	redirect_io(msh, cmd, -1, 0);
+	if (msh->exit_code)
+		msh_error(msh, (CLEAN | EXIT) << 8 | msh->exit_code, NULL, NULL);
+	execute_cmd(msh, cmd);
+}
+
+void	set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i)
+{
+	if (*prev_rd_fd != -1)
+	{
+		close(*prev_rd_fd);
+		*prev_rd_fd = -1;
+	}
+	if (i < cmd_count - 1)
+	{
+		*prev_rd_fd = pipe_fd[0];
+		close(pipe_fd[1]);
+		pipe_fd[1] = -1;
+	}
+}
+
+void	safe_pipefork_fail(t_msh *msh, int prev_rd_fd, int *pipe_fd, int err_data_pack)
+{
+	int	i = err_data_pack >> 8;
+	int	err_type = (signed char)(err_data_pack & 0xFF);
+
+	if (err_type == 1)
+		msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, ERR_SYSFUNC, "pipe");
+	else if (err_type == -1)
+		msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, ERR_SYSFUNC, "fork");
+	if (prev_rd_fd != -1)
+		close(prev_rd_fd);
+	if (i < msh->cmd_count - 1 && pipe_fd[0] != -1 && pipe_fd[1] != -1)
+	{
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+	}
+}
+
+static void	parent_signal_and_pipe_handler(t_msh *msh,
+	int *prev_rd_fd, int *pipe_fd, int i)
+{
+	signal(SIGINT, SIG_IGN);
+	if (msh->cmd_count > 1)
+		set_pipe_chain(prev_rd_fd, pipe_fd, msh->cmd_count, i);
+}
+
+static int	execin_child_loop(t_msh *msh, t_cmd **cmd,
+	int *prev_rd_fd, int *i_ptr)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+	int		i = *i_ptr;
+
+	memset(pipe_fd, -1, 2 * sizeof(int));
+	if (i < msh->cmd_count - 1 && pipe(pipe_fd) < 0)
+		return (-2);
+	pid = fork();
+	if (pid < 0)
+		return (-1);
+	if (pid == 0)
+		run_child_proc(msh, *cmd, *prev_rd_fd, pipe_fd);
+	else
+		parent_signal_and_pipe_handler(msh, prev_rd_fd, pipe_fd, i);
+	*i_ptr += 1;
+	return ((pipe_fd[0] << 16) | (pipe_fd[1] & 0xFFFF)); // Encode pipe_fd
+}
+
+void	execin_child(t_msh *msh, t_cmd **cmd, int prev_rd_fd, int i)
+{
+	int		result;
+	int		pipe_fd[2];
+	pid_t	last_pid = 1;
+
+	while (i < msh->cmd_count)
+	{
+		result = execin_child_loop(msh, cmd, &prev_rd_fd, &i);
+		if (result == -1 || result == -2)
+			break;
+		last_pid = 1; // fallback in case wait_child needs it
+		pipe_fd[0] = result >> 16;
+		pipe_fd[1] = result & 0xFFFF;
+		cmd++;
+	}
+	if (i < msh->cmd_count)
+		safe_pipefork_fail(msh, prev_rd_fd, pipe_fd, (i << 8) | (last_pid & 0xFF));
+	if (i > 0)
+	{
+		wait_child(msh, i, last_pid);
+		init_sig();
+	}
+}

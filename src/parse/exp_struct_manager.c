@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 20:32:19 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 04:47:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:35:15 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ void	revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
 {
 	int	exp_len;
 	int	tmp_len;
-	int	size;
 	int	new_exp_len;
 
 	exp_len = token -> expn_len;
-	size = sizeof(char *);
 	tmp_len = ft_arrlen((void **) exp -> tmp_arr);
 	if (!exp_len)
 		new_exp_len = tmp_len + 1;

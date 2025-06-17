@@ -38,11 +38,13 @@ SOURCES = main/main.c \
 	  envl/utils_envl.c \
 	  execute/exec_cmd.c \
 	  execute/execin_child.c \
-	  execute/heredoc.c \
+	  signal_stuff/heredoc.c \
 	  execute/redir.c \
 	  execute/reset_cmd_attr.c \
-	  signal/signal_handler.c \
-	  signal/signal_utils.c
+	  signal_stuff/signal_handler.c \
+	  signal_stuff/signal_utils.c \
+
+#change later heredoc and execin child
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
 DEPS    = $(OBJECTS:.o=.d) #what is  this?

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 22:57:24 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 08:07:15 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 00:34:15 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	builtin_exit(t_msh *msh, char **cmd)
 
 	digi_count = 0;
 	num = 0;
-	if (msh -> cmd_count == 1)
-		ft_putendl_fd("exit", STDOUT_FILENO);//what was the case huong said about this? i changes stderr to stdout to match withh the tester
+	//if (msh -> cmd_count == 1)
+		//ft_putendl_fd("exit", STDOUT_FILENO);//what was the case huong said about this? i changes stderr to stdout to match withh the tester
 	if (++cmd && *cmd)
 	{
 		digi_count = is_numeric(*cmd);

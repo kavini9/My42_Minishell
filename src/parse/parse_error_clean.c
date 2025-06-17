@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:15:44 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 05:22:19 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:52:41 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	clean_aux(t_msh *msh, t_parse *aux)
 {
 	t_token	**token;
 
+	free(aux -> line);
+		aux -> line = NULL;
 	if (aux -> seg)
 		free_arr((void **) aux -> seg);
 	token = aux -> token;
@@ -71,8 +73,3 @@ void	parse_error(t_msh *msh, t_parse *aux, t_expan *exp, char *func_name)
 		clean_exp(exp);
 	msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, func_name);
 }
-
-//clean aux: Shouldn't it clean line?
-// free(*aux -> line);//find a way to free line before exit
-//     *aux -> line = NULL;
-//this complained a Invalid free
