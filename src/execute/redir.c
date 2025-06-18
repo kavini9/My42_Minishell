@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:47:01 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 07:04:19 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:26:55 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,11 @@ void	redirect_io(t_msh *msh, t_cmd *cmd, int fd, int i)
 	redir = cmd -> redir;
 	while (redir && *redir)
 	{
-		// if ((*redir)-> type != REDIR_HDOC && (*redir)-> ambi_o_hdexp)
-		// 	return (msh_error(msh, (ERRNO | LOG) << 8 | 1, ERR_AMBI_REDIR,
-		// 			(*redir)-> fname_o_del));
-		// else
-		fd = open_file_gethdfd(msh, cmd, *redir, &i);
+		if ((*redir)-> type != REDIR_HDOC && (*redir)-> ambi_o_hdexp)
+			return (msh_error(msh, (ERRNO | LOG) << 8 | 1, ERR_AMBI_REDIR,
+					(*redir)-> fname_o_del));
+		else
+			fd = open_file_gethdfd(msh, cmd, *redir, &i);
 		if (fd == -1)
 			return (msh_error(msh, (ERRNO | LOG) << 8 | 1, ERR_SYSFUNC,
 					(*redir)-> fname_o_del));

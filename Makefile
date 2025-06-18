@@ -43,6 +43,7 @@ SOURCES = main/main.c \
 	  execute/reset_cmd_attr.c \
 	  signal_stuff/signal_handler.c \
 	  signal_stuff/signal_utils.c \
+	  ../MyTests/debug_print.c \
 
 #change later heredoc and execin child
 

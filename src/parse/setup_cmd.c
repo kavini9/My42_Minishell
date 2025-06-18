@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/31 18:17:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 20:00:10 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:21:03 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ void	addto_redir_arr(t_msh *msh, t_token *token, t_cmd *cmd, int *len)
 	if (token -> redir == REDIR_HDOC
 		&& (ft_strchr(token -> token, '\'') || ft_strchr(token -> token, '"')))
 		cmd -> redir[*len]-> ambi_o_hdexp = 1;
-	if (token -> expn && !is_ambi_redir(token -> expn))
+	if (token -> expn && !is_ambi_redir(token -> expn, cmd, *len))
 		q_arg = *(token -> expn);
 	else
 	{
 		q_arg = token -> token;
-		cmd -> redir[*len]-> ambi_o_hdexp = 1;
+		
 	}
 	arg = ft_strdup(remove_quotes(q_arg));
 	if (!arg)

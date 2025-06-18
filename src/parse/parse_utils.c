@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:02:37 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 05:56:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:22:49 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,13 @@ int	redir_skip(char *seg)
 	return (skip);
 }
 
-int	is_ambi_redir(char **expan)
+int	is_ambi_redir(char **expan, t_cmd *cmd, int len)
 {
 	if (ft_arrlen((void **) expan) > 1 || !**expan)
+	{
+		cmd -> redir[len]-> ambi_o_hdexp = 1;
 		return (1);
+	}
 	return (0);
 }
 

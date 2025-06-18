@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 04:34:47 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:22:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,7 @@ int	 check_quotes(char *start, char *end);
 char *skip_whitespaces(char **str);
 int redir_skip(char *seg);
 char *remove_quotes(char *q_arg);
-int is_ambi_redir(char **expan);
+int	is_ambi_redir(char **expan, t_cmd *cmd, int len);
 
 //expand
 void expand_tokens(t_msh *msh, t_token **token);

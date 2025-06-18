@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 18:15:44 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 19:52:41 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:36:37 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	clean_aux(t_msh *msh, t_parse *aux)
 	t_token	**token;
 
 	free(aux -> line);
-		aux -> line = NULL;
+	aux -> line = NULL;
 	if (aux -> seg)
 		free_arr((void **) aux -> seg);
 	token = aux -> token;

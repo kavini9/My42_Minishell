@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 05:43:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:41:57 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ void	expscan_token(t_msh *msh, t_token *token)
 			else
 				exp.key = free_and_null(exp.key);
 		}
-		if (*(exp.suffix) && !(*(exp.suffix) == '$' && check_quotes(exp.tok, exp.suffix) != '\''
-				&& (ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '_'
-					|| *(exp.suffix + 1) == '?' || *(exp.suffix + 1) == '$')))
+		if (*(exp.suffix) && !(*(exp.suffix) == '$' && (*(exp.suffix + 1) == '_'
+			||  ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '?' 
+			|| *(exp.suffix + 1) == '$') && check_quotes(exp.tok, exp.suffix) != '\''))
 		{
 			ft_memcpy(exp.exp, exp.suffix, sizeof(char));
 			exp.suffix++;

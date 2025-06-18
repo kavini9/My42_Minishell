@@ -1,4 +1,5 @@
 //auxiliary. delete later
+#include "../includes/minishell.h"
 
 void print_segments(char **seg)
 {
