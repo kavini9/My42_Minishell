@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:31:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 11:12:46 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:34:05 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	error_log(char *err_msg, char *param, int err_no, int extrarg)
 		printf_fd(STDERR_FILENO, err_msg, strerror(err_no));
 	else
 		printf_fd(STDERR_FILENO, err_msg);
-	if (!ft_strcmp(err_msg, ERR_DUP)) //used this free ft_itoa(fd) which was used to write te error message for dup fail. 
+	if (!ft_strcmp(err_msg, ERR_DUP))
 		free(param);
 }
 

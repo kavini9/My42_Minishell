@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:54:35 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:42:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ void msh_init(t_msh *msh, char **envp);
 void    msh_execute(t_msh *msh);
 void	msh_parse(t_msh *msh, char *line);
 void	msh_loop(t_msh *msh);
+int	msh_exit(t_msh *msh, char *line);
 
 //validate
 int	msh_validate_line(t_msh *msh, char **line);

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 11:23:11 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:33:09 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ void	close_all_hdocfd(int *hdocfd_l)
 	i = 0;
 	while (i < 16)
 	{
-		if (hdocfd_l[i] != -1) // I had set this value to zero before but it should be -1.so I changed.
+		if (hdocfd_l[i] != -1)
 		{
 			close(hdocfd_l[i]);
-			hdocfd_l[i] = -1; // set this to -1 so when we try to clean it later incase  of an error we won't be closing a already closed hdfd.
+			hdocfd_l[i] = -1;
 		}
 		i++;
 	}
@@ -50,7 +50,7 @@ void	free_redir(t_redir **redir)
 		return ;
 	while (redir && *redir)
 	{
-		free((*redir)-> fname_o_del);//should we checkk if this exist.
+		free((*redir)-> fname_o_del);
 		free(*redir);
 		redir++;
 	}

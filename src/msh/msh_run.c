@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 12:24:02 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:32:04 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ void	msh_init(t_msh *msh, char **envp)
 	if (!msh -> cwd)
 		msh_error(msh, (ERRNO | LOG | CLEAN | EXIT) << 8 | 1, ERR_GETCWD,
 			"init");
-	msh -> old_wd = ft_strdup(msh -> cwd);//if we go one level up the old pwd is different
+	msh -> old_wd = ft_strdup(msh -> cwd);
 	if (!msh -> old_wd)
-		msh_error(msh, LOG | CLEAN | EXIT << 8 | 1 , ERR_MALLOC, NULL);//"minishell: fatal error: memory allocation failed in %s.\n"
+		msh_error(msh, LOG | CLEAN | EXIT << 8 | 1, ERR_MALLOC, NULL);
 	duplicate_env(msh, envp);
 	set_shlvl(msh, msh -> envl);
 	ft_memset(msh -> hdocfd_l, -1, sizeof(int) * 16);
@@ -29,10 +29,10 @@ void	msh_init(t_msh *msh, char **envp)
 
 void	msh_execute(t_msh *msh)
 {
-	here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);//what kind of errors can occur with this? pipe open, read and write to pipe
+	here_doc(msh, msh -> cmd, msh -> hdocfd_l, 0);
 	if (msh -> exit_code != 130)
 	{
-		if (msh -> cmd_count == 1 && is_builtin((*msh->cmd)-> cmd)) //TODO: see the dereference here. see if it needs too be chnged in struct.
+		if (msh -> cmd_count == 1 && is_builtin((*msh->cmd)-> cmd))
 			execin_shell(msh, *msh -> cmd);
 		else
 		{
@@ -51,12 +51,9 @@ void	msh_parse(t_msh *msh, char *line)
 	init_parse_structs(msh, line);
 	line_split_bypipe(msh, line, line, msh -> aux -> seg);
 	seg_tokenize(msh, msh -> aux);
-	//print_tokens(msh -> aux -> token);// remove later
 	expand_tokens(msh, msh -> aux -> token);
-	//print_expand_arrays(msh -> aux -> token);// remove later
 	init_cmd_struct(msh, msh -> cmd_count);
 	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
-	//print_cmd_members(msh -> cmd);// remove later
 	clean_aux(msh, msh -> aux);
 }
 
@@ -71,37 +68,6 @@ int	msh_exit(t_msh *msh, char *line)
 	return (0);
 }
 
-// void	msh_loop(t_msh *msh)
-// {
-// 	char	*line;
-
-// 	while (1)
-// 	{
-// 		if (isatty(fileno(stdin)))
-// 			init_sig();
-// 		line = readline("minishell> ");
-// 		if (msh_exit(msh, line)) // Handle Ctrl+D (EOF)
-// 			exit(msh->exit_code);
-// 		if (g_sig == SIGINT)
-// 		{
-// 			msh->exit_code = 130;
-// 			g_sig = 0;
-// 		}
-// 		add_history(line);
-// 		if (*line && !msh_validate_line(msh, &line))
-// 		{
-// 			msh_parse(msh, line);
-// 			msh->exit_code = 0;
-// 			msh_execute(msh);
-// 		}
-// 		else if (line)
-// 			free(line);
-// 	}
-// 	rl_clear_history();
-// }
-
-
-
 void	msh_loop(t_msh *msh)
 {
 	char	*line;
@@ -110,25 +76,9 @@ void	msh_loop(t_msh *msh)
 	{
 		if (isatty(fileno(stdin)))
 			init_sig();
-		if (isatty(fileno(stdin)))
-			line = readline("minishell> "); // use custom prompt string
-		else
-		{
-			line = get_next_line(fileno(stdin)); // tester gives input
-			if (!line)
-				break ; // avoid ft_strtrim(NULL) segfault
-			char *trimmed = ft_strtrim(line, "\n"); // remove newline
-			free(line);
-			line = trimmed;
-		}
-		if (msh_exit(msh, line)) // Handle Ctrl+D (EOF)
+		line = readline("minishell> ");
+		if (msh_exit(msh, line))
 			exit(msh->exit_code);
-		if (!line) // Handle Ctrl+D (EOF)
-		// {
-		// 	printf("exit\n");
-		// 	msh_clean(msh);
-		// 	exit(msh->exit_code);
-		// }
 		if (g_sig == SIGINT)
 		{
 			msh->exit_code = 130;
@@ -138,25 +88,11 @@ void	msh_loop(t_msh *msh)
 		if (*line && !msh_validate_line(msh, &line))
 		{
 			msh_parse(msh, line);
-			msh->exit_code = 0; //Placeholder — replace later
+			msh->exit_code = 0;
 			msh_execute(msh);
 		}
 		else if (line)
 			free(line);
 	}
 	rl_clear_history();
-}
-
-int	main(int ac, char **av, char **envp)
-{
-	t_msh	msh;
-	
-	(void) av;
-	if (ac != 1)
-		exit(printf("# minishell: Error: Invalid number of arguments."
-				"\n# Usage: ./minishell"));
-	msh_init(&msh, envp);
-	msh_loop(&msh);
-	msh_clean(&msh);
-	exit(msh.exit_code);
 }

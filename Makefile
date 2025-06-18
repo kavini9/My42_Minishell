@@ -7,48 +7,45 @@ DIR_INC     = ./includes
 
 HEADERS     = $(DIR_INC)/minishell.h
 
-#vpath %.c main/ builtin/ envl/
+SOURCES = /main.c \
+		msh/msh_run.c \
+		msh/msh_clean.c \
+		msh/msh_error.c \
+		validate/checker.c \
+		validate/redirections.c \
+		validate/validate.c \
+		parse/parse.c \
+		parse/tokenize.c \
+		parse/parse_utils.c \
+		parse/expand.c \
+		parse/variable_extract.c \
+		parse/expand_array_utils.c \
+		parse/exp_struct_manager.c \
+		parse/setup_cmd.c \
+		parse/msh_realloc.c \
+		parse/parse_error_clean.c \
+		builtin/cd.c \
+		builtin/cd_unlinked_dir.c \
+		builtin/echo.c \
+		builtin/env.c \
+		builtin/exec_builtin.c \
+		builtin/exit.c \
+		builtin/export.c \
+		builtin/pwd.c \
+		builtin/unset.c \
+		envl/init_envp.c \
+		envl/utils_envl.c \
+		execute/exec_cmd.c \
+		execute/execin_child.c \
+		execute/heredoc.c \
+		execute/redir.c \
+		execute/reset_cmd_attr.c \
+		signal/signal_handler.c \
+		signal/signal_utils.c \
 
-SOURCES = main/main.c \
-	  main/msh_clean.c \
-	  main/msh_error.c \
-	  validate/checker.c \
-	  validate/redirections.c \
-	  validate/validate.c \
-	  parse/parse.c \
-	  parse/tokenize.c \
-	  parse/parse_utils.c \
-	  parse/expand.c \
-	  parse/variable_extract.c \
-	  parse/expand_array_utils.c \
-	  parse/exp_struct_manager.c \
-	  parse/setup_cmd.c \
-	  parse/msh_realloc.c \
-	  parse/parse_error_clean.c \
-	  builtin/cd.c \
-	  builtin/cd_unlinked_dir.c \
-	  builtin/echo.c \
-	  builtin/env.c \
-	  builtin/exec_builtin.c \
-	  builtin/exit.c \
-	  builtin/export.c \
-	  builtin/pwd.c \
-	  builtin/unset.c \
-	  envl/init_envp.c \
-	  envl/utils_envl.c \
-	  execute/exec_cmd.c \
-	  execute/execin_child.c \
-	  execute/heredoc.c \
-	  execute/redir.c \
-	  execute/reset_cmd_attr.c \
-	  signal/signal_handler.c \
-	  signal/signal_utils.c \
-
-
-#change later heredoc and execin child
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
-DEPS    = $(OBJECTS:.o=.d) #what is  this?
+#DEPS    = $(OBJECTS:.o=.d) #what is  this?
 
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -I$(DIR_INC) -MMD -MP 
@@ -63,8 +60,6 @@ libft:
 
 $(NAME): $(OBJECTS)
 	$(CC) $(OBJECTS) $(LIBFT_FLAGS) -lreadline -o $@ 
-#see where exactly to add readline flags
-#-g -fsanitize=address
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)
