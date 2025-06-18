@@ -5,7 +5,8 @@ DIR_SRC     = ./src
 DIR_OBJ     = $(DIR_SRC)/objects
 DIR_INC     = ./includes
 
-HEADERS     = $(DIR_INC)/minishell.h
+HEADERS     = $(DIR_INC)/minishell.h \
+			$(DIR_INC)/define.h \
 
 SOURCES = /main.c \
 		msh/msh_run.c \
@@ -45,13 +46,12 @@ SOURCES = /main.c \
 
 
 OBJECTS = $(addprefix $(DIR_OBJ)/,$(SOURCES:.c=.o))
-#DEPS    = $(OBJECTS:.o=.d) #what is  this?
 
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -I$(DIR_INC) -MMD -MP 
-RM      = rm -rf
-
+CC      	= cc
+CFLAGS  	= -Wall -Wextra -Werror -I$(DIR_INC)
+RM      	= rm -rf
 LIBFT_FLAGS = -L $(DIR_LIBFT) -lft
+RL_FLAGS 	= -lreadline
 
 all: libft $(NAME)
 
@@ -59,13 +59,11 @@ libft:
 	@make -C $(DIR_LIBFT)
 
 $(NAME): $(OBJECTS)
-	$(CC) $(OBJECTS) $(LIBFT_FLAGS) -lreadline -o $@ 
+	$(CC) $(OBJECTS) $(LIBFT_FLAGS) $(RL_FLAGS) -o $@ 
 
 $(DIR_OBJ)/%.o: $(DIR_SRC)/%.c $(HEADERS)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
-
--include $(DEPS)
+	$(CC) $(CFLAGS) -I$(DIR_INC) -c $< -o $@
 
 clean:
 	@$(RM) $(DIR_OBJ)
@@ -76,8 +74,5 @@ fclean: clean
 	@make -C $(DIR_LIBFT) fclean
 
 re: fclean all
-
-debug: CFLAGS += -g
-debug: re
 
 .PHONY: all libft clean fclean re debug

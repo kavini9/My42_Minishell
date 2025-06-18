@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   msh_run.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 12:32:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:48:51 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	msh_init(t_msh *msh, char **envp)
 	ft_memset(msh, 0, sizeof(t_msh));
 	msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
-		msh_error(msh, (ERRNO | LOG | CLEAN | EXIT) << 8 | 1, ERR_GETCWD,
+		msh_error(msh, (ERRNO | LOG | CLEAN | EXIT) << 8 | 1, CWD,
 			"init");
 	msh -> old_wd = ft_strdup(msh -> cwd);
 	if (!msh -> old_wd)

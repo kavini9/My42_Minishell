@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:22:43 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:12:34 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 14:57:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	builtin_pwd(t_msh *msh)
 	{
 		msh -> cwd = getcwd(NULL, 0);
 		if (!msh -> cwd)
-			return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, ERR_GETCWD,
+			return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, CWD,
 					"cd"));
 		builtin_pwd(msh);
 	}

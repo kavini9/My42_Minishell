@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 14:25:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 06:39:40 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 21:30:01 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,35 @@ void	overwrite_env_var(t_msh *msh, char **env_var, char *entry)
 	msh -> exit_code = EXIT_SUCCESS;
 }
 
+// char *ft_substr_alt(char *asd, size_t start, size_t length)
+// {
+// 	static int l = 0;
+	
+// 	l++;
+// 	if (l < 4)
+// 	{
+// 		return ft_substr(asd, start,  length);	
+// 	}
+	
+// 	return (0);
+//}
+
+// #define ft_substr(x, y, z) ft_substr_alt(x,y,z)
+
+// char *ft_strdup_alt(char *asd)
+// {
+// 	static int l = 0;
+	
+// 	l++;
+// 	if (l < 4)
+// 	{
+// 		return ft_strdup(asd);	
+// 	}
+	
+// 	return (0);
+// }
+
+// #define ft_strdup(x) ft_strdup_alt(x)
 void	set_env(t_msh *msh, char **envl, char *entry)
 {
 	char	**env_iter;
@@ -92,6 +121,7 @@ void	set_env(t_msh *msh, char **envl, char *entry)
 		return (add_env_var(msh, envl, entry));
 	if (*(entry + k_len) == '=')
 		return (overwrite_env_var(msh, env_iter, entry));
+	free(entry);
 }
 
 void	update_env(t_msh *msh, char *key, char *value)
@@ -99,6 +129,9 @@ void	update_env(t_msh *msh, char *key, char *value)
 	char	*entry;
 
 	entry = NULL;
+	if (!value)
+		msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, 
+			"update env");
 	if (key && value)
 		entry = ft_strjoin(key, value);
 	if (value)

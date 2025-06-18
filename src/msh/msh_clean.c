@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 12:33:09 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 19:46:38 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,5 +86,6 @@ void	msh_clean(t_msh *msh)
 		free_cmd(msh -> cmd);
 	if (msh -> std_fd)
 		restore_stdfd(msh, &msh -> std_fd[0], &msh -> std_fd[1]);
+	close_all_hdocfd(msh -> hdocfd_l);
 	ft_memset(msh, 0, offsetof(t_msh, exit_code));
 }

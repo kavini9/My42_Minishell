@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 19:09:42 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:11:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:02:38 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	msh_wd_update(t_msh *msh)
 	free(msh -> cwd);
 	msh -> cwd = getcwd(NULL, 0);
 	if (!msh -> cwd)
-		return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, ERR_GETCWD,
+		return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, CWD,
 				"cd"));
 	update_env(msh, "OLDPWD=", ft_strdup(msh -> old_wd));
 	update_env(msh, "PWD=", ft_strdup(msh -> cwd));
@@ -34,7 +34,7 @@ void	cd_env_var(t_msh *msh, char *dir)
 
 	path = get_env(msh -> envl, dir);
 	if (!path)
-		return (msh_error(msh, (LOG | CLEAN) << 8 | 1, ERR_DIR_NOTSET, dir));
+		return (msh_error(msh, (LOG) << 8 | 1, ERR_DIR_NOTSET, dir));
 	if (chdir(path) == -1)
 		return (msh_error(msh, (ERRNO | LOG) << 8 | 1, ERR_CHDIR, path));
 	if (!ft_strcmp(dir, "OLDPWD"))
@@ -49,7 +49,7 @@ void	cd_tilde(t_msh *msh, char *tilde_path)
 
 	home = get_env(msh -> envl, "HOME");
 	if (!home)
-		return (msh_error(msh, (LOG | CLEAN) << 8 | 1, ERR_DIR_NOTSET, "HOME"));
+		return (msh_error(msh, (LOG) << 8 | 1, ERR_DIR_NOTSET, "HOME"));
 	path = ft_strjoin(home, tilde_path + 1);
 	if (!path)
 		msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, "cd");
@@ -72,7 +72,7 @@ void	cd_path(t_msh *msh, char *path)
 	if (!cwd && errno == ENOENT)
 		return (handle_unlinked_cwd(msh, path));
 	else if (!cwd)
-		return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, ERR_GETCWD,
+		return (msh_error(msh, (ERRNO | LOG | CLEAN) << 8 | 1, CWD,
 				"cd"));
 	free(cwd);
 	return (msh_wd_update(msh));

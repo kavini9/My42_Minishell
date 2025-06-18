@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/01 18:05:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 07:50:36 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 20:40:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,23 @@ int	exec_builtin(t_msh *msh, char **cmd)
 
 void	restore_stdfd(t_msh *msh, int *fd_0, int *fd_1)
 {
-	if (dup2(*fd_0, STDIN_FILENO) == -1)
+	if (*fd_0 != -1 && dup2(*fd_0, STDIN_FILENO) == -1)
+	{
+		//printf("111111111111111111111111111111111111111111111111111\n");
 		msh_error(msh, (ERRNO | LOG | CLEAN | EXIT) << 8 | 1, ERR_DUP,
 			ft_itoa(*fd_0));
+		//printf("222222222222222222222222222222222222222222222222\n");
+	}
 	if (*fd_0 != -1)
 		close(*fd_0);
 	*fd_0 = -1;
-	if (dup2(*fd_1, STDOUT_FILENO) == -1)
+	if (*fd_1 != -1 && dup2(*fd_1, STDOUT_FILENO) == -1)
+	{
+		//printf("333333333333333333333333333333333333333333333333333\n");
 		msh_error(msh, (ERRNO | LOG | CLEAN | EXIT) << 8 | 1, ERR_DUP,
 			ft_itoa(*fd_1));
+		//printf("44444444444444444444444444444444444444444444444444\n");
+	}
 	if (*fd_1 != -1)
 		close(*fd_1);
 	*fd_1 = -1;

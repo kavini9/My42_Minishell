@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 03:42:50 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:09:02 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 19:50:19 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ static void	heredoc_child(t_msh *msh, t_redir *redir, int *pipefd)
 		i++;
 	}
 	if (!line && !g_sig)
-		printf_fd(2, WAR_HDEOF, i, redir->fname_o_del);
+		printf_fd(2, "minishell: warning: here-document at line %i delimited"
+			" by end-of-file (wanted `%s')\n", i, redir->fname_o_del);
 	free(line);
 	close(pipefd[1]);
 	msh_clean(msh);

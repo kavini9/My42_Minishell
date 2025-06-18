@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:43:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:08:43 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 14:56:18 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@
 # define ERR_SYNTAX "syntax error near unexpected token near %s\n"
 # define ERR_MALLOC "minishell: fatal error: memory allocation failed in %s\n"
 # define ERR_DIR_NOTSET "minishell: cd: %s not set\n"
-# define ERR_DIR_UNLINK "minishell: cd: error retrieving current directory:"\
-" getcwd: cannot access parent directories: %s\n"
-# define ERR_GETCWD "minishell: %s: error retrieving current directory:"\
-" getcwd: %s\n"
+# define CWD "minishell: %s: error retrieving current directory: getcwd: %s\n"
 # define ERR_CHDIR "minishell: cd: %s: %s\n"
 # define ERR_EXIT_XTRARG "minishell: exit: too many arguments\n"
 # define ERR_EXIT_NONUMERIC "minishell: exit: %s: numeric argument required\n"
@@ -31,8 +28,5 @@
 # define ERR_DUP "minishell: %d: %s\n"
 # define ERR_AMBI_REDIR "minishell: %s: ambiguous redirect\n"
 # define ERR_HDLIM "minishell: maximum here-document count exceeded\n"
-# define WAR_HDEOF "minishell: warning: here-document at line %i delimited"\
-" by end-of-file (wanted `%s')\n"
-
 
 #endif

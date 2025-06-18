@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:12:52 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 10:24:18 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:08:48 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	handle_unlinked_cwd(t_msh *msh, char *path)
 	char	*tmp;
 	char	*new_wd;
 
-	msh_error(msh, LOG << 8 | 1, ERR_DIR_UNLINK, strerror(ENOENT));
+	msh_error(msh, LOG << 8 | 1, "minishell: cd: error retrieving current "
+		"directory: getcwd: cannot access parent directories: %s\n",
+		strerror(ENOENT));
 	new_wd = ft_strjoin("/", path);
 	tmp = new_wd;
 	if (tmp)
