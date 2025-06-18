@@ -3,22 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 17:25:32 by aoshinth          #+#    #+#             */
-/*   Updated: 2025/06/09 20:47:52 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:36:50 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int validate_redirect(t_msh *msh, char *line, int *i, char *type)
+int	validate_redirect(t_msh *msh, char *line, int *i, char *type)
 {
-	
 	(void) type;
 	(*i)++;
 	(*i) = skip_whitespace(line, *i);
-
 	if (!line[*i] || line[*i] == '|' || line[*i] == '<' || line[*i] == '>')
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
@@ -33,9 +31,9 @@ int validate_redirect(t_msh *msh, char *line, int *i, char *type)
 	return (0);
 }
 
-static int check_in_redirects(t_msh *msh, char *line, int *i)
+static int	check_in_redirects(t_msh *msh, char *line, int *i)
 {
-	int count;
+	int	count;
 
 	count = 1;
 	while (line[*i + count] == '>')
@@ -60,9 +58,9 @@ static int check_in_redirects(t_msh *msh, char *line, int *i)
 	return (0);
 }
 
-static int check_out_redirects(t_msh *msh, char *line, int *i)
+static int	check_out_redirects(t_msh *msh, char *line, int *i)
 {
-	int count;
+	int	count;
 
 	count = 1;
 	while (line[*i + count] == '<')
@@ -87,10 +85,9 @@ static int check_out_redirects(t_msh *msh, char *line, int *i)
 	return (0);
 }
 
-
-int check_redirects(t_msh *msh, char *line)
+int	check_redirects(t_msh *msh, char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (line[i])

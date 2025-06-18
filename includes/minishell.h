@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 09:22:04 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 10:54:35 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ typedef struct s_msh
 
 
 
-//main
+/*-------------------------main------------------------ */
 void msh_init(t_msh *msh, char **envp);
 void    msh_execute(t_msh *msh);
 void	msh_parse(t_msh *msh, char *line);
@@ -175,7 +175,7 @@ int	is_ambi_redir(char **expan, t_cmd *cmd, int len);
 
 //expand
 void expand_tokens(t_msh *msh, t_token **token);
-void expscan_token(t_msh *msh, t_token *token);
+void	expscan_token(t_msh *msh, t_token *token, t_expan exp);
 void    expand_parameter(t_msh *msh, t_token *token, t_expan *exp);
 char *extract_env_key(char **token);
 

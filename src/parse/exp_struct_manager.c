@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 20:32:19 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 19:35:15 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 10:46:07 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	revise_exp_arr(t_msh *msh, t_token *token, t_expan *exp)
 
 void	init_exp(t_msh *msh, t_token token, t_expan *exp)
 {
-	ft_memset(exp, 0, sizeof(t_expan));
 	exp -> tok = ft_strdup(token.token);
 	if (!exp -> tok)
 		parse_error(msh, msh -> aux, exp, "expansion util struct init");

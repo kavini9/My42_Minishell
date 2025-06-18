@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: aoshinth <aoshinth@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 22:41:30 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/09 17:20:12 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 09:46:42 by aoshinth         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int	detect_consecutive_pipes(t_msh *msh, char *line)
 static int	handle_trailing_pipe(t_msh *msh, char *line)
 {
 	int		i;
-	//char	*extended_line;
 
 	i = ft_strlen(line) - 1;
 	while (i >= 0 && ft_isspace(line[i]))
@@ -56,7 +55,8 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
 		if (i >= 1 && (line[i - 1] == '>' || line[i - 1] == '<'))
 			check_redirects(msh, line);
 		else
-			ft_putendl_fd("minishell: syntax error near unexpected token `|'", 2);
+			ft_putendl_fd(
+				"minishell: syntax error near unexpected token `|'", 2);
 		msh->exit_code = 2;
 		return (1);
 	}
@@ -65,7 +65,7 @@ static int	handle_trailing_pipe(t_msh *msh, char *line)
 
 int	validate_pipe(t_msh *msh, char *line)
 {
-	int	i; 
+	int	i;
 	int	j;
 	int	len;
 
@@ -80,7 +80,6 @@ int	validate_pipe(t_msh *msh, char *line)
 		if (len > 2)
 			len = 2;
 		write(2, line + i, len);
-
 		ft_putendl_fd("'", 2);
 		msh->exit_code = 2;
 		return (1);
@@ -90,31 +89,30 @@ int	validate_pipe(t_msh *msh, char *line)
 	return (0);
 }
 
+int	msh_validate_line(t_msh *msh, char **line)
+{
+	int	i;	
 
-int msh_validate_line(t_msh *msh, char **line)  
-{  
-    int i = 0;
-
-	if (!**line  || !(*line)[skip_whitespace(*line, i)])
+	i = 0;
+	if (!**line || !(*line)[skip_whitespace(*line, i)])
 		return (1);
-    if (check_quote(*line, ft_strlen(*line)))  
-    {
-        ft_putendl_fd("minishell: syntax error unmatched quotes", 2);  
-        msh->exit_code = 2;  
-        return (1);  
-    }
-    if (validate_pipe(msh, *line))  
-        return (1);
-
-    while ((*line)[i])  
-    {  
-        if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))  
-        {
-            ft_putendl_fd("minishell: invalid syntax", 2);  
-            msh->exit_code = 2;  
-            return (1);  
-        }  
-        i++;  
-    }  
-    return (check_redirects(msh, *line));  
+	if (check_quote(*line, ft_strlen(*line)))
+	{
+		ft_putendl_fd("minishell: syntax error unmatched quotes", 2);
+		msh->exit_code = 2;
+		return (1);
+	}
+	if (validate_pipe(msh, *line))
+		return (1);
+	while ((*line)[i])
+	{
+		if (!check_quote(*line, i) && ((*line)[i] == ';' || (*line)[i] == '\\'))
+		{
+			ft_putendl_fd("minishell: invalid syntax", 2);
+			msh->exit_code = 2;
+			return (1);
+		}
+		i++;
+	}
+	return (check_redirects(msh, *line));
 }

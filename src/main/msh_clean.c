@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 03:57:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 11:23:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,77 @@
 
 void	close_all_hdocfd(int *hdocfd_l)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < 16)
 	{
-		if (hdocfd_l[i] != -1)// I had set this value to zero before but it should be -1.so I changed.
+		if (hdocfd_l[i] != -1) // I had set this value to zero before but it should be -1.so I changed.
 		{
 			close(hdocfd_l[i]);
 			hdocfd_l[i] = -1; // set this to -1 so when we try to clean it later incase  of an error we won't be closing a already closed hdfd.
-		}	
+		}
 		i++;
-	}	
-}
-void free_arr(void **arr)
-{
-    void **tmp;
-
-    tmp = arr;
-    while (*tmp)
-    {
-        free(*tmp);
-        tmp++;
-    }
-    free(arr);
+	}
 }
 
-void    free_redir(t_redir **redir)
+void	free_arr(void **arr)
 {
-    t_redir **ptr_redir;
-    
-    ptr_redir = redir;
-    if (!redir)
-        return ;
-    while (redir && *redir)
-    { 
-        free((*redir) -> fname_o_del);//should we checkk if this exist.
-        free(*redir);
-        redir++;
-    }
-    free(ptr_redir);
+	void	**tmp;
+
+	tmp = arr;
+	while (*tmp)
+	{
+		free(*tmp);
+		tmp++;
+	}
+	free(arr);
 }
 
-void    free_cmd(t_cmd **cmd)
+void	free_redir(t_redir **redir)
 {
-    t_cmd **cmd_ptr;
-    
-    cmd_ptr = cmd;
-    while (*cmd)
-    {
-        if ((*cmd) -> cmd)
-            free_arr((void **) (*cmd) -> cmd);
-        if ((*cmd) -> redir)
-            free_redir((*cmd) -> redir);
-        free(*cmd);
-        cmd++;
-    }
-    free(cmd_ptr);
+	t_redir	**ptr_redir;
+
+	ptr_redir = redir;
+	if (!redir)
+		return ;
+	while (redir && *redir)
+	{
+		free((*redir)-> fname_o_del);//should we checkk if this exist.
+		free(*redir);
+		redir++;
+	}
+	free(ptr_redir);
 }
 
-void msh_clean(t_msh *msh)
+void	free_cmd(t_cmd **cmd)
 {
-    if (msh -> cwd)
+	t_cmd	**cmd_ptr;
+
+	cmd_ptr = cmd;
+	while (*cmd)
+	{
+		if ((*cmd)-> cmd)
+			free_arr((void **)(*cmd)-> cmd);
+		if ((*cmd)-> redir)
+			free_redir((*cmd)-> redir);
+		free(*cmd);
+		cmd++;
+	}
+	free(cmd_ptr);
+}
+
+void	msh_clean(t_msh *msh)
+{
+	if (msh -> cwd)
 		free(msh -> cwd);
-    if (msh -> old_wd)
-        free(msh -> old_wd);
-    if (msh -> envl)
-        free_arr((void **) msh -> envl);
-    if (msh -> cmd)
-        free_cmd(msh -> cmd);
-    if (msh -> std_fd)
-        restore_stdfd(msh, &msh -> std_fd[0], &msh -> std_fd[1]);
-    ft_memset(msh, 0, offsetof(t_msh, exit_code));
+	if (msh -> old_wd)
+		free(msh -> old_wd);
+	if (msh -> envl)
+		free_arr((void **) msh -> envl);
+	if (msh -> cmd)
+		free_cmd(msh -> cmd);
+	if (msh -> std_fd)
+		restore_stdfd(msh, &msh -> std_fd[0], &msh -> std_fd[1]);
+	ft_memset(msh, 0, offsetof(t_msh, exit_code));
 }

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:11:45 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 09:41:57 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 10:52:43 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,8 @@ void	expand_parameter(t_msh *msh, t_token *token, t_expan *exp)
 	revise_exp_arr(msh, token, exp);
 }
 
-void	expscan_token(t_msh *msh, t_token *token)
+void	expscan_token(t_msh *msh, t_token *token, t_expan exp)
 {
-	t_expan	exp;
-
 	init_exp(msh, *token, &exp);
 	while (*(exp.suffix))
 	{
@@ -78,9 +76,10 @@ void	expscan_token(t_msh *msh, t_token *token)
 			else
 				exp.key = free_and_null(exp.key);
 		}
-		if (*(exp.suffix) && !(*(exp.suffix) == '$' && (*(exp.suffix + 1) == '_'
-			||  ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '?' 
-			|| *(exp.suffix + 1) == '$') && check_quotes(exp.tok, exp.suffix) != '\''))
+		if (*(exp.suffix) && !(*(exp.suffix) == '$'
+				&& check_quotes(exp.tok, exp.suffix) != '\''
+				&& (ft_isalnum(*(exp.suffix + 1)) || *(exp.suffix + 1) == '_'
+					|| *(exp.suffix + 1) == '?' || *(exp.suffix + 1) == '$')))
 		{
 			ft_memcpy(exp.exp, exp.suffix, sizeof(char));
 			exp.suffix++;
@@ -94,7 +93,9 @@ void	expand_tokens(t_msh *msh, t_token **token)
 {
 	char	*token_iter;
 	t_token	*tok_tmp;
+	t_expan	exp;
 
+	ft_memset(&exp, 0, sizeof(t_expan));
 	while (*token)
 	{
 		tok_tmp = *token;
@@ -106,7 +107,7 @@ void	expand_tokens(t_msh *msh, t_token **token)
 				token_iter = ft_strchr((++token_iter), '$');
 			if ((*tok_tmp).redir != REDIR_HDOC && token_iter
 				&& check_quotes((*tok_tmp).token, token_iter) != '\'')
-				expscan_token(msh, tok_tmp);
+				expscan_token(msh, tok_tmp, exp);
 			(tok_tmp)++;
 		}
 		token++;
