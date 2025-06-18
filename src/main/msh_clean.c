@@ -6,12 +6,27 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:13:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/16 22:03:19 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 03:57:32 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	close_all_hdocfd(int *hdocfd_l)
+{
+	int i;
+
+	i = 0;
+	while (i < 16)
+	{
+		if (hdocfd_l[i] != -1)// I had set this value to zero before but it should be -1.so I changed.
+		{
+			close(hdocfd_l[i]);
+			hdocfd_l[i] = -1; // set this to -1 so when we try to clean it later incase  of an error we won't be closing a already closed hdfd.
+		}	
+		i++;
+	}	
+}
 void free_arr(void **arr)
 {
     void **tmp;

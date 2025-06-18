@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 17:43:40 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/15 00:22:17 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 04:05:21 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define ERR_XPORTID "minishell: export: `%s': not a valid identifier\n"
 # define ERR_SYSFUNC "minishell: %s: %s\n"
 # define ERR_DUP "minishell: %d: %s\n"
+# define ERR_AMBI_REDIR "minishell: %s: ambiguous redirect\n"
 # define ERR_HDLIM "minishell: maximum here-document count exceeded\n"
 # define WAR_HDEOF "minishell: warning: here-document at line %i delimited by end-of-file (wanted `%s')\n"
 

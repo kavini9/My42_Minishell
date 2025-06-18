@@ -6,19 +6,19 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 17:57:09 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/15 05:15:06 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 05:48:17 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path)
 {
-	struct stat statbuf;
-	
+	struct stat	statbuf;
+
 	if (access(cmd_path, F_OK) == 0)
 	{
-		if (stat(cmd_path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))//double check this stat and the macro
+		if (stat(cmd_path, &statbuf) == 0 && S_ISDIR(statbuf.st_mode))
 			cmd -> err_note.strerr = IS_DIRECTORY;
 		else if (access(cmd_path, X_OK) != 0)
 			cmd -> err_note.strerr = strerror(errno);
@@ -33,25 +33,25 @@ int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path)
 
 char	**get_path_array(t_msh *msh, char **envl)
 {
-	char *env_path;
-    char **arr_path;
+	char	*env_path;
+	char	**arr_path;
 
-    env_path = get_env(envl, "PATH");
-	if (env_path)//if (*env_path)
-        arr_path = ft_split(env_path, ':');
-	else //can this go wrong when env is NULL i.e. env -i
-		arr_path = ft_split(".", ' ');// will create {"./", NULL} so I can search current folder if the env path is unset.
+	env_path = get_env(envl, "PATH");
+	if (env_path)
+		arr_path = ft_split(env_path, ':');
+	else
+		arr_path = ft_split(".", ' ');
 	if (!arr_path)
-		msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "split");//"minishell: fatal error: memory allocation failed in %s\n"
+		msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, "split");
 	return (arr_path);
 }
 
 static void	set_errnote(t_msh *msh, t_cmd *cmd)
 {
-	if (msh -> exit_code != X_KO)//may be write a seperate function for this
+	if (msh -> exit_code != X_KO)
 		msh -> exit_code = F_KO;
 	if (cmd -> err_note.strerr == NULL)
-	 	cmd -> err_note.strerr = CMD_NOT_FOUND;
+		cmd -> err_note.strerr = CMD_NOT_FOUND;
 }
 
 void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
@@ -61,7 +61,7 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 	char	*tmp;
 
 	arr_path = get_path_array(msh, msh -> envl);
-	ptr_arr_path = arr_path; 
+	ptr_arr_path = arr_path;
 	while (*cmd_name && arr_path && *arr_path)
 	{
 		*cmd_path = ft_strjoin("/", cmd_name);
@@ -71,43 +71,42 @@ void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path)
 		if (tmp)
 			free(tmp);
 		if (!*cmd_path)
-			msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "exec");//"minishell: fatal error: memory allocation failed in %s\n"
+			msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, "exec");
 		if (access_check(msh, cmd, *cmd_path) == 0)
 			return (free_arr((void **) ptr_arr_path));
 		free(*cmd_path);
 		arr_path++;
 	}
 	set_errnote(msh, cmd);
-	free_arr((void **) ptr_arr_path);//check if this needs to be null. this should be destroyed going out of this function.
-	*cmd_path = ft_strdup(cmd_name);//this is protected in calling function
+	free_arr((void **) ptr_arr_path);
+	*cmd_path = ft_strdup(cmd_name);
 }
 
-void    execute_cmd(t_msh *msh, t_cmd *cmd)
+void	execute_cmd(t_msh *msh, t_cmd *cmd, char *cmd_path)
 {
-    char **cmd_arr;
-    char *cmd_path;
+	char	**cmd_arr;
 
 	cmd_path = NULL;
 	if (msh -> exit_code == 0 && cmd -> cmd && !exec_builtin(msh, cmd -> cmd))
 	{
-    	cmd_arr = cmd -> cmd;
-    	if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))
-        	get_cmd_path(msh, cmd, *cmd_arr, &cmd_path);
-    	else if (*cmd_arr)
-    	{
-        	access_check(msh, cmd, *cmd_arr);
-        	cmd_path = ft_strdup(*cmd_arr);//think about calling set_errnote here
-    	}
-    	if (!cmd_path)
-        	msh_error(msh, (LOG|CLEAN|EXIT) << 8 | 1, ERR_MALLOC, "execution");
-    	sig_reseted();//SIGNAL: is this in correct place
+		cmd_arr = cmd -> cmd;
+		if (*cmd_arr && !ft_strchr(*cmd_arr, '/'))
+			get_cmd_path(msh, cmd, *cmd_arr, &cmd_path);
+		else if (*cmd_arr)
+		{
+			access_check(msh, cmd, *cmd_arr);
+			cmd_path = ft_strdup(*cmd_arr);
+		}
+		if (!cmd_path)
+			msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, "exec");
+		sig_reseted();
 		execve(cmd_path, cmd_arr, msh -> envl);
 		cmd -> err_note.cmd_path = cmd_path;
 		if (!cmd -> err_note.strerr)
 			cmd -> err_note.strerr = strerror(errno);
-		msh_error(msh, (EXTRARG|LOG) << 8 | msh -> exit_code , ERR_SYSFUNC, (char *)&(cmd -> err_note));
+		msh_error(msh, (EXTRARG | LOG) << 8 | msh -> exit_code, ERR_SYSFUNC,
+			(char *)&(cmd -> err_note));
 		free(cmd_path);
 	}
-	msh_error(msh, (CLEAN|EXIT) << 8 | msh -> exit_code, NULL, NULL);
+	msh_error(msh, (CLEAN | EXIT) << 8 | msh -> exit_code, NULL, NULL);
 }
-//think about set_errnote

@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 19:43:33 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 04:34:47 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,7 +264,7 @@ void    set_pipe_chain(int *prev_rd_fd, int *pipe_fd, int cmd_count, int i);
 void	run_child_proc(t_msh *msh, t_cmd *cmd, int rd_fd, int *pipe);
 void	wait_child(t_msh *msh, int i, pid_t pid);
 
-void    execute_cmd(t_msh *msh, t_cmd *cmd);
+void	execute_cmd(t_msh *msh, t_cmd *cmd, char *cmd_path);
 void	get_cmd_path(t_msh *msh, t_cmd *cmd, char *cmd_name, char **cmd_path);
 char	**get_path_array(t_msh *msh, char **envl);
 int	access_check(t_msh *msh, t_cmd *cmd, char *cmd_path);

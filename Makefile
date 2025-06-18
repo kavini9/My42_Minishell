@@ -38,7 +38,7 @@ SOURCES = main/main.c \
 	  envl/utils_envl.c \
 	  execute/exec_cmd.c \
 	  execute/execin_child.c \
-	  signal_stuff/heredoc.c \
+	  execute/heredoc.c \
 	  execute/redir.c \
 	  execute/reset_cmd_attr.c \
 	  signal_stuff/signal_handler.c \
