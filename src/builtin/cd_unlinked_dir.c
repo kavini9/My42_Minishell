@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:12:52 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 07:24:14 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 10:24:18 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	handle_unlinked_cwd(t_msh *msh, char *path)
 		msh_error(msh, (LOG | CLEAN | EXIT) << 8 | 1, ERR_MALLOC, "cd");
 	free(msh -> cwd);
 	msh -> cwd = new_wd;
-	update_env(msh, "OLDPWD=", msh -> old_wd);
-	update_env(msh, "PWD=", msh -> cwd);
+	update_env(msh, "OLDPWD=", ft_strdup(msh -> old_wd));
+	update_env(msh, "PWD=", ft_strdup(msh -> cwd));
 	msh -> exit_code = EXIT_SUCCESS;
 }
