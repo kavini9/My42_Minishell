@@ -41,9 +41,9 @@ SOURCES = main/main.c \
 	  execute/heredoc.c \
 	  execute/redir.c \
 	  execute/reset_cmd_attr.c \
-	  signal_stuff/signal_handler.c \
-	  signal_stuff/signal_utils.c \
-	  ../MyTests/debug_print.c \
+	  signal/signal_handler.c \
+	  signal/signal_utils.c \
+
 
 #change later heredoc and execin child
 

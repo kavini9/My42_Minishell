@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:32:56 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 11:56:25 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:24:02 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,27 +60,16 @@ void	msh_parse(t_msh *msh, char *line)
 	clean_aux(msh, msh -> aux);
 }
 
-// void	msh_exit(t_msh *msh)
-// {
-// 	printf("exit\n");
-// 	msh_clean(msh);
-// 	exit(msh->exit_code);
-// }
-
-// char	*msh_read_line(void)
-// {
-// 	char	*line;
-// 	char	*trimmed;
-
-// 	if (isatty(fileno(stdin)))
-// 		return readline("minishell> ");
-// 	line = get_next_line(fileno(stdin));
-// 	if (!line)
-// 		return NULL;
-// 	trimmed = ft_strtrim(line, "\n");
-// 	free(line);
-// 	return trimmed;
-// }
+int	msh_exit(t_msh *msh, char *line)
+{
+	if (!line)
+	{
+		printf("exit\n");
+		msh_clean(msh);
+		return (1);
+	}
+	return (0);
+}
 
 // void	msh_loop(t_msh *msh)
 // {
@@ -90,9 +79,9 @@ void	msh_parse(t_msh *msh, char *line)
 // 	{
 // 		if (isatty(fileno(stdin)))
 // 			init_sig();
-// 		line = msh_read_line();
-// 		if (!line)//check if we can replace msh_exit
-// 			msh_exit(msh);
+// 		line = readline("minishell> ");
+// 		if (msh_exit(msh, line)) // Handle Ctrl+D (EOF)
+// 			exit(msh->exit_code);
 // 		if (g_sig == SIGINT)
 // 		{
 // 			msh->exit_code = 130;
@@ -105,10 +94,13 @@ void	msh_parse(t_msh *msh, char *line)
 // 			msh->exit_code = 0;
 // 			msh_execute(msh);
 // 		}
-// 		//free(line);
+// 		else if (line)
+// 			free(line);
 // 	}
 // 	rl_clear_history();
 // }
+
+
 
 void	msh_loop(t_msh *msh)
 {
@@ -118,7 +110,6 @@ void	msh_loop(t_msh *msh)
 	{
 		if (isatty(fileno(stdin)))
 			init_sig();
-		//line = readline("minishell> ");
 		if (isatty(fileno(stdin)))
 			line = readline("minishell> "); // use custom prompt string
 		else
@@ -130,12 +121,14 @@ void	msh_loop(t_msh *msh)
 			free(line);
 			line = trimmed;
 		}
-		if (!line) // Handle Ctrl+D (EOF)
-		{
-			printf("exit\n");
-			msh_clean(msh);
+		if (msh_exit(msh, line)) // Handle Ctrl+D (EOF)
 			exit(msh->exit_code);
-		}
+		if (!line) // Handle Ctrl+D (EOF)
+		// {
+		// 	printf("exit\n");
+		// 	msh_clean(msh);
+		// 	exit(msh->exit_code);
+		// }
 		if (g_sig == SIGINT)
 		{
 			msh->exit_code = 130;
@@ -157,7 +150,7 @@ void	msh_loop(t_msh *msh)
 int	main(int ac, char **av, char **envp)
 {
 	t_msh	msh;
-
+	
 	(void) av;
 	if (ac != 1)
 		exit(printf("# minishell: Error: Invalid number of arguments."
@@ -167,24 +160,3 @@ int	main(int ac, char **av, char **envp)
 	msh_clean(&msh);
 	exit(msh.exit_code);
 }
-
-//	print_envl(&msh);
-/*
-void	msh_parse(t_msh *msh, char *line)
-{
-	t_parse	aux;//in static memory remember to assign to cmd struct before leaving this function.
-
-	msh -> aux = &aux;
-	init_parse_structs(msh, line);
-	line_split_bypipe(msh, line, msh -> aux -> seg);
-	print_segments(msh -> aux -> seg);//debugging purpose
-	seg_tokenize(msh, msh -> aux);
-	print_tokens(msh -> aux -> token);//debugging purpose
-	expand_tokens(msh, msh -> aux -> token);
-	print_expand_arrays(msh -> aux -> token);//debugging purpose
-	init_cmd_struct(msh, msh -> cmd_count);
-	setup_cmd(msh, msh -> aux -> token, msh -> cmd);
-	print_cmd_members(msh -> cmd);//debugging purpose
-	clean_aux(msh, msh -> aux);
-}
-*/
