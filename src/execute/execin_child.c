@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:29:15 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 04:56:16 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:18:43 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	wait_child(t_msh *msh, int i, pid_t pid)
 		if (WIFSIGNALED(status) && !sig)
 			sig = WTERMSIG(status);
 	}
-	if (sig == SIGQUIT)
+	if (sig == SIGQUIT && msh -> exit_code > 128)
 		write(STDERR_FILENO, "Quit (core dumped)\n", 20);
 	else if (sig == SIGINT)
 		write(STDERR_FILENO, "\n", 1);

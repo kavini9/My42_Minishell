@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 19:26:27 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/17 08:18:13 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:09:54 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,9 @@ void	builtin_export(t_msh *msh, char **cmd)
 	while (*cmd)
 	{
 		if (!is_valid_id(*cmd))
-			return (msh_error(msh, LOG << 8 | 1, ERR_XPORTID,*cmd));
-		set_env(msh, msh -> envl, ft_strdup(*cmd));
+			msh_error(msh, LOG << 8 | 1, ERR_XPORTID,*cmd);
+		else
+			set_env(msh, msh -> envl, ft_strdup(*cmd));
 		cmd++;
 	}
 }

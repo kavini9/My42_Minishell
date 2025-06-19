@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 20:57:11 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/16 17:27:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:57:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*ft_realloc(void *ptr, size_t size_prev, size_t size_new)
 	if (!ptr_new)
 	{
 		free(ptr);
-		return (NULL);//should I set errno to ENOMEM
+		return (NULL);
 	}
 	if (size_prev > 0)
 	{

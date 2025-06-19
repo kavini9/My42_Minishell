@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/03 18:42:33 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 16:49:32 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:53:11 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,7 @@ void	free_arr(void **arr);
 void	free_cmd(t_cmd **cmd);
 void	free_redir(t_redir **redir);
 void	*free_and_null(void *ptr);
+int		bullshit_line_saving_free(void *thing);
 
 /*-------------------------Reset State------------------------*/
 void	reset_cmd_attr(t_msh *msh);

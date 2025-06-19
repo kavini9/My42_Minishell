@@ -96,6 +96,41 @@ void    overwrite_env_var(char **env_var, char *entry)
 printf("\033[1;32moverwrite successful %s\n\033[0m", entry);
 }
 
+int 	bullshit_line_saving_free(void *thing)
+{
+	free(thing);
+	return (1);
+}
+
+// char *ft_substr_alt(char *asd, size_t start, size_t length)
+// {
+// 	static int l = 0;
+	
+// 	l++;
+// 	if (l < 4)
+// 	{
+// 		return ft_substr(asd, start,  length);	
+// 	}
+	
+// 	return (0);
+// }
+
+// #define ft_substr(x, y, z) ft_substr_alt(x,y,z)
+
+// char *ft_strdup_alt(char *asd)
+// {
+// 	static int l = 0;
+	
+// 	l++;
+// 	if (l < 4)
+// 	{
+// 		return ft_strdup(asd);	
+// 	}
+	
+// 	return (0);
+// }
+
+// #define ft_strdup(x) ft_strdup_alt(x)
 void    set_env(t_msh *msh, char **envl, char *entry)
 {  
     char    **env_iter;
@@ -108,7 +143,7 @@ void    set_env(t_msh *msh, char **envl, char *entry)
 		key = ft_substr(entry, 0, eq - entry);
     if (!eq)
 		key = ft_strdup(entry);
-	if (!key)
+	if (!key && bullshit_line_saving_free(entry))
 		printf("\033[1;31mset env key error\n\033[0m");//TODO: error
     k_len = ft_strlen(key);
     env_iter = envl;

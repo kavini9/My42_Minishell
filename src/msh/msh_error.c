@@ -6,11 +6,17 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 16:31:28 by wweerasi          #+#    #+#             */
-/*   Updated: 2025/06/18 12:34:05 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:49:42 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	bullshit_line_saving_free(void *thing)
+{
+	free(thing);
+	return (1);
+}
 
 void	error_log(char *err_msg, char *param, int err_no, int extrarg)
 {

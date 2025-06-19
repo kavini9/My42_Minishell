@@ -6,7 +6,7 @@
 /*   By: wweerasi <wweerasi@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 12:23:14 by wweerasi          #+#    #+#             */
-/*   Updated: 2024/05/07 21:29:26 by wweerasi         ###   ########.fr       */
+/*   Updated: 2025/06/19 15:55:32 by wweerasi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ static char	**ft_split_alloc(char const *s, char c)
 		split_count = 0;
 		while (*temp_s != '\0')
 		{
-			if ((temp_s == s && *temp_s != c) \
-					|| (temp_s != s && *(temp_s - 1) == c && *(temp_s) != c))
+			if ((temp_s == s && *temp_s != c)
+				|| (temp_s != s && *(temp_s - 1) == c && *(temp_s) != c))
 				split_count++;
 			temp_s++;
 		}
@@ -82,8 +82,8 @@ char	**ft_split(char const *s, char c)
 		tmp_split = split_s;
 		while (*tmp_s != '\0')
 		{
-			if ((tmp_s == s && *tmp_s != c) \
-					|| (tmp_s != s && *(tmp_s - 1) == c && *(tmp_s) != c))
+			if ((tmp_s == s && *tmp_s != c)
+				|| (tmp_s != s && *(tmp_s - 1) == c && *(tmp_s) != c))
 			{
 				*tmp_split = ft_substr_alloc(tmp_s, c);
 				if (*tmp_split == NULL)
